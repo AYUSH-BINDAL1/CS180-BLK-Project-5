@@ -14,7 +14,7 @@ import java.net.SocketException;
  * <p>
  */
 
-public class MarketPlaceServer {
+public class MarketPlaceServer extends Threads {
 
     public static void main(String[] args) {
         ServerSocket serverSocket; //Creates ServerSocket
