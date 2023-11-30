@@ -1,16 +1,18 @@
 /**
- * Program Name
+ * PurchaseHistory
  * <p>
- * Program Description
+ * Handles all purchase history information for the users
  *
- * @author Ayush Bindal, Lab #
- * @version 01/01/2023
+ * @author Ayush Bindal, Lab #L08
+ * @version 11/30/2023
  * <p>
  * Sources: [TA NAMES]
  */
 
 public class PurchaseHistory {
-    //TODO: Create viewCustomerPurchaseHistory method
+    //TODO: Create viewCustomerPurchaseHistoryClient method
+    //TODO: Create viewCustomerPurchaseHistoryServer method
 
-    //TODO: Create exportCustomerPurchaseHistory method
+    //TODO: Create exportCustomerPurchaseHistoryClient method
+    //TODO: Create exportCustomerPurchaseHistoryServer method
 }

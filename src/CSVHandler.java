@@ -1,18 +1,18 @@
 /**
- * Program Name
+ * CSVHandler
  * <p>
- * Program Description
+ * Java class that handles all CSV handling including export and import
  *
- * @author Ayush Bindal, Lab #
- * @version 01/01/2023
+ * @author Ayush Bindal, Lab #L08
+ * @version 11/30/2023
  * <p>
- * Sources: [TA NAMES]
  */
 
 public class CSVHandler {
-    //TODO: Create importSellerCSV method
+    //TODO: Create importSellerCSVClient method
+    //TODO: Create importSellerCSVServer method
 
-
-    //TODO: Create exportSellerCSV method
+    //TODO: Create importSellerCSVClient method
+    //TODO: Create exportSellerCSVServer method
 
 }

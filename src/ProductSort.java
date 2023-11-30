@@ -1,26 +1,25 @@
 /**
- * Program Name
+ * ProductSort
  * <p>
- * Program Description
+ * Sorts the products based on price or quantity for the customer
  *
- * @author Ayush Bindal, Lab #
- * @version 01/01/2023
+ * @author Ayush Bindal, Lab #L08
+ * @version 11/30/2023
  * <p>
- * Sources: [TA NAMES]
  */
 
 public class ProductSort {
 
-    //TODO: Create sortByIncreasingPrice method
+    //TODO: Create sortByIncreasingPriceServer method
+    //TODO: Create sortByIncreasingPriceClient method
 
+    //TODO: Create sortByDecreasingPriceServer method
+    //TODO: Create sortByDecreasingPriceClient method
 
-    //TODO: Create sortByDecreasingPrice method
+    //TODO: Create sortByIncreasingQuantityServer method
+    //TODO: Create sortByIncreasingQuantityClient method
 
-
-    //TODO: Create sortByIncreasingQuantity method
-
-
-    //TODO: Create sortByDecreasingQuantity method
-
+    //TODO: Create sortByDecreasingQuantityServer method
+    //TODO: Create sortByDecreasingQuantityClient method
 
 }

@@ -1,22 +1,23 @@
 /**
- * Program Name
+ * ProductSearch
  * <p>
- * Program Description
+ * Handles all seraching for products for customers
  *
- * @author Ayush Bindal, Lab #
+ * @author Ayush Bindal, Lab #L08
  * @version 01/01/2023
  * <p>
  * Sources: [TA NAMES]
  */
 
 public class ProductSearch {
-    //TODO: Create searchByName method
+    //TODO: Create searchByNameClient method
+    //TODO: Create searchByNameServer method
 
+    //TODO: Create searchByStoreClient method
+    //TODO: Create searchByStoreServer method
 
-    //TODO: Create searchByStore method
-
-
-    //TODO: Create searchByDescription method
+    //TODO: Create searchByDescriptionClient method
+    //TODO: Create searchByDescriptionServer method
 
 
 }

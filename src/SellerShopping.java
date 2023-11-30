@@ -1,33 +1,34 @@
 /**
- * Program Name
+ * SellerShopping
  * <p>
- * Program Description
+ * Handles all methods pertaining to the seller shopping cart information
  *
- * @author Ayush Bindal, Lab #
- * @version 01/01/2023
+ * @author Ayush Bindal, Lab #L08
+ * @version 11/30/2023
  * <p>
- * Sources: [TA NAMES]
  */
 
 public class SellerShopping {
 
+    //TODO: Create getSellerShoppingCartClient method
+    //TODO: Create getSellerShoppingCartServer method
 
-    //TODO: Create getSellerShoppingCart method
-
-
-    //TODO: Create modifyProduct method
-
-
-    //TODO: Create deleteProduct method
+    //TODO: Create modifyProductClient method
+    //TODO: Create modifyProductServer method
 
 
-    //TODO: Create createNewProduct method
+    //TODO: Create deleteProductClient method
+    //TODO: Create deleteProductServer method
+
+    //TODO: Create createNewProductClient method
+    //TODO: Create createNewProductServer method
 
 
-    //TODO: Create viewAllProducts method
+    //TODO: Create viewAllProductsClient method
+    //TODO: Create viewAllProductsServer method
 
-
-    //TODO: Create viewShoppingCarts method
+    //TODO: Create viewShoppingCartsClient method
+    //TODO: Create viewShoppingCartsServer method
 
 
 }

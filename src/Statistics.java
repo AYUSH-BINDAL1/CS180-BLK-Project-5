@@ -1,36 +1,35 @@
 /**
- * Program Name
+ * Statistics
  * <p>
- * Program Description
+ * Handles all information regarding statistics feature for both customer and seller
  *
- * @author Ayush Bindal, Lab #
- * @version 01/01/2023
+ * @author Ayush Bindal, Lab #L08
+ * @version 11/30/2023
  * <p>
- * Sources: [TA NAMES]
  */
 
 public class Statistics {
+    //TODO: Create customerDashboardClient method
+    //TODO: Create customerDashboardServer method
 
-    //TODO: Create customerDashboard method
+    //TODO: Create customerDashboardSpecificClient method
+    //TODO: Create customerDashboardSpecificServer method
 
+    //TODO: Create sortCustomerLowtoHighClient method
+    //TODO: Create sortCustomerLowtoHighServer method
 
-    //TODO: Create customerDashboardSpecific method
+    //TODO: Create sortCustomerHightoLowClient method
+    //TODO: Create sortCustomerHightoLowServer method
 
+    //TODO: Create viewSalesByStoreClient method
+    //TODO: Create viewSalesByStoreServer method
 
-    //TODO: Create sortCustomerLowtoHigh method
+    //TODO: Create generateSellerDashboardServer method
+    //TODO: Create generateSellerDashboardClient method
 
+    //TODO: Create sortListClient method (Sub method for generateSeller Dashboard)
+    //TODO: Create sortListServer method (Sub method for generateSeller Dashboard)
 
-    //TODO: Create sortCustomerHightoLow method
-
-
-    //TODO: Create viewSalesByStore method
-
-
-    //TODO: Create generateSellerDashboard method
-
-
-    //TODO: Create sortList method (Sub method for generateSeller Dashboard)
-
-
-    //TODO: Create updatePurchaseCount method (Sub method for generateSeller Dashboard)
+    //TODO: Create updatePurchaseCountClient method (Sub method for generateSeller Dashboard)
+    //TODO: Create updatePurchaseCountServer method (Sub method for generateSeller Dashboard)
 }

@@ -2,37 +2,42 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Program Name
+ * AccountManager
  * <p>
- * Program Description
+ * Java class that handles all infomration regarding the user (Usernames, Password, etc...)
  *
- * @author Ayush Bindal, Lab #
- * @version 01/01/2023
+ * @author Ayush Bindal, Lab #L08
+ * @version 11/30/2023
  * <p>
- * Sources: [TA NAMES]
  */
 
 public class AccountManager {
 
-    //TODO: Create editAccountDetails method
+
+    //TODO: Create editAccountDetailsClient method
+    //TODO: Create editAccountDetailsServer method
 
 
-    //TODO: Create editPassword method
+    //TODO: Create editPasswordClient method
+    //TODO: Create editPasswordServer method
 
 
-    //TODO: Create updateEmailFilesList method
+    //TODO: Create updateEmailFilesListClient method
+    //TODO: Create updateEmailFilesListServer method
 
 
-    //TODO: Create deleteAccount method
+    //TODO: Create deleteAccountClient method
+    //TODO: Create deleteAccountServer method
+
+    //TODO: Create deleteAccountFilesListClient method
+    //TODO: Create deleteAccountFilesListServer method
 
 
-    //TODO: Create deleteAccountFilesList method
+    //TODO: Create deleteAccountFilesListClient method
+    //TODO: Create authenticateAccountServer method
 
-
-    //TODO: Create authenticateAccount method
-
-
-    //TODO: Create registerNewAccount method
+    //TODO: Create registerNewAccountServer method
+    //TODO: Create registerNewAccountServer method
 
 
     //TODO: Create validateEmail method
