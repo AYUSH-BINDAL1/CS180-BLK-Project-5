@@ -10,4 +10,7 @@
  */
 
 public class PurchaseHistory {
+    //TODO: Create viewCustomerPurchaseHistory method
+
+    //TODO: Create exportCustomerPurchaseHistory method
 }

@@ -10,4 +10,17 @@
  */
 
 public class ProductSort {
+
+    //TODO: Create sortByIncreasingPrice method
+
+
+    //TODO: Create sortByDecreasingPrice method
+
+
+    //TODO: Create sortByIncreasingQuantity method
+
+
+    //TODO: Create sortByDecreasingQuantity method
+
+
 }

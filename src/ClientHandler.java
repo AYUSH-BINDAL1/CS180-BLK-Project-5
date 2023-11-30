@@ -1,3 +1,5 @@
+import java.net.Socket;
+
 /**
  * Program Name
  * <p>
@@ -10,4 +12,13 @@
  */
 
 public class ClientHandler {
+    //TODO: Create Constructor and Socket
+
+
+    //TODO: Create run method
+
+
+    //TODO: Create exitProgram method
+
+
 }

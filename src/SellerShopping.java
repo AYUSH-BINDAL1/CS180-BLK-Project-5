@@ -10,4 +10,24 @@
  */
 
 public class SellerShopping {
+
+
+    //TODO: Create getSellerShoppingCart method
+
+
+    //TODO: Create modifyProduct method
+
+
+    //TODO: Create deleteProduct method
+
+
+    //TODO: Create createNewProduct method
+
+
+    //TODO: Create viewAllProducts method
+
+
+    //TODO: Create viewShoppingCarts method
+
+
 }

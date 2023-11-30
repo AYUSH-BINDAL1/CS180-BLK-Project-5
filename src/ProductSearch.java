@@ -10,4 +10,13 @@
  */
 
 public class ProductSearch {
+    //TODO: Create searchByName method
+
+
+    //TODO: Create searchByStore method
+
+
+    //TODO: Create searchByDescription method
+
+
 }
