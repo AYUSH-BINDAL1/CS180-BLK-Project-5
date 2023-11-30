@@ -1,21 +1,28 @@
 import java.net.Socket;
 
 /**
- * Program Name
+ * ClientHandler
  * <p>
- * Program Description
+ * Java class that implements Runnable used to create new Threads for new connections to the Server
  *
- * @author Ayush Bindal, Lab #
- * @version 01/01/2023
+ * @author Ayush Bindal, Lab #L08
+ * @version 11/30/2023
  * <p>
- * Sources: [TA NAMES]
  */
 
-public class ClientHandler {
-    //TODO: Create Constructor and Socket
+public class ClientHandler implements Runnable {
 
+    private Socket clientSocket;
 
-    //TODO: Create run method
+    //Constructor for new ClientHandler
+    public ClientHandler(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+    }
+
+    //TODO: Finish run method
+    public void run() {
+
+    }
 
 
     //TODO: Create exitProgram method

@@ -1,15 +1,43 @@
+import javax.swing.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+
 /**
- * Program Name
+ * MarketPlaceServer
  * <p>
- * Program Description
+ * Java class that starts the server and accepts connections from clients and starts individual threads for them.
  *
- * @author Ayush Bindal, Lab #
- * @version 01/01/2023
+ * @author Ayush Bindal, Lab #L08
+ * @version 11/30/2023
  * <p>
- * Sources: [TA NAMES]
  */
 
 public class MarketPlaceServer {
 
-    //TODO: Create main method
+    public static void main(String[] args) {
+        ServerSocket serverSocket; //Creates ServerSocket
+        Socket clientSocket; //Creates clientSocket
+        ClientHandler clientHandler; //Creates ClientHandler
+        try {
+
+            serverSocket = new ServerSocket(6969); //PORT NUMBER: 6969
+            serverSocket.setReuseAddress(true);
+
+            //TODO: IF NEEDED put any booting of ArrayList or Files here.
+
+            while(true) {
+                clientSocket = serverSocket.accept(); //Continues to accept connections to the server
+                JOptionPane.showMessageDialog(null, "Connection to Server Established",
+                        "Connection Established", JOptionPane.INFORMATION_MESSAGE);
+                clientHandler = new ClientHandler(clientSocket);
+                Thread thread = new Thread(clientHandler); //Creates new thread
+                thread.start(); //Starts thread
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

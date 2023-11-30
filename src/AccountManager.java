@@ -1,3 +1,6 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Program Name
  * <p>
@@ -33,6 +36,17 @@ public class AccountManager {
 
 
     //TODO: Create validateEmail method
+    //Verifies email is valid email
+    public static boolean validateEmail(String email) {
+        String usernameRegex = "^[^,][A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        Pattern pattern = Pattern.compile(usernameRegex);
+        Matcher matcher = pattern.matcher(email);
+
+        //TODO: Convert to PrintWriter
+        System.out.println("Invalid Email");
+
+        return matcher.matches();
+    }
 
 
 }
