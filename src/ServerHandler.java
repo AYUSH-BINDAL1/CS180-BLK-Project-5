@@ -13,10 +13,18 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
 
     private Socket clientSocket;
+    BufferedReader reader;
+    PrintWriter writer;
 
     //Constructor for new ClientHandler
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
+        try {
+            reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            writer = new PrintWriter(clientSocket.getOutputStream(), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //TODO: Finish run method

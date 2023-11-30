@@ -1,9 +1,9 @@
 /**
- * Program Name
+ * CustomerShopping
  * <p>
- * Program Description
+ * This class handles all of the file reading/writing for the shopping cart
  *
- * @author Ayush Bindal, Lab #
+ * @author  Lab L08
  * @version 01/01/2023
  * <p>
  * Sources: [TA NAMES]
