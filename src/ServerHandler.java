@@ -1,3 +1,5 @@
+import java.io.*;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 /**
@@ -10,18 +12,18 @@ import java.net.Socket;
  * <p>
  */
 
-public class ClientHandler implements Runnable {
+public class ServerHandler implements Runnable {
 
     private Socket clientSocket;
     BufferedReader reader;
-    PrintWriter writer;
+    BufferedWriter writer;
 
     //Constructor for new ClientHandler
-    public ClientHandler(Socket clientSocket) {
+    public ServerHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         try {
             reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            writer = new PrintWriter(clientSocket.getOutputStream(), true);
+            writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }

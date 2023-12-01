@@ -14,12 +14,12 @@ import java.net.SocketException;
  * <p>
  */
 
-public class MarketPlaceServer extends Threads {
+public class MarketPlaceServer {
 
     public static void main(String[] args) {
         ServerSocket serverSocket; //Creates ServerSocket
         Socket clientSocket; //Creates clientSocket
-        ClientHandler clientHandler; //Creates ClientHandler
+        ServerHandler serverHandler; //Creates ServerHandler
         try {
 
             serverSocket = new ServerSocket(6969); //PORT NUMBER: 6969
@@ -31,8 +31,8 @@ public class MarketPlaceServer extends Threads {
                 clientSocket = serverSocket.accept(); //Continues to accept connections to the server
                 JOptionPane.showMessageDialog(null, "Connection to Server Established",
                         "Connection Established", JOptionPane.INFORMATION_MESSAGE);
-                clientHandler = new ClientHandler(clientSocket);
-                Thread thread = new Thread(clientHandler); //Creates new thread
+                serverHandler = new ServerHandler(clientSocket);
+                Thread thread = new Thread(serverHandler); //Creates new thread
                 thread.start(); //Starts thread
 
             }
