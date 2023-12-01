@@ -19,6 +19,8 @@ public class CSVHandler {
     private static final Object LOCK = new Object();
     //TODO: Create importSellerCSVClient method
 
+    //FIXME: May need to pass in the Socket reader as parameter and read in the path through the
+    // sent String and synchronized needs to be fixed
     public static void importSellerCSVServer(String path) {
         try {
             ArrayList<String> sellerCSVLines = (ArrayList<String>) Files.readAllLines(Paths.get(path));
@@ -47,6 +49,8 @@ public class CSVHandler {
     //TODO: Create importSellerCSVClient method
 
 
+    //FIXME: May need to pass in the Socket reader as parameter and read in the path and sellerEmail through the
+    // sent String
     public static void exportSellerCSVServer(String path, String sellerEmail) {
         try {
             ArrayList<String> productLines = (ArrayList<String>)Files.readAllLines(Paths.get("Product.txt"));
