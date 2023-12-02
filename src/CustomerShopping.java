@@ -96,14 +96,33 @@ public class CustomerShopping {
     }
 
     //TODO: Create getCustomerShoppingCartClient method
-    //TODO: Create getCustomerShoppingCartServer method
+    public static String getCustomerShoppingCartServer(String email, Object LOCK) {
+        ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
+        StringBuilder result = new StringBuilder(); //Result to return to run method
+        try {
+            synchronized (LOCK) {
+                //Reads lines from ShoppingCart.txt
+                shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
+            }
+            for(String line : shoppingCartLines) {
+                String[] shoppingCartSplit = line.split(",");
+                if(shoppingCartSplit[6].equals(email)) { //If the customer email matches it adds it to the result
+                    result.append(line).append("\n");
+                }
+            }
+            if(result.isEmpty()) {
+                result.append("EMPTY CART"); //Empty cart
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result.toString(); //Returns the result to run method
+    }
 
     //TODO: Create buyProductClient method
     //TODO: Create buyProductServer method
 
     //TODO: Create checkoutCartClient method
-    //TODO: Create checkoutCartServer method
-
     //Given the customerEmail checks out their cart
     public static String checkoutCartServer(String email, Object LOCK) {
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
@@ -129,8 +148,8 @@ public class CustomerShopping {
                 synchronized (LOCK) {
                     //Rewrites files
                     Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines); //Rewrites text file
-                    Files.write(Paths.get("PurchaseHistory.txt"), toAdd, StandardOpenOption.APPEND); //Appends the
-                    // list to the text file
+                    Files.write(Paths.get("PurchaseHistory.txt"), toAdd,
+                            StandardOpenOption.APPEND); //Appends the list to the text file
                 }
                 result = "SUCCESS";
             }
