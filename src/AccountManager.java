@@ -1,3 +1,4 @@
+import java.awt.dnd.InvalidDnDOperationException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,10 +20,11 @@ public class AccountManager {
 
 
     // TODO: Create editAccountDetailsClient Method
+    //May not need editAccountDetailsServer and can just do through run method in ServerHandler
     // TODO: Create editAccountDetailsServer Method
 
     //Given a newPassword and email, updates Username.txt accordingly
-    public static void updatePasswordFilesList(String email, String newPassword, Object LOCK) {
+    public static void updatePasswordFiles(String email, String newPassword, Object LOCK) {
         try {
             ArrayList<String> userInformationList; //
             synchronized (LOCK) {
@@ -42,7 +44,7 @@ public class AccountManager {
 
     //Given a newEmail and email, updates Username.txt, Product.txt, ShoppingCart.txt and PurchaseHistory.txt
     // accordingly
-    public static void updateEmailFilesList(String oldEmail, String newEmail, Object LOCK) {
+    public static void updateEmailFiles(String oldEmail, String newEmail, Object LOCK) {
         try {
             ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
             ArrayList<String> productList; //ArrayList of lines from Product.txt
@@ -122,11 +124,30 @@ public class AccountManager {
     }
 
     //TODO: Create deleteAccountClient Method
-    //TODO: Create deleteAccountServer Method
+    public static String deleteAccount(String email, String password, Object LOCK) {
+        String result = ""; //Result to send back to run
+        try {
+            ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
+            synchronized (LOCK) {
+                //Reads lines from Username.txt
+                userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
+            }
+            int emailIndex = userInformationList.indexOf(email); //Index of email in Username.txt
+            if(userInformationList.get(emailIndex + 1).equals(password)) { //If password matches deletes account
+                deleteAccountFiles(email, LOCK);
+                result = "SUCCESS";
+            } else {
+                result = "INVALID PASSWORD";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
     //Given email, deletes information from Username.txt, Product.txt, ShoppingCart.txt and PurchaseHistory.txt
     // accordingly
-    public static void deleteAccountFilesList(String email, Object LOCK) {
+    public static void deleteAccountFiles(String email, Object LOCK) {
         try {
             ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
             ArrayList<String> productList; //ArrayList of lines from Product.txt
@@ -186,11 +207,75 @@ public class AccountManager {
     }
 
 
-    // TODO: Create authenticateAccountClient Method
-    // TODO: Create authenticateAccountServer Method
+    // TODO: Create loginClient Method
 
-    // TODO: Create registerNewAccountClient Method
-    // TODO: Create registerNewAccountServer Method
+    //Method that takes email, password, and userType and if they match with an account in the Username.txt sends
+    // message back to run in ServerHandler
+    public static String login(String email, String password, String userType, Object LOCK) {
+
+        ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
+        String result = "";
+
+        try {
+            synchronized (LOCK) {
+                //Reads lines from Username.txt
+                userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
+            }
+
+            int emailIndex = userInformationList.indexOf(email); //Index of email in Username.txt
+            if(emailIndex != -1) { //If the email is valid
+
+                if(userInformationList.get(emailIndex + 1).equals(password)) { //If the password is valid
+                    if(userInformationList.get(emailIndex + 2).equals(userType)) { //If the userType is valid
+                        result = "SUCCESS"; //Login Sucessful
+                    } else { //Invalid User Type
+                        result = "INVALID USER TYPE";
+                    }
+                } else { //Invalid Password
+                    result = "INVALID PASSWORD";
+                }
+            } else {  //If the Username.txt doesn't contain the email
+                result = "INVALID EMAIL";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result; //Returns result to run to let client know if the login succeeded or failed
+    }
+
+    // TODO: Create registerClient Method
+
+    //Method that takes email, password, userType and if valid and not existing adds to the Username.txt file
+    public static String registerServer(String email, String password, String userType, Object LOCK) {
+        String result = "";
+        ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
+        boolean validEmail = validateEmail(email); //Verifies email is valid email;
+        if (!validEmail) {
+            result = "INVALID EMAIL"; //If email is not valid, returns invalid email to client
+        }
+        try {
+            synchronized (LOCK) {
+                //Reads lines from Username.txt
+                userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
+            }
+
+            int emailIndex = userInformationList.indexOf(email); //Index of email in Username.txt
+            if (emailIndex != -1) { //If the email already exists in Username.txt
+                result = "EMAIL ALREADY EXISTS";
+            } else { //If the email does not exist already
+                userInformationList.add(email); //Adds email to Username.txt
+                userInformationList.add(password); //Adds password to Username.txt
+                userInformationList.add(userType); //Adds userType to Username.txt
+                synchronized (LOCK) {
+                    Files.write(Paths.get("Username.txt"), userInformationList);
+                }
+                result = "SUCCESS";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result; //Returns result to run to let client know if the registration succeeded or failed
+    }
 
 
     //Verifies email is valid email

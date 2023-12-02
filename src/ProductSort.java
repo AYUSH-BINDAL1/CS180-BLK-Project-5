@@ -1,3 +1,11 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 /**
  * ProductSort
  * <p>
@@ -10,11 +18,11 @@
 
 public class ProductSort {
 
-    //TODO: Create sortByIncreasingPriceServer method
     //TODO: Create sortByIncreasingPriceClient method
+    //TODO: Create sortByIncreasingPriceServer method
 
-    //TODO: Create sortByDecreasingPriceServer method
     //TODO: Create sortByDecreasingPriceClient method
+    //TODO: Create sortByDecreasingPriceServer method
 
     //TODO: Create sortByIncreasingQuantityServer method
     //TODO: Create sortByIncreasingQuantityClient method
