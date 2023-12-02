@@ -16,7 +16,6 @@ public class SellerShopping {
     //TODO: Create modifyProductClient method
     //TODO: Create modifyProductServer method
 
-
     //TODO: Create deleteProductClient method
     //TODO: Create deleteProductServer method
 
@@ -29,6 +28,7 @@ public class SellerShopping {
 
     //TODO: Create viewShoppingCartsClient method
     //TODO: Create viewShoppingCartsServer method
+
 
 
 }

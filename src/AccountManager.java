@@ -20,19 +20,18 @@ public class AccountManager {
 
 
     // TODO: Create editAccountDetailsClient Method
-    //May not need editAccountDetailsServer and can just do through run method in ServerHandler
-    // TODO: Create editAccountDetailsServer Method
 
     //Given a newPassword and email, updates Username.txt accordingly
     public static void updatePasswordFiles(String email, String newPassword, Object LOCK) {
         try {
-            ArrayList<String> userInformationList; //
+            ArrayList<String> userInformationList;
             synchronized (LOCK) {
+                //Reads lines from Username.txt
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
 
-            int passwordIndex = userInformationList.indexOf(email) + 1;
-            userInformationList.set(passwordIndex, newPassword);
+            int passwordIndex = userInformationList.indexOf(email) + 1; //Index of password
+            userInformationList.set(passwordIndex, newPassword); //Sets oldPassword to newPassword
             synchronized (LOCK) {
                 Files.write(Paths.get("Username.txt"), userInformationList);
             }
@@ -227,7 +226,7 @@ public class AccountManager {
 
                 if(userInformationList.get(emailIndex + 1).equals(password)) { //If the password is valid
                     if(userInformationList.get(emailIndex + 2).equals(userType)) { //If the userType is valid
-                        result = "SUCCESS"; //Login Sucessful
+                        result = "SUCCESS"; //Login Successful
                     } else { //Invalid User Type
                         result = "INVALID USER TYPE";
                     }

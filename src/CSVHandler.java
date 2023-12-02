@@ -20,7 +20,7 @@ public class CSVHandler {
     //TODO: Create importSellerCSVClient method
 
     //Given a path to a seller's CSV file, import the seller's products into the Product.txt file.
-    public static void importSellerCSVServer(String path, Object LOCK) {
+    public static String importSellerCSVServer(String path, Object LOCK) {
         try {
             ArrayList<String> sellerCSVLines; // List of seller CSV lines (lines containing seller information)
             ArrayList<String> productLines; // List of product lines (lines containing product information)
@@ -47,13 +47,14 @@ public class CSVHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "SUCCESS";
     }
 
     //TODO: Create importSellerCSVClient method
 
 
     //Given the sellerEmail and path writes Products the seller owns to a new CSV file
-    public static void exportSellerCSVServer(String path, String sellerEmail, Object LOCK) {
+    public static String exportSellerCSVServer(String path, String sellerEmail, Object LOCK) {
         try {
             ArrayList<String> productLines; // List of product lines (lines containing product information)
             synchronized (LOCK) {
@@ -73,6 +74,7 @@ public class CSVHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "SUCCESS";
     }
 
 }

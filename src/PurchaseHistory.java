@@ -11,21 +11,42 @@ import java.util.ArrayList;
  * @author Ayush Bindal, Lab #L08
  * @version 11/30/2023
  * <p>
- * Sources: [TA NAMES]
  */
 
 public class PurchaseHistory {
     //TODO: Create viewCustomerPurchaseHistoryClient method
-    //TODO: Create viewCustomerPurchaseHistoryServer method
-
-    //TODO: Create exportCustomerPurchaseHistoryClient method
-    //TODO: Create exportCustomerPurchaseHistoryServer method
-    public static void exportCustomerPurchaseHistoryServer(String customerEmail, String path, Object LOCK) {
+    public static String viewCustomerPurchaseHistoryServer(String customerEmail, Object LOCK) {
+        StringBuilder formattedString = new StringBuilder();
+        String lineSeparator = System.getProperty("line.separator"); //Uses \n as delimiter for each line
         try {
-            ArrayList<String> purchaseHistoryLines; // List of all purchases (lines containing product
+            ArrayList<String> purchaseHistoryLines; // List of all purchase lines (lines containing product
             // information)
             synchronized (LOCK) {
-                //Gets lines
+                //Gets lines from PurchaseHistory.txt
+                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+            }
+            for (String purchaseHistoryLine : purchaseHistoryLines) {
+                String[] productLine = purchaseHistoryLine.split(","); //Splits the individual lines
+                if (productLine[6].equals(customerEmail)) { //If the customer bought the item adds the line to the
+                    // StringBuilder along with a "\n"
+                    formattedString.append(purchaseHistoryLine).append(lineSeparator);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //FIXME: May need to change to ObjectOutputStream and send ArrayList to server
+        return formattedString.toString(); //Returns formatted String
+    }
+
+    //TODO: Create exportCustomerPurchaseHistoryClient method
+    //Given a path and customerEmail creates a new txt file with the customer's purchase history
+    public static String exportCustomerPurchaseHistoryServer(String customerEmail, String path, Object LOCK) {
+        try {
+            ArrayList<String> purchaseHistoryLines; // List of all purchase lines (lines containing product
+            // information)
+            synchronized (LOCK) {
+                //Gets lines from PurchaseHistory.txt
                 purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
             }
             for(int i = 0; i < purchaseHistoryLines.size(); i++) {
@@ -41,5 +62,6 @@ public class PurchaseHistory {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "SUCCESS";
     }
 }
