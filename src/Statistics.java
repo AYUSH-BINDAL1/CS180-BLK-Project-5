@@ -19,13 +19,13 @@ import java.util.Collections;
 
 public class Statistics {
     //TODO: Create customerDashboardClient method
-    public static ArrayList<String> customerDashboardServer(Object LOCK) {
+    public static ArrayList<String> customerDashboardServer(Object PURCHASEHISTORYLOCK, Object PRODUCTLOCK) {
         //seller store product quantity
         ArrayList<String> sortedBought = new ArrayList<>();
         ArrayList<String> allProducts;
         ArrayList<String> purchaseHistory;
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 allProducts =  (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
             }
             for (int currentLine = 0; currentLine < allProducts.size(); currentLine++) {
@@ -37,7 +37,7 @@ public class Statistics {
         }
 
         try {
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 purchaseHistory =  (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
             }
             for (int currentHistory = 0; currentHistory < purchaseHistory.size(); currentHistory++) {
@@ -77,16 +77,16 @@ public class Statistics {
 
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
-        // CustomerUsername, productName, quantitiy, price, sellerUsername, store
+        // CustomerUsername, productName, quantity, price, sellerUsername, store
         return sortedBought;
     }
     //TODO: Create customerDashboardSpecificClient method
-    public static ArrayList<String> customerDashboardSpecificServer(String customerEmail, Object LOCK) {
+    public static ArrayList<String> customerDashboardSpecificServer(String customerEmail, Object PURCHASEHISTORYLOCK) {
         // Seller store product quantity
         ArrayList<String> sortedBought = new ArrayList<>();
         ArrayList<String> totalPurchaseHistory;
         try {
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 totalPurchaseHistory = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
             }
             for (int currentLine = 0; currentLine < totalPurchaseHistory.size(); currentLine++) {
@@ -125,7 +125,7 @@ public class Statistics {
         }
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
-        // CustomerUsername, productName, quantitiy, price, sellerUsername, store
+        // CustomerUsername, productName, quantity, price, sellerUsername, store
         return sortedBought;
     }
     //TODO: Create sortCustomerLowtoHighClient method
