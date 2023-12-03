@@ -9,10 +9,10 @@ import java.util.ArrayList;
 /**
  * CustomerShopping
  * <p>
- * This class handles all the file reading/writing for the shopping cart
+ * This class handles all the methods for the customer shopping cart and buying
  *
- * @author  Lab L08
- * @version 01/01/2023
+ * @author Ayush Bindal Lab #L08
+ * @version 12/02/2023
  * <p>
  */
 

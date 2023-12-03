@@ -6,12 +6,11 @@ import java.util.ArrayList;
 /**
  * ProductSearch
  * <p>
- * Handles all seraching for products for customers
+ * Handles all searching for products for customers
  *
- * @author Ayush Bindal, Lab #L08
- * @version 01/01/2023
+ * @author Lionel Loo, Lab #L08
+ * @version 12/02/2023
  * <p>
- * Sources: [TA NAMES]
  */
 
 public class ProductSearch {
