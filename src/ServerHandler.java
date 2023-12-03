@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -8,7 +9,7 @@ import java.net.Socket;
  * Java class that implements Runnable used to create new Threads for new connections to the Server
  *
  * @author Ayush Bindal, Lab #L08
- * @version 11/30/2023
+ * @version 12/02/2023
  * <p>
  */
 
@@ -37,7 +38,17 @@ public class ServerHandler implements Runnable {
     }
 
 
-    //TODO: Create exitProgram method
+    public void exitProgram() {
+        JOptionPane.showMessageDialog(null, "Thanks for using the Marketplace!", "Goodbye",
+                JOptionPane.INFORMATION_MESSAGE);
+        try {
+            reader.close();
+            writer.close();
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

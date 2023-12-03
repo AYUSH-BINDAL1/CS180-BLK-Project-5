@@ -11,8 +11,8 @@ import java.util.Comparator;
  * <p>
  * Sorts the products based on price or quantity for the customer
  *
- * @author Ayush Bindal, Lab #L08
- * @version 11/30/2023
+ * @author Lionel, Lab #L08
+ * @version 12/02/2023
  * <p>
  */
 
