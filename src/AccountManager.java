@@ -22,7 +22,8 @@ public class AccountManager {
     // TODO: Create editAccountDetailsClient Method
 
     //Given a newPassword and email, updates Username.txt accordingly
-    public static void updatePasswordFiles(String email, String newPassword, Object LOCK) {
+    public static String updatePasswordFiles(String email, String oldPassword, String newPassword, Object LOCK) {
+        String result = "";
         try {
             ArrayList<String> userInformationList;
             synchronized (LOCK) {
@@ -31,13 +32,21 @@ public class AccountManager {
             }
 
             int passwordIndex = userInformationList.indexOf(email) + 1; //Index of password
-            userInformationList.set(passwordIndex, newPassword); //Sets oldPassword to newPassword
-            synchronized (LOCK) {
-                Files.write(Paths.get("Username.txt"), userInformationList);
+            String oldPasswordOnFile = userInformationList.get(passwordIndex); //Password on file
+            if(oldPasswordOnFile.equals(oldPassword)) { //Checks to see if the password they enter is equal to the
+                // password on file
+                userInformationList.set(passwordIndex, newPassword); //Changes password and rewrites file
+                synchronized (LOCK) {
+                    Files.write(Paths.get("Username.txt"), userInformationList);
+                }
+                result = "PASSWORD UPDATED";
+            } else {
+                result = "INCORRECT PASSWORD";
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return result;
     }
 
 
@@ -282,10 +291,6 @@ public class AccountManager {
         String usernameRegex = "^[^,][A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"; //Regex expression
         Pattern pattern = Pattern.compile(usernameRegex);
         Matcher matcher = pattern.matcher(email);
-
-        //TODO: Convert to PrintWriter
-        System.out.println("Invalid Email");
-
         return matcher.matches();
     }
 

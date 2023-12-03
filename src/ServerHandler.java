@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -37,7 +38,17 @@ public class ServerHandler implements Runnable {
     }
 
 
-    //TODO: Create exitProgram method
+    public void exitProgram() {
+        JOptionPane.showMessageDialog(null, "Thanks for using the Marketplace!", "Goodbye",
+                JOptionPane.INFORMATION_MESSAGE);
+        try {
+            reader.close();
+            writer.close();
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

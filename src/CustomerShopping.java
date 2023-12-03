@@ -1,3 +1,5 @@
+import com.sun.source.tree.IfTree;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,6 +21,7 @@ public class CustomerShopping {
 
     //Given a product in the form of the formatted String EXACTLY as it is in the Product.txt file adds if it is a
     // valid quantity
+    //FIXME: Probably need to check if the chosenProduct exsists here too.
     public static String addToCartServer(String email, String chosenProduct, Object LOCK) {
         String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
         int purchaseQuantity = Integer.parseInt(chosenProductSplit[5]); //Gets the quantity of the user's product
@@ -57,10 +60,13 @@ public class CustomerShopping {
         return result;
     }
 
+    //FIXME: Fixing this right now
+
 
     //TODO: Create removeProductClient method
 
     //Given a product from a customer's shopping cart attempts to remove it and add it back to Product.txt
+    //FIXME: Probably need to check if the chosenProduct is in the shopping cart first
     public static String removeProductServer(String email, String chosenProduct, Object LOCK) {
         String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
         ArrayList<String> productLines; //ArrayList of lines from Product.txt
@@ -75,7 +81,7 @@ public class CustomerShopping {
             productLines.remove(chosenProduct);
             for(int i = 0; i < productLines.size(); i++) {
                 String[] productSplit = productLines.get(i).split(",");
-                if(productSplit[0].equals(chosenProductSplit[0]) && productSplit[1].equals(chosenProductSplit[1])
+                if(productSplit[0].equals(chosenProductSplit[0]) && productSplit[2].equals(chosenProductSplit[2])
                         && productSplit[3].equals(chosenProductSplit[3])) { //If the product line and chosen product =
                     //Reads the values from the chosenProduct back to the line
                     productSplit[5] =
@@ -96,9 +102,9 @@ public class CustomerShopping {
     }
 
     //TODO: Create getCustomerShoppingCartClient method
-    public static String getCustomerShoppingCartServer(String email, Object LOCK) {
+    public static ArrayList<String> getCustomerShoppingCartServer(String email, Object LOCK) {
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
-        StringBuilder result = new StringBuilder(); //Result to return to run method
+        ArrayList<String> returnList = new ArrayList<String>(); //Result to return to run method
         try {
             synchronized (LOCK) {
                 //Reads lines from ShoppingCart.txt
@@ -107,20 +113,68 @@ public class CustomerShopping {
             for(String line : shoppingCartLines) {
                 String[] shoppingCartSplit = line.split(",");
                 if(shoppingCartSplit[6].equals(email)) { //If the customer email matches it adds it to the result
-                    result.append(line).append("\n");
+                    returnList.add(line);
                 }
-            }
-            if(result.isEmpty()) {
-                result.append("EMPTY CART"); //Empty cart
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result.toString(); //Returns the result to run method
+        return returnList; //Returns the result to run method
     }
 
     //TODO: Create buyProductClient method
-    //TODO: Create buyProductServer method
+
+    //Method that buys product directly from page and returns whether it succeeded or not.
+    public static String buyProductServer(String customerEmail, String chosenProduct, Object LOCK) {
+
+        String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
+        int purchaseAmount = Integer.parseInt(chosenProductSplit[5]); //Gets the quantity of the user's product
+        ArrayList<String> productLines; //ArrayList of lines from Product.txt
+        String result = ""; //Result to return to run method
+        String modifiedProduct = ""; //Product to add to PurchaseHistory.txt
+
+        try {
+
+            synchronized (LOCK) {
+                //Reads lines from Product.txt
+                productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
+            }
+
+            for(int i = 0; i < productLines.size(); i++) { //Loops through the Product.txt file
+                String[] currentProductSplit = productLines.get(i).split(","); //Splits the current product line
+                if(chosenProductSplit[0].equals(currentProductSplit[0]) &&
+                        chosenProductSplit[2].equals(currentProductSplit[2]) &&
+                        chosenProductSplit[3].equals(currentProductSplit[3])) { //If the product is found in Product
+                    // .txt
+                    int amountAvailable = Integer.parseInt(currentProductSplit[5]);
+                    if(amountAvailable >= purchaseAmount) { //Checks if there is enough quantity and modifies
+                        // accordingly
+                        amountAvailable = amountAvailable - purchaseAmount;
+                        currentProductSplit[5] = Integer.toString(amountAvailable);
+                        modifiedProduct = String.join(",", currentProductSplit); //Rejoins string
+                        productLines.set(i, modifiedProduct);
+                        modifiedProduct += "," + customerEmail; //Adds the customer email to the
+                        result = "SUCCESS";
+                    } else { //Not enough quantity
+                        result = "NOT ENOUGH QUANTITY";
+                    }
+                    break;
+                }
+            }
+            if(result.isEmpty()) { //Didn't find the product
+                result = "PRODUCT NOT FOUND";
+            } else if(result.equals("SUCCESS")) { //If and only if the product has been changed it modifies the product
+                synchronized (LOCK) {
+                    //Rewrites files
+                    Files.write(Paths.get("Product.txt"), productLines);
+                    Files.write(Paths.get("Product.txt"), modifiedProduct.getBytes(), StandardOpenOption.APPEND);
+                }
+            }
+        } catch (IOException e ) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
     //TODO: Create checkoutCartClient method
     //Given the customerEmail checks out their cart
