@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class SellerShopping {
 
     //TODO: Create getSellerShoppingCartClient method
-    //TODO: Create getSellerShoppingCartServer method
+
     //Gets all products from ShoppingCart.txt and returns all products that belong to the seller
     public static ArrayList<String> getSellerShoppingCartServer(String sellerEmail, Object LOCK) {
         ArrayList<String> allProducts;
@@ -42,7 +42,6 @@ public class SellerShopping {
 
 
     //TODO: Create modifyProductClient method
-    //TODO: Create modifyProductServer method
     public static void modifyProductServer(String productName, String productDescription, String storeName,
                                            String sellerEmail, double price, int quantity, String oldProduct,
                                            Object LOCK) {
@@ -86,7 +85,6 @@ public class SellerShopping {
 
 
     //TODO: Create deleteProductClient method
-    //TODO: Create deleteProductServer method
     public static void deleteProductServer(String oldProduct, Object LOCK) {
         ArrayList<String> allShoppingCart;
         ArrayList<String> allProducts;
@@ -126,7 +124,32 @@ public class SellerShopping {
     }
 
     //TODO: Create createNewProductClient method
-    //TODO: Create createNewProductServer method
+    public static String createNewProductServer(String productName, String productDescription, String storeName,
+                                                String sellerEmail, double price, int quantity, Object LOCK) {
+        ArrayList<String> productLines; //ArrayList of lines from Product.txt
+        boolean productExists; //boolean to check if product already exists
+        try {
+            synchronized (LOCK) {
+                //Reads lines from Product.txt
+                productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
+            }
+            for(int i = 0; i < productLines.size(); i++) {
+                String[] productSplit = productLines.get(i).split(","); //Splits the productLines
+                if(productSplit[0].equals(productName) && productSplit[2].equals(storeName) && productSplit[3].equals(sellerEmail)) { //If the product already exsists
+                    return "PRODUCT ALREADY EXISTS"; //returns error message if product already exists
+                }
+            }
+            productLines.add(productName + "," + productDescription + "," + storeName + "," + sellerEmail + "," + price + "," + quantity); //Creates new formatted product
+            synchronized (LOCK) {
+                Files.write(Paths.get("Product.txt"), productLines);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        return "PRODUCT CREATED";
+    }
+
 
     //TODO: Create viewAllProductsClient method
     public ArrayList<String> viewAllProductsServer(String email, Object LOCK) {
