@@ -14,7 +14,11 @@ import java.util.ArrayList;
  */
 
 public class PurchaseHistory {
+
+
     //TODO: Create viewCustomerPurchaseHistoryClient method
+
+
     //Given a customer returns an ArrayList of Strings containing the customer's purchase history
     public static ArrayList<String> viewCustomerPurchaseHistoryServer(String customerEmail, Object LOCK) {
         ArrayList<String> returnList = new ArrayList<>();
@@ -23,7 +27,8 @@ public class PurchaseHistory {
             // information)
             synchronized (LOCK) {
                 //Gets lines from PurchaseHistory.txt
-                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+                purchaseHistoryLines = (ArrayList<String>)
+                        Files.readAllLines(Paths.get("PurchaseHistory.txt"));
             }
 
             for (String purchaseHistoryLine : purchaseHistoryLines) {
@@ -39,7 +44,10 @@ public class PurchaseHistory {
         return returnList; //Returns ArrayList
     }
 
+
     //TODO: Create exportCustomerPurchaseHistoryClient method
+
+
     //Given a path and customerEmail creates a new txt file with the customer's purchase history
     public static String exportCustomerPurchaseHistoryServer(String customerEmail, String path, Object LOCK) {
         try {
@@ -47,11 +55,12 @@ public class PurchaseHistory {
             // information)
             synchronized (LOCK) {
                 //Gets lines from PurchaseHistory.txt
-                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+                purchaseHistoryLines = (ArrayList<String>)
+                        Files.readAllLines(Paths.get("PurchaseHistory.txt"));
             }
-            for(int i = 0; i < purchaseHistoryLines.size(); i++) {
+            for (int i = 0; i < purchaseHistoryLines.size(); i++) {
                 String[] productLine = purchaseHistoryLines.get(i).split(","); //Splits the individual lines
-                if(!productLine[6].equals(customerEmail)) { //If the customer didn't buy the item it removes the line
+                if (!productLine[6].equals(customerEmail)) { //If the customer didn't buy the item it removes the line
                     purchaseHistoryLines.remove(i);
                     i--; //Accounts for removal of line
                 }
@@ -64,4 +73,6 @@ public class PurchaseHistory {
         }
         return "SUCCESS";
     }
+
+
 }

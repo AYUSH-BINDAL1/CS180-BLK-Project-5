@@ -26,7 +26,7 @@ public class SellerShopping {
                 //creates arraylist of all products from ShoppingCart.txt
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
             }
-            //loops through all products and adds all products that belong to the seller to sellerShoppingCart arraylist
+            //loops through all products and adds all products belonging to seller sellerShoppingCart arraylist
             for (int i = 0; i < allProducts.size(); i++) {
                 String[] currentProduct = allProducts.get(i).split(","); //splits current product by comma
                 if (currentProduct[3].equals(sellerEmail)) {
@@ -38,7 +38,6 @@ public class SellerShopping {
         }
         return sellerShoppingCart; //returns
     }
-
 
 
     //TODO: Create modifyProductClient method
@@ -55,20 +54,22 @@ public class SellerShopping {
                 //creates arraylist of all products from Product.txt
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
-            for (int i = 0; i < allProducts.size(); i++)  {
+            for (int i = 0; i < allProducts.size(); i++) {
                 String[] productSplit = allProducts.get(i).split(","); //splits current product by comma
-                    if(productSplit[0].equals(oldProductSplit[0]) && productSplit[2].equals(oldProductSplit[2])
-                            && productSplit[3].equals(oldProductSplit[3])) {
-                        allProducts.set(i,
-                                productName + "," + productDescription + "," + storeName + "," + sellerEmail + "," + price + "," + quantity);
-                    } 
+                if (productSplit[0].equals(oldProductSplit[0]) && productSplit[2].equals(oldProductSplit[2])
+                        && productSplit[3].equals(oldProductSplit[3])) {
+                    allProducts.set(i,
+                            productName + "," + productDescription + "," + storeName + "," + sellerEmail + ","
+                                    + price + "," + quantity);
+                }
             }
             for (int i = 0; i < allShoppingCart.size(); i++) {
                 String[] shoppingCartSplit = allShoppingCart.get(i).split(","); //splits current product by comma(",");
-                if(shoppingCartSplit[0].equals(oldProductSplit[0]) && shoppingCartSplit[2].equals(oldProductSplit[2])
+                if (shoppingCartSplit[0].equals(oldProductSplit[0]) && shoppingCartSplit[2].equals(oldProductSplit[2])
                         && shoppingCartSplit[3].equals(oldProductSplit[3])) {
                     allShoppingCart.set(i,
-                            productName + "," + productDescription + "," + storeName + "," + sellerEmail + "," + price + "," + quantity + "," + shoppingCartSplit[6]);
+                            productName + "," + productDescription + "," + storeName + "," + sellerEmail + ","
+                                    + price + "," + quantity + "," + shoppingCartSplit[6]);
                 }
             }
             synchronized (LOCK) {
@@ -96,19 +97,19 @@ public class SellerShopping {
                 //creates arraylist of all products from Product.txt
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
-            for (int i = 0; i < allProducts.size(); i++)  {
+            for (int i = 0; i < allProducts.size(); i++) {
                 String[] productSplit = allProducts.get(i).split(","); //splits current product by comma
-                if(productSplit[0].equals(oldProductSplit[0]) && productSplit[2].equals(oldProductSplit[2])
+                if (productSplit[0].equals(oldProductSplit[0]) && productSplit[2].equals(oldProductSplit[2])
                         && productSplit[3].equals(oldProductSplit[3])) {
                     allProducts.remove(i);
                     i--;
                 }
             }
             for (int i = 0; i < allShoppingCart.size(); i++) {
-                String[] shoppingCartSplit = allShoppingCart.get(i).split(","); //splits current product by comma(",");
-                if(shoppingCartSplit[0].equals(oldProductSplit[0]) && shoppingCartSplit[2].equals(oldProductSplit[2])
+                String[] shoppingCartSplit = allShoppingCart.get(i).split(","); //Splits by product ","
+                if (shoppingCartSplit[0].equals(oldProductSplit[0]) && shoppingCartSplit[2].equals(oldProductSplit[2])
                         && shoppingCartSplit[3].equals(oldProductSplit[3])) {
-                    allShoppingCart.remove(i); //removes product from shopping cart (if it exists in shopping cart already)
+                    allShoppingCart.remove(i); //removes product from shopping cart (exists in shopping cart )
                     i--; //Accounts for removal (if it exists in shopping cart already)
                 }
             }
@@ -133,13 +134,15 @@ public class SellerShopping {
                 //Reads lines from Product.txt
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
-            for(int i = 0; i < productLines.size(); i++) {
+            for (int i = 0; i < productLines.size(); i++) {
                 String[] productSplit = productLines.get(i).split(","); //Splits the productLines
-                if(productSplit[0].equals(productName) && productSplit[2].equals(storeName) && productSplit[3].equals(sellerEmail)) { //If the product already exsists
+                if (productSplit[0].equals(productName) && productSplit[2].equals(storeName) &&
+                        productSplit[3].equals(sellerEmail)) { //If the product already exists
                     return "PRODUCT ALREADY EXISTS"; //returns error message if product already exists
                 }
             }
-            productLines.add(productName + "," + productDescription + "," + storeName + "," + sellerEmail + "," + price + "," + quantity); //Creates new formatted product
+            productLines.add(productName + "," + productDescription + "," + storeName + "," + sellerEmail + ","
+                    + price + "," + quantity); //Creates new formatted product
             synchronized (LOCK) {
                 Files.write(Paths.get("Product.txt"), productLines);
             }
@@ -159,9 +162,9 @@ public class SellerShopping {
                 //Reads lines from Product.txt
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
-            for(int i = 0; i < productLines.size(); i++) {
+            for (int i = 0; i < productLines.size(); i++) {
                 String[] productSplit = productLines.get(i).split(","); //Splits the productLines
-                if(!productSplit[3].equals(email)) {
+                if (!productSplit[3].equals(email)) {
                     productLines.remove(i);
                     i--;
                 }
@@ -180,9 +183,9 @@ public class SellerShopping {
                 //Reads lines from ShoppingCart.txt
                 shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
-            for(int i = 0; i < shoppingCartLines.size(); i++) {
+            for (int i = 0; i < shoppingCartLines.size(); i++) {
                 String[] productSplit = shoppingCartLines.get(i).split(","); //Splits the ShoppingCart line
-                if(!productSplit[3].equals(email)) {
+                if (!productSplit[3].equals(email)) {
                     shoppingCartLines.remove(i);
                     i--;
                 }
@@ -192,7 +195,6 @@ public class SellerShopping {
         }
         return shoppingCartLines;
     }
-
 
 
 }

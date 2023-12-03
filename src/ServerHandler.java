@@ -20,6 +20,7 @@ public class ServerHandler implements Runnable {
     BufferedWriter writer; //Writer that writes from the server to the client socket
     private static Object LOCK; //LOCK for synchronizing
 
+
     //Constructor for new ClientHandler
     public ServerHandler(Socket clientSocket, Object LOCK) {
         this.clientSocket = clientSocket; //Sets up socket
@@ -31,6 +32,7 @@ public class ServerHandler implements Runnable {
             e.printStackTrace();
         }
     }
+
 
     //TODO: Finish run method
     public void run() {

@@ -16,7 +16,9 @@ import java.net.SocketException;
 
 public class MarketPlaceServer {
 
+
     public static final Object LOCK = new Object(); //Creates "global" Object LOCK for synchronizing
+
 
     public static void main(String[] args) {
         ServerSocket serverSocket; //Creates ServerSocket
@@ -30,7 +32,7 @@ public class MarketPlaceServer {
 
             //TODO: IF NEEDED put any booting of Files here.
 
-            while(true) {
+            while (true) {
                 clientSocket = serverSocket.accept(); //Continues to accept connections to the server
                 JOptionPane.showMessageDialog(null, "Connection to Server Established",
                         "Connection Established", JOptionPane.INFORMATION_MESSAGE);

@@ -17,7 +17,9 @@ import java.util.List;
 
 public class CSVHandler {
 
+
     //TODO: Create importSellerCSVClient method
+
 
     //Given a path to a seller's CSV file, import the seller's products into the Product.txt file.
     public static String importSellerCSVServer(String path, Object LOCK) {
@@ -50,6 +52,7 @@ public class CSVHandler {
         return "SUCCESS";
     }
 
+
     //TODO: Create importSellerCSVClient method
 
 
@@ -61,9 +64,9 @@ public class CSVHandler {
                 //Gets lines
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
-            for(int i = 0; i < productLines.size(); i++) {
+            for (int i = 0; i < productLines.size(); i++) {
                 String[] productLine = productLines.get(i).split(","); //Splits the individual lines
-                if(!productLine[3].equals(sellerEmail)) { //If the seller doesn't own the product it removes the line
+                if (!productLine[3].equals(sellerEmail)) { //If the seller doesn't own the product it removes the line
                     productLines.remove(i);
                     i--; //Accounts for removal of line
                 }
@@ -76,5 +79,6 @@ public class CSVHandler {
         }
         return "SUCCESS";
     }
+
 
 }

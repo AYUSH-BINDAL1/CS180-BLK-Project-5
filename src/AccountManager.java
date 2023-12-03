@@ -21,8 +21,10 @@ public class AccountManager {
 
     // TODO: Create editAccountDetailsClient Method
 
+
     //Given a newPassword and email, updates Username.txt accordingly
-    public static String updatePasswordFiles(String email, String oldPassword, String newPassword, Object LOCK) {
+    public static String updatePasswordFiles(String email, String oldPassword, String newPassword,
+                                             Object LOCK) {
         String result = "";
         try {
             ArrayList<String> userInformationList;
@@ -33,7 +35,7 @@ public class AccountManager {
 
             int passwordIndex = userInformationList.indexOf(email) + 1; //Index of password
             String oldPasswordOnFile = userInformationList.get(passwordIndex); //Password on file
-            if(oldPasswordOnFile.equals(oldPassword)) { //Checks to see if the password they enter is equal to the
+            if (oldPasswordOnFile.equals(oldPassword)) { //Checks to see if the password they enter is equal to the
                 // password on file
                 userInformationList.set(passwordIndex, newPassword); //Changes password and rewrites file
                 synchronized (LOCK) {
@@ -73,10 +75,10 @@ public class AccountManager {
                 //Reads lines from Product.txt
                 productList = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
-            for(int i = 0; i < productList.size(); i++) {
+            for (int i = 0; i < productList.size(); i++) {
                 String[] productLine = productList.get(i).split(","); //Splits productList at index i into
                 // productLine
-                if(productLine[3].equals(oldEmail)) { //If oldEmail is found in Product.txt, sets newEmail at
+                if (productLine[3].equals(oldEmail)) { //If oldEmail is found in Product.txt, sets newEmail at
                     // index 3 in productLine
                     productLine[3] = newEmail;
                     productList.set(i, String.join(",", productLine)); //Sets productLine as a
@@ -92,13 +94,13 @@ public class AccountManager {
                 purchaseHistoryList = (ArrayList<String>)
                         Files.readAllLines(Paths.get("PurchaseHistory.txt"));
             }
-            for(int i = 0; i < purchaseHistoryList.size(); i++) {
+            for (int i = 0; i < purchaseHistoryList.size(); i++) {
                 String[] purchaseHistoryLine = purchaseHistoryList.get(i).split(",");
-                if(purchaseHistoryLine[3].equals(oldEmail)) { //If the oldEmail is seller in PurchaseHistory.txt
+                if (purchaseHistoryLine[3].equals(oldEmail)) { //If the oldEmail is seller in PurchaseHistory.txt
                     purchaseHistoryLine[3] = newEmail;
                     purchaseHistoryList.set(i, String.join(",", purchaseHistoryLine));
                 }
-                if(purchaseHistoryLine[6].equals(oldEmail)) { //If the oldEmail is customer in PurchaseHistory.txt
+                if (purchaseHistoryLine[6].equals(oldEmail)) { //If the oldEmail is customer in PurchaseHistory.txt
                     purchaseHistoryLine[6] = newEmail;
                     purchaseHistoryList.set(i, String.join(",", purchaseHistoryLine));
                 }
@@ -111,13 +113,13 @@ public class AccountManager {
                 //Reads lines from ShoppingCart.txt
                 shoppingCartList = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
             }
-            for(int i = 0; i < shoppingCartList.size(); i++) {
+            for (int i = 0; i < shoppingCartList.size(); i++) {
                 String[] shoppingCartLine = shoppingCartList.get(i).split(",");
-                if(shoppingCartLine[3].equals(oldEmail)) {  //If the oldEmail is seller in PurchaseHistory.txt
+                if (shoppingCartLine[3].equals(oldEmail)) {  //If the oldEmail is seller in PurchaseHistory.txt
                     shoppingCartLine[3] = newEmail;
                     shoppingCartList.set(i, String.join(",", shoppingCartLine));
                 }
-                if(shoppingCartLine[6].equals(oldEmail)) {  //If the oldEmail is customer in PurchaseHistory.txt
+                if (shoppingCartLine[6].equals(oldEmail)) {  //If the oldEmail is customer in PurchaseHistory.txt
                     shoppingCartLine[6] = newEmail;
                     shoppingCartList.set(i, String.join(",", shoppingCartLine));
                 }
@@ -131,7 +133,10 @@ public class AccountManager {
         }
     }
 
+
     //TODO: Create deleteAccountClient Method
+
+
     public static String deleteAccount(String email, String password, Object LOCK) {
         String result = ""; //Result to send back to run
         try {
@@ -141,7 +146,7 @@ public class AccountManager {
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
             int emailIndex = userInformationList.indexOf(email); //Index of email in Username.txt
-            if(userInformationList.get(emailIndex + 1).equals(password)) { //If password matches deletes account
+            if (userInformationList.get(emailIndex + 1).equals(password)) { //If password matches deletes account
                 deleteAccountFiles(email, LOCK);
                 result = "SUCCESS";
             } else {
@@ -152,6 +157,7 @@ public class AccountManager {
         }
         return result;
     }
+
 
     //Given email, deletes information from Username.txt, Product.txt, ShoppingCart.txt and PurchaseHistory.txt
     // accordingly
@@ -178,9 +184,9 @@ public class AccountManager {
                 //Reads lines from Product.txt
                 productList = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
-            for(int i = 0; i < productList.size(); i++) {
+            for (int i = 0; i < productList.size(); i++) {
                 String[] productLine = productList.get(i).split(",");
-                if(productLine[3].equals(email)) { //If email is found in Product.txt, removes product
+                if (productLine[3].equals(email)) { //If email is found in Product.txt, removes product
                     productList.remove(i);
                     i--; //Accounts for removal
                 }
@@ -192,14 +198,14 @@ public class AccountManager {
             synchronized (LOCK) {
                 shoppingCartList = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
             }
-            for(int i = 0; i < shoppingCartList.size(); i++) {
+            for (int i = 0; i < shoppingCartList.size(); i++) {
                 String[] shoppingCartLine = shoppingCartList.get(i).split(","); //Splits shoppingCartList
-                if(shoppingCartLine[3].equals(email)) { //If email is found for seller in ShoppingCart.txt, removes
+                if (shoppingCartLine[3].equals(email)) { //If email is found for seller in ShoppingCart.txt, removes
                     // product
                     shoppingCartList.remove(i);
                     i--;
                 }
-                if(shoppingCartLine[6].equals(email)) { //If email is found for customer in ShoppingCart.txt, removes
+                if (shoppingCartLine[6].equals(email)) { //If email is found for customer in ShoppingCart.txt, removes
                     // product
                     shoppingCartList.remove(i);
                     i--;
@@ -217,6 +223,7 @@ public class AccountManager {
 
     // TODO: Create loginClient Method
 
+
     //Method that takes email, password, and userType and if they match with an account in the Username.txt sends
     // message back to run in ServerHandler
     public static String login(String email, String password, String userType, Object LOCK) {
@@ -231,10 +238,10 @@ public class AccountManager {
             }
 
             int emailIndex = userInformationList.indexOf(email); //Index of email in Username.txt
-            if(emailIndex != -1) { //If the email is valid
+            if (emailIndex != -1) { //If the email is valid
 
-                if(userInformationList.get(emailIndex + 1).equals(password)) { //If the password is valid
-                    if(userInformationList.get(emailIndex + 2).equals(userType)) { //If the userType is valid
+                if (userInformationList.get(emailIndex + 1).equals(password)) { //If the password is valid
+                    if (userInformationList.get(emailIndex + 2).equals(userType)) { //If the userType is valid
                         result = "SUCCESS"; //Login Successful
                     } else { //Invalid User Type
                         result = "INVALID USER TYPE";
@@ -251,7 +258,9 @@ public class AccountManager {
         return result; //Returns result to run to let client know if the login succeeded or failed
     }
 
+
     // TODO: Create registerClient Method
+
 
     //Method that takes email, password, userType and if valid and not existing adds to the Username.txt file
     public static String registerServer(String email, String password, String userType, Object LOCK) {

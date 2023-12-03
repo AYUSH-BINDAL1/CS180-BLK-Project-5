@@ -14,12 +14,15 @@ import java.util.ArrayList;
  */
 
 public class ProductSearch {
+
+
     //TODO: Create searchByNameClient method
+
 
     //Given searched product name, return ArrayList of products that contain that searched term
     public static ArrayList<String> searchByNameServer(String productName, Object LOCK) {
         ArrayList<String> allProducts;
-        ArrayList<String> searchedproducts = new ArrayList<>();
+        ArrayList<String> searchedProducts = new ArrayList<>();
         productName = productName.toLowerCase(); //makes product name lowercase;
         try {
             synchronized (LOCK) {
@@ -30,16 +33,19 @@ public class ProductSearch {
                 String[] currentProduct = allProducts.get(i).split(","); //splits current product by comma
                 currentProduct[0] = currentProduct[0].toLowerCase(); //makes product name lowercase
                 if (currentProduct[0].contains(productName)) {
-                    searchedproducts.add(allProducts.get(i)); //adds current product
+                    searchedProducts.add(allProducts.get(i)); //adds current product
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return searchedproducts; //return searched products
+        return searchedProducts; //return searched products
     }
 
+
     //TODO: Create searchByStoreClient method
+
+
     //Given searched product store, return ArrayList of products that contain that searched term
     public static ArrayList<String> searchByStoreServer(String storeName, Object LOCK) {
         ArrayList<String> allProducts;
@@ -65,6 +71,7 @@ public class ProductSearch {
 
 
     //TODO: Create searchByDescriptionClient method
+
 
     //Given searched product description, return ArrayList of products that contain that searched term
     public static ArrayList<String> searchByDescriptionServer(String descriptionSearched, Object LOCK) {
