@@ -17,16 +17,21 @@ import java.util.List;
 
 public class CSVHandler {
 
+
     //TODO: Create importSellerCSVClient method
 
+
     //Given a path to a seller's CSV file, import the seller's products into the Product.txt file.
-    public static String importSellerCSVServer(String path, Object LOCK) {
+    public static String importSellerCSVServer(String path, Object PRODUCTLOCK) {
         try {
+            Object CSVLOCK = new Object();
             ArrayList<String> sellerCSVLines; // List of seller CSV lines (lines containing seller information)
             ArrayList<String> productLines; // List of product lines (lines containing product information)
-            synchronized (LOCK) {
-                //Gets information from text file
+            synchronized (CSVLOCK) {
                 sellerCSVLines = (ArrayList<String>) Files.readAllLines(Paths.get(path));
+            }
+            synchronized (PRODUCTLOCK) {
+                //Gets information from text file
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             sellerCSVLines.remove(0); // Remove the first line (index 0) containing formatting
@@ -41,7 +46,7 @@ public class CSVHandler {
                 }
                 productLines.add(csvLine); //Appends the csvLine if it is valid
             }
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 Files.write(Paths.get("Product.txt"), productLines); //Rewrites the Product.txt
             }
         } catch (IOException e) {
@@ -50,25 +55,26 @@ public class CSVHandler {
         return "SUCCESS";
     }
 
+
     //TODO: Create importSellerCSVClient method
 
 
     //Given the sellerEmail and path writes Products the seller owns to a new CSV file
-    public static String exportSellerCSVServer(String path, String sellerEmail, Object LOCK) {
+    public static String exportSellerCSVServer(String path, String sellerEmail, Object PRODUCTLOCK) {
         try {
             ArrayList<String> productLines; // List of product lines (lines containing product information)
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Gets lines
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
-            for(int i = 0; i < productLines.size(); i++) {
+            for (int i = 0; i < productLines.size(); i++) {
                 String[] productLine = productLines.get(i).split(","); //Splits the individual lines
-                if(!productLine[3].equals(sellerEmail)) { //If the seller doesn't own the product it removes the line
+                if (!productLine[3].equals(sellerEmail)) { //If the seller doesn't own the product it removes the line
                     productLines.remove(i);
                     i--; //Accounts for removal of line
                 }
             }
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 Files.write(Paths.get(path), productLines);
             }
         } catch (IOException e) {
@@ -76,5 +82,6 @@ public class CSVHandler {
         }
         return "SUCCESS";
     }
+
 
 }
