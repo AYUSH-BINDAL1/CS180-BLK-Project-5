@@ -183,7 +183,57 @@ public class Statistics {
 
 
     //TODO: Create viewSalesByStoreClient method
-    //TODO: Create viewSalesByStoreServer method
+
+
+    public static String viewSalesByStoreServer(String sellerEmail, Object PURCHASEHISTORYLOCK) {
+        ArrayList<String> purchaseHistoryLines; //ArrayList of purchaseHistory from PurchaseHistory.txt
+        ArrayList<String> stores = new ArrayList<String>(); //ArrayList of Strings contain stores
+        try {
+           synchronized (PURCHASEHISTORYLOCK) {
+               //Reads lines from PurchaseHistory
+               purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+           }
+
+            for (String purchase : purchaseHistoryLines) { //Reads through each line in purchaseHistory and if the
+                // stores ArrayList doesn't already have the store and the sellerEmail matches adds the name of the
+                // store to the ArrayList
+                String[] purchaseSplit = purchase.split(",");
+                if (!stores.contains(purchaseSplit[2]) && purchaseSplit[3].equals(sellerEmail)) {
+                    stores.add(purchaseSplit[2]);
+                }
+            }
+
+            for (int i = 0; i < stores.size(); i++) { //Loops through all the stores ArrayList
+                StringBuilder newString = new StringBuilder();
+                String currentStore = stores.get(i);
+                newString.append("Store: ").append(currentStore).append("\n"); //Adds the current store to the
+                // StringBuilder
+
+                for (int j = 0; j < purchaseHistoryLines.size(); j++) { //Loops through purchaseHistory and checks
+                    // if the purchase was from the currentStore. If it is, it calculates the revenue from the sale
+                    // and adds it to the StringBuilder
+                    String[] currentPurchaseSplit = purchaseHistoryLines.get(j).split(",");
+
+                    if (currentPurchaseSplit[2].equals(currentStore)) {
+
+                        //Calculates revenue from sale
+                        int quantitySold = Integer.parseInt(currentPurchaseSplit[5]);
+                        double pricePerUnit = Double.parseDouble(currentPurchaseSplit[4]);
+                        double revenueFromSale = quantitySold * pricePerUnit;
+
+                        //Adds the revenue from the sale and customer information to the StringBuilder
+                        newString.append("    Product: ").append(currentPurchaseSplit[0]).append("\n");
+                        newString.append("        Customer Information: ").append(currentPurchaseSplit[6]).append("\n");
+                        newString.append("        Revenue: ").append(revenueFromSale).append("\n");
+
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stores.toString(); //Returns formatted String of the stores sales
+    }
 
     //TODO: Create generateSellerDashboardServer method
     //TODO: Create generateSellerDashboardClient method
