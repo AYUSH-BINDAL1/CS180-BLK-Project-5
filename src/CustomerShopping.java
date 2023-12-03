@@ -25,17 +25,22 @@ public class CustomerShopping {
     //Given a product in the form of the formatted String EXACTLY as it is in the Product.txt file adds if it is a
     // valid quantity
     //FIXME: Probably need to check if the chosenProduct exists already.
-    public static String addToCartServer(String email, String chosenProduct, Object LOCK) {
+    public static String addToCartServer(String email, String chosenProduct, Object SHOPPINGCARTLOCK,
+                                         Object PRODUCTLOCK) {
         String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
         int purchaseQuantity = Integer.parseInt(chosenProductSplit[5]); //Gets the quantity of the user's product
         String result = "";
         ArrayList<String> productLines; //ArrayList of lines from Product.txt
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
         try {
-            synchronized (LOCK) {
-                //Reads lines from ShoppingCart.txt and Product.txt
-                productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
+            synchronized (SHOPPINGCARTLOCK) {
+                //Reads lines from ShoppingCart.txt
                 shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
+            }
+            synchronized (PRODUCTLOCK) {
+                //Reads lines from Product.txt
+                productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
+
             }
             int productIndex = productLines.indexOf(chosenProduct); //Gets the index where the chosenProduct is
             // found in "Product.txt". This **SHOULD** work if the String is formatted correctly
@@ -52,9 +57,11 @@ public class CustomerShopping {
                 productLines.set(productIndex, String.join(",", productOnFileSplit));
                 result = "ADDED TO CART";
                 shoppingCartLines.add(chosenProduct + "," + email);
-                synchronized (LOCK) {
-                    Files.write(Paths.get("Product.txt"), productLines);
+                synchronized (SHOPPINGCARTLOCK) {
                     Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines);
+                }
+                synchronized (PRODUCTLOCK) {
+                    Files.write(Paths.get("Product.txt"), productLines);
                 }
             }
         } catch (IOException e) {
@@ -69,15 +76,19 @@ public class CustomerShopping {
 
     //Given a product from a customer's shopping cart attempts to remove it and add it back to Product.txt
     //FIXME: Probably need to check if the chosenProduct is in the shopping cart first
-    public static String removeProductServer(String email, String chosenProduct, Object LOCK) {
+    public static String removeProductServer(String email, String chosenProduct, Object SHOPPINGCARTLOCK,
+                                             Object PRODUCTLOCK) {
         String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
         ArrayList<String> productLines; //ArrayList of lines from Product.txt
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
         try {
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
+                //Reads lines from ShoppingCart.txt
+                shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
+            }
+            synchronized (PRODUCTLOCK) {
                 //Reads lines from ShoppingCart.txt and Product.txt
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
-                shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
             }
             //Removes the product from the shopping cart
             productLines.remove(chosenProduct);
@@ -92,10 +103,12 @@ public class CustomerShopping {
                     productLines.set(i, String.join(",", productSplit));
                 }
             }
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
+                Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines);
+            }
+            synchronized (PRODUCTLOCK) {
                 //Rewrites files
                 Files.write(Paths.get("Product.txt"), productLines);
-                Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -104,11 +117,11 @@ public class CustomerShopping {
     }
 
     //TODO: Create getCustomerShoppingCartClient method
-    public static ArrayList<String> getCustomerShoppingCartServer(String email, Object LOCK) {
+    public static ArrayList<String> getCustomerShoppingCartServer(String email, Object SHOPPINGCARTLOCK) {
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
         ArrayList<String> returnList = new ArrayList<String>(); //Result to return to run method
         try {
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
                 //Reads lines from ShoppingCart.txt
                 shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
             }
@@ -129,7 +142,8 @@ public class CustomerShopping {
 
 
     //Method that buys product directly from page and returns whether it succeeded or not.
-    public static String buyProductServer(String customerEmail, String chosenProduct, Object LOCK) {
+    public static String buyProductServer(String customerEmail, String chosenProduct, Object PURCHASEHISTORYLOCK,
+                                          Object PRODUCTLOCK) {
 
         String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
         int purchaseAmount = Integer.parseInt(chosenProductSplit[5]); //Gets the quantity of the user's product
@@ -139,7 +153,7 @@ public class CustomerShopping {
 
         try {
 
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Reads lines from Product.txt
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
@@ -168,10 +182,12 @@ public class CustomerShopping {
             if (result.isEmpty()) { //Didn't find the product
                 result = "PRODUCT NOT FOUND";
             } else if (result.equals("SUCCESS")) { //If and only if the product has been changed it modifies the product
-                synchronized (LOCK) {
-                    //Rewrites files
+                synchronized (PRODUCTLOCK) {
                     Files.write(Paths.get("Product.txt"), productLines);
-                    Files.write(Paths.get("Product.txt"), modifiedProduct.getBytes(),
+                }
+                synchronized (PURCHASEHISTORYLOCK) {
+                    //Rewrites files
+                    Files.write(Paths.get("PurchaseHistory.txt"), modifiedProduct.getBytes(),
                             StandardOpenOption.APPEND);
                 }
             }
@@ -183,12 +199,12 @@ public class CustomerShopping {
 
     //TODO: Create checkoutCartClient method
     //Given the customerEmail checks out their cart
-    public static String checkoutCartServer(String email, Object LOCK) {
+    public static String checkoutCartServer(String email, Object SHOPPINGCARTLOCK, Object PURCHASEHISTORYLOCK) {
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
         ArrayList<String> toAdd = new ArrayList<String>(); //ArrayList to add to PurchaseHistory.txt
         String result = ""; //Result to return to run method
         try {
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
                 //Reads lines from ShoppingCart.txt and PurchaseHistory.txt
                 shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
             }
@@ -204,9 +220,11 @@ public class CustomerShopping {
             if (toAdd.isEmpty()) { //Empty cart
                 result = "EMPTY CART";
             } else {
-                synchronized (LOCK) {
-                    //Rewrites files
+                synchronized (SHOPPINGCARTLOCK) {
                     Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines); //Rewrites text file
+                }
+                synchronized (PURCHASEHISTORYLOCK) {
+                    //Rewrites files
                     Files.write(Paths.get("PurchaseHistory.txt"), toAdd,
                             StandardOpenOption.APPEND); //Appends the list to the text file
                 }

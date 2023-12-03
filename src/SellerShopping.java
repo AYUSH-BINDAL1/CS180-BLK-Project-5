@@ -18,11 +18,11 @@ public class SellerShopping {
     //TODO: Create getSellerShoppingCartClient method
 
     //Gets all products from ShoppingCart.txt and returns all products that belong to the seller
-    public static ArrayList<String> getSellerShoppingCartServer(String sellerEmail, Object LOCK) {
+    public static ArrayList<String> getSellerShoppingCartServer(String sellerEmail, Object SHOPPINGCARTLOCK) {
         ArrayList<String> allProducts;
         ArrayList<String> sellerShoppingCart = new ArrayList<>();
         try {
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
                 //creates arraylist of all products from ShoppingCart.txt
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
             }
@@ -43,14 +43,16 @@ public class SellerShopping {
     //TODO: Create modifyProductClient method
     public static void modifyProductServer(String productName, String productDescription, String storeName,
                                            String sellerEmail, double price, int quantity, String oldProduct,
-                                           Object LOCK) {
+                                           Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         ArrayList<String> allShoppingCart;
         ArrayList<String> allProducts;
         String[] oldProductSplit = oldProduct.split(","); //splits old product by comma
         try {
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
                 //creates arraylist of all products from ShoppingCart.txt
                 allShoppingCart = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
+            }
+            synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products from Product.txt
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
@@ -72,12 +74,12 @@ public class SellerShopping {
                                     + price + "," + quantity + "," + shoppingCartSplit[6]);
                 }
             }
-            synchronized (LOCK) {
-                Files.write(Paths.get("Product.txt"), allProducts);
+            synchronized (SHOPPINGCARTLOCK) {
                 Files.write(Paths.get("ShoppingCart.txt"), allShoppingCart);
             }
-
-
+            synchronized (PRODUCTLOCK) {
+                Files.write(Paths.get("Product.txt"), allProducts);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,14 +88,16 @@ public class SellerShopping {
 
 
     //TODO: Create deleteProductClient method
-    public static void deleteProductServer(String oldProduct, Object LOCK) {
+    public static void deleteProductServer(String oldProduct, Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         ArrayList<String> allShoppingCart;
         ArrayList<String> allProducts;
         String[] oldProductSplit = oldProduct.split(","); //splits old product by comma
         try {
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
                 //creates arraylist of all products from ShoppingCart.txt
                 allShoppingCart = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
+            }
+            synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products from Product.txt
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
@@ -113,9 +117,11 @@ public class SellerShopping {
                     i--; //Accounts for removal (if it exists in shopping cart already)
                 }
             }
-            synchronized (LOCK) {
-                Files.write(Paths.get("Product.txt"), allProducts);
+            synchronized (SHOPPINGCARTLOCK) {
                 Files.write(Paths.get("ShoppingCart.txt"), allShoppingCart);
+            }
+            synchronized (PRODUCTLOCK) {
+                Files.write(Paths.get("Product.txt"), allProducts);
             }
 
 
@@ -126,11 +132,11 @@ public class SellerShopping {
 
     //TODO: Create createNewProductClient method
     public static String createNewProductServer(String productName, String productDescription, String storeName,
-                                                String sellerEmail, double price, int quantity, Object LOCK) {
+                                                String sellerEmail, double price, int quantity, Object PRODUCTLOCK) {
         ArrayList<String> productLines; //ArrayList of lines from Product.txt
         boolean productExists; //boolean to check if product already exists
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Reads lines from Product.txt
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
@@ -143,7 +149,7 @@ public class SellerShopping {
             }
             productLines.add(productName + "," + productDescription + "," + storeName + "," + sellerEmail + ","
                     + price + "," + quantity); //Creates new formatted product
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 Files.write(Paths.get("Product.txt"), productLines);
             }
         } catch (IOException e) {
@@ -155,10 +161,10 @@ public class SellerShopping {
 
 
     //TODO: Create viewAllProductsClient method
-    public ArrayList<String> viewAllProductsServer(String email, Object LOCK) {
+    public ArrayList<String> viewAllProductsServer(String email, Object PRODUCTLOCK) {
         ArrayList<String> productLines = new ArrayList<>(); //ArrayList of lines from Product.txt
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Reads lines from Product.txt
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
@@ -176,10 +182,10 @@ public class SellerShopping {
     }
 
     //TODO: Create viewShoppingCartsClient method
-    public ArrayList<String> viewShoppingCartsServer(String email, Object LOCK) {
+    public ArrayList<String> viewShoppingCartsServer(String email, Object PRODUCTLOCK) {
         ArrayList<String> shoppingCartLines = new ArrayList<>(); //ArrayList of lines from ShoppingCart.txt
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Reads lines from ShoppingCart.txt
                 shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }

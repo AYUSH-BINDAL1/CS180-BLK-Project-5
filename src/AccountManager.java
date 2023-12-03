@@ -24,11 +24,11 @@ public class AccountManager {
 
     //Given a newPassword and email, updates Username.txt accordingly
     public static String updatePasswordFiles(String email, String oldPassword, String newPassword,
-                                             Object LOCK) {
+                                             Object USERINFOLOCK) {
         String result = "";
         try {
             ArrayList<String> userInformationList;
-            synchronized (LOCK) {
+            synchronized (USERINFOLOCK) {
                 //Reads lines from Username.txt
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
@@ -38,7 +38,7 @@ public class AccountManager {
             if (oldPasswordOnFile.equals(oldPassword)) { //Checks to see if the password they enter is equal to the
                 // password on file
                 userInformationList.set(passwordIndex, newPassword); //Changes password and rewrites file
-                synchronized (LOCK) {
+                synchronized (USERINFOLOCK) {
                     Files.write(Paths.get("Username.txt"), userInformationList);
                 }
                 result = "PASSWORD UPDATED";
@@ -54,24 +54,25 @@ public class AccountManager {
 
     //Given a newEmail and email, updates Username.txt, Product.txt, ShoppingCart.txt and PurchaseHistory.txt
     // accordingly
-    public static void updateEmailFiles(String oldEmail, String newEmail, Object LOCK) {
+    public static void updateEmailFiles(String oldEmail, String newEmail, Object USERINFOLOCK,
+                                        Object SHOPPINGCARTLOCK, Object PURCHASEHISTORYLOCK, Object PRODUCTLOCK) {
         try {
             ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
             ArrayList<String> productList; //ArrayList of lines from Product.txt
             ArrayList<String> purchaseHistoryList; //ArrayList of lines from purchaseHistory.txt
             ArrayList<String> shoppingCartList; //ArrayList of lines from ShoppingCart.txt
 
-            synchronized (LOCK) {
+            synchronized (USERINFOLOCK) {
                 //Reads lines from Username.txt
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
             int emailIndex = userInformationList.indexOf(oldEmail); //Index of oldEmail in Username.txt
             userInformationList.set(emailIndex, newEmail); //Sets newEmail at index emailIndex in Username.txt
-            synchronized (LOCK) {
+            synchronized (USERINFOLOCK) {
                 Files.write(Paths.get("Username.txt"), userInformationList);
             }
 
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Reads lines from Product.txt
                 productList = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
@@ -85,11 +86,11 @@ public class AccountManager {
                     // String in productList at index i
                 }
             }
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 Files.write(Paths.get("Product.txt"), productList);
             }
 
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 //Reads lines from PurchaseHistory.txt
                 purchaseHistoryList = (ArrayList<String>)
                         Files.readAllLines(Paths.get("PurchaseHistory.txt"));
@@ -105,11 +106,11 @@ public class AccountManager {
                     purchaseHistoryList.set(i, String.join(",", purchaseHistoryLine));
                 }
             }
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 Files.write(Paths.get("PurchaseHistory.txt"), productList);
             }
 
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
                 //Reads lines from ShoppingCart.txt
                 shoppingCartList = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
             }
@@ -124,7 +125,7 @@ public class AccountManager {
                     shoppingCartList.set(i, String.join(",", shoppingCartLine));
                 }
             }
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
                 Files.write(Paths.get("ShoppingCart.txt"), productList);
             }
 
@@ -137,17 +138,18 @@ public class AccountManager {
     //TODO: Create deleteAccountClient Method
 
 
-    public static String deleteAccount(String email, String password, Object LOCK) {
+    public static String deleteAccount(String email, String password, Object USERINFOLOCK,
+                                       Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         String result = ""; //Result to send back to run
         try {
             ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
-            synchronized (LOCK) {
+            synchronized (USERINFOLOCK) {
                 //Reads lines from Username.txt
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
             int emailIndex = userInformationList.indexOf(email); //Index of email in Username.txt
             if (userInformationList.get(emailIndex + 1).equals(password)) { //If password matches deletes account
-                deleteAccountFiles(email, LOCK);
+                deleteAccountFiles(email, USERINFOLOCK, SHOPPINGCARTLOCK, PRODUCTLOCK);
                 result = "SUCCESS";
             } else {
                 result = "INVALID PASSWORD";
@@ -161,13 +163,14 @@ public class AccountManager {
 
     //Given email, deletes information from Username.txt, Product.txt, ShoppingCart.txt and PurchaseHistory.txt
     // accordingly
-    public static void deleteAccountFiles(String email, Object LOCK) {
+    public static void deleteAccountFiles(String email, Object USERINFOLOCK,
+                                          Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         try {
             ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
             ArrayList<String> productList; //ArrayList of lines from Product.txt
             ArrayList<String> shoppingCartList; //ArrayList of lines from ShoppingCart.txt
 
-            synchronized (LOCK) {
+            synchronized (USERINFOLOCK) {
                 //Reads lines from Username.txt
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
@@ -176,11 +179,11 @@ public class AccountManager {
             userInformationList.remove(emailIndex); //Removes password
             userInformationList.remove(emailIndex); //Removes userType
 
-            synchronized (LOCK) {
+            synchronized (USERINFOLOCK) {
                 Files.write(Paths.get("Username.txt"), userInformationList);
             }
 
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Reads lines from Product.txt
                 productList = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
@@ -191,11 +194,11 @@ public class AccountManager {
                     i--; //Accounts for removal
                 }
             }
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 Files.write(Paths.get("Product.txt"), productList);
             }
 
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
                 shoppingCartList = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
             }
             for (int i = 0; i < shoppingCartList.size(); i++) {
@@ -211,7 +214,7 @@ public class AccountManager {
                     i--;
                 }
             }
-            synchronized (LOCK) {
+            synchronized (SHOPPINGCARTLOCK) {
                 Files.write(Paths.get("ShoppingCart.txt"), productList);
             }
 
@@ -226,13 +229,13 @@ public class AccountManager {
 
     //Method that takes email, password, and userType and if they match with an account in the Username.txt sends
     // message back to run in ServerHandler
-    public static String login(String email, String password, String userType, Object LOCK) {
+    public static String loginServer(String email, String password, String userType, Object USERINFOLOCK) {
 
         ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
         String result = "";
 
         try {
-            synchronized (LOCK) {
+            synchronized (USERINFOLOCK) {
                 //Reads lines from Username.txt
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
@@ -263,7 +266,7 @@ public class AccountManager {
 
 
     //Method that takes email, password, userType and if valid and not existing adds to the Username.txt file
-    public static String registerServer(String email, String password, String userType, Object LOCK) {
+    public static String registerServer(String email, String password, String userType, Object USERINFOLOCK) {
         String result = "";
         ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
         boolean validEmail = validateEmail(email); //Verifies email is valid email;
@@ -271,7 +274,7 @@ public class AccountManager {
             result = "INVALID EMAIL"; //If email is not valid, returns invalid email to client
         }
         try {
-            synchronized (LOCK) {
+            synchronized (USERINFOLOCK) {
                 //Reads lines from Username.txt
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
@@ -283,7 +286,7 @@ public class AccountManager {
                 userInformationList.add(email); //Adds email to Username.txt
                 userInformationList.add(password); //Adds password to Username.txt
                 userInformationList.add(userType); //Adds userType to Username.txt
-                synchronized (LOCK) {
+                synchronized (USERINFOLOCK) {
                     Files.write(Paths.get("Username.txt"), userInformationList);
                 }
                 result = "SUCCESS";

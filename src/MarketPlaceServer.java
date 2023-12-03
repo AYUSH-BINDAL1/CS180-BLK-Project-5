@@ -16,8 +16,12 @@ import java.net.SocketException;
 
 public class MarketPlaceServer {
 
+    //Creates "global" Object LOCKS for synchronizing specific files
+    public static final Object USERINFOLOCK = new Object();
+    public static final Object SHOPPINGCARTLOCK = new Object();
+    public static final Object PURCHASEHISTORYLOCK = new Object();
+    public static final Object PRODUCTLOCK = new Object();
 
-    public static final Object LOCK = new Object(); //Creates "global" Object LOCK for synchronizing
 
 
     public static void main(String[] args) {
@@ -36,8 +40,9 @@ public class MarketPlaceServer {
                 clientSocket = serverSocket.accept(); //Continues to accept connections to the server
                 JOptionPane.showMessageDialog(null, "Connection to Server Established",
                         "Connection Established", JOptionPane.INFORMATION_MESSAGE);
-                serverHandler = new ServerHandler(clientSocket, LOCK); //Creates new serverHandler with clientSocket
-                // and LOCK
+                serverHandler = new ServerHandler(clientSocket, USERINFOLOCK, SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK,
+                        PRODUCTLOCK); //Creates new serverHandler with clientSocket; //Creates new serverHandler with
+                // clientSocket and LOCK
                 Thread thread = new Thread(serverHandler); //Creates new thread
                 thread.start(); //Starts thread
 

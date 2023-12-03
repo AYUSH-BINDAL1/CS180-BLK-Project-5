@@ -20,12 +20,12 @@ public class PurchaseHistory {
 
 
     //Given a customer returns an ArrayList of Strings containing the customer's purchase history
-    public static ArrayList<String> viewCustomerPurchaseHistoryServer(String customerEmail, Object LOCK) {
+    public static ArrayList<String> viewCustomerPurchaseHistoryServer(String customerEmail, Object PURCHASEHISTORYLOCK) {
         ArrayList<String> returnList = new ArrayList<>();
         try {
             ArrayList<String> purchaseHistoryLines; // List of all purchase lines (lines containing product
             // information)
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 //Gets lines from PurchaseHistory.txt
                 purchaseHistoryLines = (ArrayList<String>)
                         Files.readAllLines(Paths.get("PurchaseHistory.txt"));
@@ -49,11 +49,12 @@ public class PurchaseHistory {
 
 
     //Given a path and customerEmail creates a new txt file with the customer's purchase history
-    public static String exportCustomerPurchaseHistoryServer(String customerEmail, String path, Object LOCK) {
+    public static String exportCustomerPurchaseHistoryServer(String customerEmail, String path,
+                                                             Object PURCHASEHISTORYLOCK) {
         try {
             ArrayList<String> purchaseHistoryLines; // List of all purchase lines (lines containing product
             // information)
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 //Gets lines from PurchaseHistory.txt
                 purchaseHistoryLines = (ArrayList<String>)
                         Files.readAllLines(Paths.get("PurchaseHistory.txt"));
@@ -65,7 +66,7 @@ public class PurchaseHistory {
                     i--; //Accounts for removal of line
                 }
             }
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 Files.write(Paths.get(path), purchaseHistoryLines);
             }
         } catch (IOException e) {

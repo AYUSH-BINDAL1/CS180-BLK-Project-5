@@ -20,12 +20,12 @@ public class ProductSearch {
 
 
     //Given searched product name, return ArrayList of products that contain that searched term
-    public static ArrayList<String> searchByNameServer(String productName, Object LOCK) {
+    public static ArrayList<String> searchByNameServer(String productName, Object PRODUCTLOCK) {
         ArrayList<String> allProducts;
         ArrayList<String> searchedProducts = new ArrayList<>();
         productName = productName.toLowerCase(); //makes product name lowercase;
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Put files from product.txt into an arraylist, all products
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
             }
@@ -47,12 +47,12 @@ public class ProductSearch {
 
 
     //Given searched product store, return ArrayList of products that contain that searched term
-    public static ArrayList<String> searchByStoreServer(String storeName, Object LOCK) {
+    public static ArrayList<String> searchByStoreServer(String storeName, Object PRODUCTLOCK) {
         ArrayList<String> allProducts;
         ArrayList<String> searchedProducts = new ArrayList<>();
         storeName = storeName.toLowerCase(); //makes product name lowercase;
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Put files from product.txt into the arraylist
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
             }
@@ -74,12 +74,12 @@ public class ProductSearch {
 
 
     //Given searched product description, return ArrayList of products that contain that searched term
-    public static ArrayList<String> searchByDescriptionServer(String descriptionSearched, Object LOCK) {
+    public static ArrayList<String> searchByDescriptionServer(String descriptionSearched, Object PRODUCTLOCK) {
         ArrayList<String> allProducts;
         ArrayList<String> searchedProducts = new ArrayList<>();
         descriptionSearched = descriptionSearched.toLowerCase(); //makes product name lowercase;
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //Put files from product.txt into the arraylist
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
             }

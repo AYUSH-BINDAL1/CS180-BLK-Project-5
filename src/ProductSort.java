@@ -23,10 +23,10 @@ public class ProductSort {
 
 
     //Sorts all products by min to max price
-    public static ArrayList<String> sortByIncreasingPriceServer(Object LOCK) {
+    public static ArrayList<String> sortByIncreasingPriceServer(Object PRODUCTLOCK) {
         ArrayList<String> allProducts = new ArrayList<>();
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
             }
@@ -62,10 +62,10 @@ public class ProductSort {
 
 
     //sorts all products by max to min price
-    public static ArrayList<String> sortByDecreasingPriceServer(Object LOCK) {
+    public static ArrayList<String> sortByDecreasingPriceServer(Object PRODUCTLOCK) {
         ArrayList<String> allProducts = new ArrayList<>();
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
             }
@@ -100,10 +100,10 @@ public class ProductSort {
 
 
     //sorts all products by min to max quantity
-    public static ArrayList<String> sortByIncreasingQuantityServer(Object LOCK) {
+    public static ArrayList<String> sortByIncreasingQuantityServer(Object PRODUCTLOCK) {
         ArrayList<String> allProducts = new ArrayList<>();
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
             }
@@ -138,10 +138,10 @@ public class ProductSort {
 
 
     //sorts all products by max to min quantity
-    public static ArrayList<String> sortByDecreasingQuantityServer(Object LOCK) {
+    public static ArrayList<String> sortByDecreasingQuantityServer(Object PRODUCTLOCK) {
         ArrayList<String> allProducts = new ArrayList<>();
         try {
-            synchronized (LOCK) {
+            synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products
                 allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
             }
