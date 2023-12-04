@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class ServerHandler implements Runnable {
 
-    private Socket clientSocket; //Individual Client Socket
+    private final Socket clientSocket; //Individual Client Socket
     BufferedReader reader; //Reader that reads from the client socket to the server
     BufferedWriter writer; //Writer that writes String results to client socket
     ObjectOutputStream outputStream;  //Output Stream to write an ArrayList to the client socket

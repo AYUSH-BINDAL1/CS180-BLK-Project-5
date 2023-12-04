@@ -128,7 +128,7 @@ public class SellerShopping {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "SUCESS";
+        return "SUCCESS";
     }
 
     //TODO: Create createNewProductClient method

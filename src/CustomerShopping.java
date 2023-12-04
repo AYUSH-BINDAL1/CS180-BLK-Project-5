@@ -1,5 +1,3 @@
-import com.sun.source.tree.IfTree;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,7 +43,7 @@ public class CustomerShopping {
             int productIndex = productLines.indexOf(chosenProduct); //Gets the index where the chosenProduct is
             // found in "Product.txt". This **SHOULD** work if the String is formatted correctly
             String[] productOnFileSplit = productLines.get(productIndex).split(",");
-            int amountAvailable = Integer.parseInt(productOnFileSplit[5]); //Gets amount avaliable to be bought
+            int amountAvailable = Integer.parseInt(productOnFileSplit[5]); //Gets amount available to be bought
 
             if (purchaseQuantity > amountAvailable) { //Not enough quantity
                 result = "NOT ENOUGH QUANTITY";
