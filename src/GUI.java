@@ -10,7 +10,7 @@ public class GUI extends JFrame {
 
     public GUI() {
         //loginPage();
-        CustomerPage();
+        addProduct();
     }
 
     // General Login Page
@@ -133,6 +133,12 @@ public class GUI extends JFrame {
         JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By Store", "Sort By Seller"});
         JComboBox<String> searchBy = new JComboBox<>(new String[]{"Search By Store", "Search by Seller"});
         JButton viewPurchaseHistory = new JButton("View/Export Purchase History");
+        viewPurchaseHistory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewPurchaseHistory();
+            }
+        });
         JButton viewStatistics = new JButton("View store/seller Statistics");
 
         // TODO: implement method to print the products in Marketplace with a view more button that corresponds to each product
@@ -393,6 +399,57 @@ public class GUI extends JFrame {
         middle.add(buyAllButton);
         middle.add(removeAllButton);
 
+    }
+
+    public void addProduct() {
+        setup("Add Product", 350, 400);
+
+        JPanel top = new JPanel(new GridLayout(6, 2, 7, 7));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JLabel productNameLabel = new JLabel("Enter Product Name:");
+        JTextField productName = new JTextField(15);
+        JLabel productPriceLabel = new JLabel("Enter Product Price:");
+        JTextField productPrice = new JTextField(15);
+        JLabel productQuantityLabel = new JLabel("Enter Product Quantity:");
+        JTextField productQuantity = new JTextField(15);
+        JLabel productStoreLabel = new JLabel("Product Store:");
+        JTextField productStore = new JTextField(15);
+        JLabel productDescription = new JLabel("Enter Product Description:");
+        JTextField productDescriptionField = new JTextField(15);
+
+        JButton addProduct = new JButton("Add Product");
+        addProduct.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: add functionality to add product to database and return to home page
+            }
+        });
+
+        JButton exit = new JButton("Exit");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        top.add(productNameLabel);
+        top.add(productName);
+        top.add(productPriceLabel);
+        top.add(productPrice);
+        top.add(productQuantityLabel);
+        top.add(productQuantity);
+        top.add(productStoreLabel);
+        top.add(productStore);
+        top.add(productDescription);
+        top.add(productDescriptionField);
+
+        bottom.add(addProduct);
+        bottom.add(exit);
+
+        add(top, BorderLayout.NORTH);
+        add(bottom, BorderLayout.SOUTH);
     }
 
     public void setup(String description, int width, int height) {
