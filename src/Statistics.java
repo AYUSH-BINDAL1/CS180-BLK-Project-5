@@ -157,7 +157,7 @@ public class Statistics {
     //TODO: Create sortCustomerHightoLowClient method
     //TODO: Create sortCustomerHightoLowServer method
     //sort from high to low
-    public static ArrayList<String> sortQuantityMax(ArrayList<String> toSort) {
+    public static ArrayList<String> sortCustomerHightoLowServer(ArrayList<String> toSort) {
         // selection sort
         for (int i = 0; i < toSort.size() - 1; i++) {
             int max = i;
