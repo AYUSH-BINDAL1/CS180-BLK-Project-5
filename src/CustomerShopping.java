@@ -236,12 +236,5 @@ public class CustomerShopping {
         return result;
     }
 
-<<<<<<< HEAD
-    // add to cart
-    // checkout cart
-    // remove from cart
-    // checkout cart
-=======
->>>>>>>
 
 }
