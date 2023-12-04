@@ -9,54 +9,64 @@ import java.util.ArrayList;
  * Handles all purchase history information for the users
  *
  * @author Ayush Bindal, Lab #L08
- * @version 11/30/2023
+ * @version 12/02/2023
  * <p>
  */
 
 public class PurchaseHistory {
+
+
     //TODO: Create viewCustomerPurchaseHistoryClient method
-    public static String viewCustomerPurchaseHistoryServer(String customerEmail, Object LOCK) {
-        StringBuilder formattedString = new StringBuilder();
-        String lineSeparator = System.getProperty("line.separator"); //Uses \n as delimiter for each line
+
+
+    //Given a customer returns an ArrayList of Strings containing the customer's purchase history
+    public static ArrayList<String> viewCustomerPurchaseHistoryServer(String customerEmail, Object PURCHASEHISTORYLOCK) {
+        ArrayList<String> returnList = new ArrayList<>();
         try {
             ArrayList<String> purchaseHistoryLines; // List of all purchase lines (lines containing product
             // information)
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 //Gets lines from PurchaseHistory.txt
-                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+                purchaseHistoryLines = (ArrayList<String>)
+                        Files.readAllLines(Paths.get("PurchaseHistory.txt"));
             }
+
             for (String purchaseHistoryLine : purchaseHistoryLines) {
                 String[] productLine = purchaseHistoryLine.split(","); //Splits the individual lines
-                if (productLine[6].equals(customerEmail)) { //If the customer bought the item adds the line to the
-                    // StringBuilder along with a "\n"
-                    formattedString.append(purchaseHistoryLine).append(lineSeparator);
+                if (productLine[6].equals(customerEmail)) { //If the customer bought the item adds the line to
+                    // ArrayList
+                    returnList.add(purchaseHistoryLine);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //FIXME: May need to change to ObjectOutputStream and send ArrayList to server
-        return formattedString.toString(); //Returns formatted String
+        return returnList; //Returns ArrayList
     }
 
+
     //TODO: Create exportCustomerPurchaseHistoryClient method
+
+
     //Given a path and customerEmail creates a new txt file with the customer's purchase history
-    public static String exportCustomerPurchaseHistoryServer(String customerEmail, String path, Object LOCK) {
+    public static String exportCustomerPurchaseHistoryServer(String customerEmail, String path,
+                                                             Object PURCHASEHISTORYLOCK) {
         try {
             ArrayList<String> purchaseHistoryLines; // List of all purchase lines (lines containing product
             // information)
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 //Gets lines from PurchaseHistory.txt
-                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+                purchaseHistoryLines = (ArrayList<String>)
+                        Files.readAllLines(Paths.get("PurchaseHistory.txt"));
             }
-            for(int i = 0; i < purchaseHistoryLines.size(); i++) {
+            for (int i = 0; i < purchaseHistoryLines.size(); i++) {
                 String[] productLine = purchaseHistoryLines.get(i).split(","); //Splits the individual lines
-                if(!productLine[6].equals(customerEmail)) { //If the customer didn't buy the item it removes the line
+                if (!productLine[6].equals(customerEmail)) { //If the customer didn't buy the item it removes the line
                     purchaseHistoryLines.remove(i);
                     i--; //Accounts for removal of line
                 }
             }
-            synchronized (LOCK) {
+            synchronized (PURCHASEHISTORYLOCK) {
                 Files.write(Paths.get(path), purchaseHistoryLines);
             }
         } catch (IOException e) {
@@ -64,4 +74,6 @@ public class PurchaseHistory {
         }
         return "SUCCESS";
     }
+
+
 }

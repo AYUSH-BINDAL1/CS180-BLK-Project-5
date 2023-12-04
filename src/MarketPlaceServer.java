@@ -10,13 +10,19 @@ import java.net.SocketException;
  * Java class that starts the server and accepts connections from clients and starts individual threads for them.
  *
  * @author Ayush Bindal, Lab #L08
- * @version 11/30/2023
+ * @version 12/2/2023
  * <p>
  */
 
 public class MarketPlaceServer {
 
-    public static final Object LOCK = new Object(); //Creates "global" Object LOCK for synchronizing
+    //Creates "global" Object LOCKS for synchronizing specific files
+    public static final Object USERINFOLOCK = new Object();
+    public static final Object SHOPPINGCARTLOCK = new Object();
+    public static final Object PURCHASEHISTORYLOCK = new Object();
+    public static final Object PRODUCTLOCK = new Object();
+
+
 
     public static void main(String[] args) {
         ServerSocket serverSocket; //Creates ServerSocket
@@ -30,12 +36,13 @@ public class MarketPlaceServer {
 
             //TODO: IF NEEDED put any booting of Files here.
 
-            while(true) {
+            while (true) {
                 clientSocket = serverSocket.accept(); //Continues to accept connections to the server
                 JOptionPane.showMessageDialog(null, "Connection to Server Established",
                         "Connection Established", JOptionPane.INFORMATION_MESSAGE);
-                serverHandler = new ServerHandler(clientSocket, LOCK); //Creates new serverHandler with clientSocket
-                // and LOCK
+                serverHandler = new ServerHandler(clientSocket, USERINFOLOCK, SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK,
+                        PRODUCTLOCK); //Creates new serverHandler with clientSocket; //Creates new serverHandler with
+                // clientSocket and LOCK
                 Thread thread = new Thread(serverHandler); //Creates new thread
                 thread.start(); //Starts thread
 
