@@ -159,6 +159,9 @@ public class CustomerShopping {
         return result;
     }
 
-
+    // add to cart
+    // checkout cart
+    // remove from cart
+    // checkout cart
 
 }

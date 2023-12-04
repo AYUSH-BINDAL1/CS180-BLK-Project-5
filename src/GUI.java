@@ -4,11 +4,15 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
-public class LoginPage extends JFrame {
+public class GUI extends JFrame {
     private JTextField email;
     private JTextField password;
 
-    public LoginPage() {
+    public GUI() {
+        loginPage();
+    }
+
+    public void loginPage() {
         setTitle("MarketPlace Login");
         setSize(600, 325);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,8 +46,14 @@ public class LoginPage extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                CustomerPage();
+                String userTypeSelected = (String) userType.getSelectedItem();
+                if (userTypeSelected.equals("Customer")) {
+                    CustomerPage();
+                } else if (userTypeSelected.equals("Seller")) {
+                    SellerPage();
+                } else {
+                    System.out.println("Invalid user type");
+                }
             }
         });
 
@@ -69,7 +79,7 @@ public class LoginPage extends JFrame {
         revalidate();
         repaint();
 
-        setTitle("MarketPlace");
+        setTitle("Customer MarketPlace");
         setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -103,6 +113,49 @@ public class LoginPage extends JFrame {
         top.add(viewStatistics);
 
         add(top, BorderLayout.NORTH);
+        add(middle, BorderLayout.CENTER);
+    }
+
+    public void SellerPage() {
+        getContentPane().removeAll();
+        revalidate();
+        repaint();
+
+        setTitle("Seller MarketPlace");
+        setSize(800, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JPanel top = new JPanel(new GridLayout(4 , 2, 5, 5));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JButton exit = new JButton("Exit");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        JButton shoppingCart = new JButton("View Shopping Cart");
+        JButton editAccount = new JButton("Edit Account");
+        JButton deleteAccount = new JButton("Delete Account");
+        JButton addProduct = new JButton("Add Product");
+        JButton viewSales = new JButton("View Sales");
+        JButton viewStatistics = new JButton("View Seller Statistics");
+        JButton csv = new JButton("Export/Import CSV");
+
+
+        top.add(exit);
+        top.add(shoppingCart);
+        top.add(editAccount);
+        top.add(deleteAccount);
+        top.add(addProduct);
+        top.add(viewSales);
+        top.add(viewStatistics);
+        top.add(csv);
+
+        add(top, BorderLayout.NORTH);
 
     }
 
@@ -110,7 +163,7 @@ public class LoginPage extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new LoginPage().setVisible(true);
+                new GUI().setVisible(true);
             }
         });
     }
