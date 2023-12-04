@@ -54,7 +54,7 @@ public class AccountManager {
 
     //Given a newEmail and email, updates Username.txt, Product.txt, ShoppingCart.txt and PurchaseHistory.txt
     // accordingly
-    public static void updateEmailFiles(String oldEmail, String newEmail, Object USERINFOLOCK,
+    public static String updateEmailFiles(String oldEmail, String newEmail, Object USERINFOLOCK,
                                         Object SHOPPINGCARTLOCK, Object PURCHASEHISTORYLOCK, Object PRODUCTLOCK) {
         try {
             ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
@@ -132,6 +132,7 @@ public class AccountManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "SUCCESS";
     }
 
 
