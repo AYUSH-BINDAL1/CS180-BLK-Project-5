@@ -45,6 +45,18 @@ public class ServerHandler implements Runnable {
 
     //TODO: Finish run method
     public void run() {
+        String clientMessage = "";
+        String[] commandSplit;
+        String command;
+        do {
+            try {
+                clientMessage = reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            commandSplit = clientMessage.split(",");
+            command = commandSplit[0];
+        } while (!command.equals("EXIT PROGRAM"));
 
     }
 
