@@ -41,7 +41,7 @@ public class SellerShopping {
 
 
     //TODO: Create modifyProductClient method
-    public static void modifyProductServer(String productName, String productDescription, String storeName,
+    public static String modifyProductServer(String productName, String productDescription, String storeName,
                                            String sellerEmail, double price, int quantity, String oldProduct,
                                            Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         ArrayList<String> allShoppingCart;
@@ -83,12 +83,12 @@ public class SellerShopping {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return "SUCCESS";
     }
 
 
     //TODO: Create deleteProductClient method
-    public static void deleteProductServer(String oldProduct, Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
+    public static String deleteProductServer(String oldProduct, Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         ArrayList<String> allShoppingCart;
         ArrayList<String> allProducts;
         String[] oldProductSplit = oldProduct.split(","); //splits old product by comma
@@ -128,6 +128,7 @@ public class SellerShopping {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "SUCESS";
     }
 
     //TODO: Create createNewProductClient method
@@ -161,7 +162,7 @@ public class SellerShopping {
 
 
     //TODO: Create viewAllProductsClient method
-    public ArrayList<String> viewAllProductsServer(String email, Object PRODUCTLOCK) {
+    public static ArrayList<String> viewSellerProducts(String email, Object PRODUCTLOCK) {
         ArrayList<String> productLines = new ArrayList<>(); //ArrayList of lines from Product.txt
         try {
             synchronized (PRODUCTLOCK) {
