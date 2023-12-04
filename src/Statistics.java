@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Statistics
@@ -18,7 +19,11 @@ import java.util.Collections;
  */
 
 public class Statistics {
+
+
     //TODO: Create customerDashboardClient method
+
+
     public static ArrayList<String> customerDashboardServer(Object PURCHASEHISTORYLOCK, Object PRODUCTLOCK) {
         //seller store product quantity
         ArrayList<String> sortedBought = new ArrayList<>();
@@ -26,7 +31,7 @@ public class Statistics {
         ArrayList<String> purchaseHistory;
         try {
             synchronized (PRODUCTLOCK) {
-                allProducts =  (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
             }
             for (int currentLine = 0; currentLine < allProducts.size(); currentLine++) {
                 String[] words = allProducts.get(currentLine).split(",");
@@ -38,7 +43,7 @@ public class Statistics {
 
         try {
             synchronized (PURCHASEHISTORYLOCK) {
-                purchaseHistory =  (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+                purchaseHistory = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
             }
             for (int currentHistory = 0; currentHistory < purchaseHistory.size(); currentHistory++) {
 
@@ -80,7 +85,11 @@ public class Statistics {
         // CustomerUsername, productName, quantity, price, sellerUsername, store
         return sortedBought;
     }
+
+
     //TODO: Create customerDashboardSpecificClient method
+
+
     public static ArrayList<String> customerDashboardSpecificServer(String customerEmail, Object PURCHASEHISTORYLOCK) {
         // Seller store product quantity
         ArrayList<String> sortedBought = new ArrayList<>();
@@ -128,7 +137,11 @@ public class Statistics {
         // CustomerUsername, productName, quantity, price, sellerUsername, store
         return sortedBought;
     }
+
+
     //TODO: Create sortCustomerLowtoHighClient method
+
+
     //sort from low to high
     public static ArrayList<String> sortCustomerLowtoHighServer(ArrayList<String> toSort) {
         // selection sort
@@ -154,8 +167,13 @@ public class Statistics {
         return toSort;
     }
 
+
     //TODO: Create sortCustomerHightoLowClient method
+
+
     //TODO: Create sortCustomerHightoLowServer method
+
+
     //sort from high to low
     public static ArrayList<String> sortCustomerHightoLowServer(ArrayList<String> toSort) {
         // selection sort
@@ -189,10 +207,10 @@ public class Statistics {
         ArrayList<String> purchaseHistoryLines; //ArrayList of purchaseHistory from PurchaseHistory.txt
         ArrayList<String> stores = new ArrayList<String>(); //ArrayList of Strings contain stores
         try {
-           synchronized (PURCHASEHISTORYLOCK) {
-               //Reads lines from PurchaseHistory
-               purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
-           }
+            synchronized (PURCHASEHISTORYLOCK) {
+                //Reads lines from PurchaseHistory
+                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+            }
 
             for (String purchase : purchaseHistoryLines) { //Reads through each line in purchaseHistory and if the
                 // stores ArrayList doesn't already have the store and the sellerEmail matches adds the name of the
@@ -235,12 +253,117 @@ public class Statistics {
         return stores.toString(); //Returns formatted String of the stores sales
     }
 
+
     //TODO: Create generateSellerDashboardServer method
     //TODO: Create generateSellerDashboardClient method
+    public static String generateSellerDashboardServer(String sellerEmail, int rank, Object PURCHASEHISTORYLOCK) {
 
-    //TODO: Create sortListClient method (Sub method for generateSeller Dashboard)
-    //TODO: Create sortListServer method (Sub method for generateSeller Dashboard)
+        ArrayList<String> purchaseHistoryLines; //ArrayList of purchaseHistory from PurchaseHistory.txt
+        ArrayList<String> stores = new ArrayList<String>(); //ArrayList of Strings contain stores
+        StringBuilder sellerDashboard = new StringBuilder(sellerEmail + "'s Dashboard\n"); //StringBuilder of
+        // sellerDashboard
 
-    //TODO: Create updatePurchaseCountClient method (Sub method for generateSeller Dashboard)
-    //TODO: Create updatePurchaseCountServer method (Sub method for generateSeller Dashboard)
+        try {
+
+            synchronized (PURCHASEHISTORYLOCK) {
+                //Reads lines from PurchaseHistory
+                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+            }
+
+            //Loops through each purchase in the purchaseHistory
+            for (String purchase : purchaseHistoryLines) {
+                String[] purchaseSplit = purchase.split(",");
+
+                // Check if the store related to the purchase is not already in the ArrayList and is associated
+                // with the seller
+                if (!stores.contains(purchaseSplit[2]) && purchaseSplit[3].equals(sellerEmail)) {
+                    ArrayList<String> customerPurchaseCount = new ArrayList<>(); //List to track customer purchase count for a store
+                    ArrayList<String> productSalesCount = new ArrayList<>(); //List to track product sales count for a store
+
+                    // Process purchase history for the specified store related to the seller
+                    for (String currentPurchase : purchaseHistoryLines) {
+                        String[] currentPurchaseSplit = currentPurchase.split(",");
+
+                        // Check if the purchase is related to the specified seller and store
+                        if (currentPurchaseSplit[3].equals(sellerEmail) && currentPurchaseSplit[2].equals(purchaseSplit[2])) {
+                            // Update customer purchase count
+                            updatePurchaseCount(customerPurchaseCount, currentPurchaseSplit[6],
+                                    currentPurchaseSplit[5]);
+
+                            // Update product sales count
+                            String productKey = currentPurchaseSplit[0].toLowerCase(); // Case-insensitive product key
+                            updatePurchaseCount(productSalesCount, productKey, currentPurchaseSplit[5]);
+                        }
+                    }
+
+                    // Sort the lists of customer purchase count and product sales count based on rank
+                    sortList(customerPurchaseCount, rank);
+                    sortList(productSalesCount, rank);
+
+                    // Generate the dashboard for the specified store
+                    sellerDashboard.append("\nStore: ").append(purchaseSplit[2]);
+
+
+                    // List of customers with the number of items they have purchased
+                    sellerDashboard.append("\nCustomers:\n");
+                    if (customerPurchaseCount.isEmpty()) {
+                        sellerDashboard.append("    No data! No current products sold for this store!");
+                    }
+                    for (String customer : customerPurchaseCount) {
+                        sellerDashboard.append("    ").append(customer).append("\n");
+                    }
+
+                    // List of products with the number of sales
+                    sellerDashboard.append("Products:\n");
+                    if (productSalesCount.isEmpty()) {
+                        sellerDashboard.append("    No data! No current products sold for this store!");
+                    }
+                    for (String entry : productSalesCount) {
+                        sellerDashboard.append("    ").append(entry).append("\n");
+                    }
+                    stores.add(purchaseSplit[2]); // Add the processed store to the list of stores
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sellerDashboard.toString(); //Returns the formatted String of the seller's dashboard
+    }
+
+
+    private static void updatePurchaseCount(ArrayList<String> list, String key, String quantity) {
+
+        // Find existing entry
+        boolean found = false;
+        for (int i = 0; i < list.size(); i++) {
+            String entry = list.get(i);
+            if (entry.startsWith(key + ": ")) {
+                // Update existing entry
+                int count = Integer.parseInt(entry.split(": ")[1]);
+                count += Integer.parseInt(quantity);
+                list.set(i, key + ": " + count);
+                found = true;
+                break;
+            }
+        }
+        // If the entry doesn't exist, add a new one
+        if (!found) {
+            list.add(key + ": " + quantity);
+        }
+    }
+
+
+    private static void sortList(ArrayList<String> list, int rank) { //Sorts seller dashboard based on what the
+        //user wants to sort
+        Comparator<String> comparator;
+        comparator = Comparator.comparingInt(s -> Integer.parseInt(s.split(": ")[1]));
+
+        if (rank == 1) {
+            Collections.sort(list, comparator.reversed());
+        } else {
+            Collections.sort(list, comparator);
+        }
+    }
+
+
 }
