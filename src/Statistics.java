@@ -24,7 +24,8 @@ public class Statistics {
     //TODO: Create customerDashboardClient method
 
 
-    public static ArrayList<String> customerDashboardServer(Object PURCHASEHISTORYLOCK, Object PRODUCTLOCK) {
+    public static ArrayList<String> customerDashboardServer(String sort, Object PURCHASEHISTORYLOCK,
+                                                            Object PRODUCTLOCK) {
         //seller store product quantity
         ArrayList<String> sortedBought = new ArrayList<>();
         ArrayList<String> allProducts;
@@ -83,14 +84,19 @@ public class Statistics {
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
         // CustomerUsername, productName, quantity, price, sellerUsername, store
-        return sortedBought;
+        if(sort == "HIGH TO LOW") {
+            return sortCustomerHightoLowServer(sortedBought);
+        } else {
+            return sortCustomerLowtoHighServer(sortedBought);
+        }
     }
 
 
     //TODO: Create customerDashboardSpecificClient method
 
 
-    public static ArrayList<String> customerDashboardSpecificServer(String customerEmail, Object PURCHASEHISTORYLOCK) {
+    public static ArrayList<String> customerDashboardSpecificServer(String customerEmail,
+                                                                    String sort, Object PURCHASEHISTORYLOCK) {
         // Seller store product quantity
         ArrayList<String> sortedBought = new ArrayList<>();
         ArrayList<String> totalPurchaseHistory;
@@ -135,7 +141,11 @@ public class Statistics {
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
         // CustomerUsername, productName, quantity, price, sellerUsername, store
-        return sortedBought;
+        if(sort == "HIGH TO LOW") {
+            return sortCustomerHightoLowServer(sortedBought);
+        } else {
+            return sortCustomerLowtoHighServer(sortedBought);
+        }
     }
 
 

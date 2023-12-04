@@ -105,7 +105,10 @@ public class ServerHandler implements Runnable {
                 result = PurchaseHistory.exportCustomerPurchaseHistoryServer(commandSplit[1], commandSplit[2],
                         PURCHASEHISTORYLOCK);
             } else if (command.equalsIgnoreCase("VIEW CUSTOMER STATISTICS")) {
-                //TODO: IS THIS DONE???
+                resultList = Statistics.customerDashboardServer(commandSplit[1],PURCHASEHISTORYLOCK, PRODUCTLOCK);
+            } else if (command.equalsIgnoreCase("VIEW CUSTOMER STATISTICS")) {
+                resultList = Statistics.customerDashboardSpecificServer(commandSplit[1],
+                        commandSplit[2], PURCHASEHISTORYLOCK);
             } else if (command.equalsIgnoreCase("VIEW SELLER PRODUCTS")) {
                 resultList = SellerShopping.viewSellerProducts(commandSplit[1], PRODUCTLOCK);
             } else if (command.equalsIgnoreCase("MODIFY PRODUCT")) {
