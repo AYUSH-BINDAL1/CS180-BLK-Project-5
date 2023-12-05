@@ -7,10 +7,9 @@ import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
 public class GUI extends JFrame {
-
     public GUI() {
-        //loginPage();
-        CustomerPage();
+        loginPage();
+        //CustomerPage();
     }
 
     //General Login Page
