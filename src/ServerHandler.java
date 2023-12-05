@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * ClientHandler
+ * ServerHandler
  * <p>
  * Java class that implements Runnable used to create new Threads for new connections to the Server
  *
