@@ -167,60 +167,10 @@ public class CustomerShopping {
     }
 
 
-    //Method that buys product directly from page and returns whether it succeeded or not.
+    
     public static String buyProductServer(String customerEmail, String chosenProduct, Object PURCHASEHISTORYLOCK,
                                           Object PRODUCTLOCK) {
-
-        String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
-        int purchaseAmount = Integer.parseInt(chosenProductSplit[5]); //Gets the quantity of the user's product
-        ArrayList<String> productLines; //ArrayList of lines from Product.txt
-        String result = ""; //Result to return to run method
-        String modifiedProduct = ""; //Product to add to PurchaseHistory.txt
-
-        try {
-
-            synchronized (PRODUCTLOCK) {
-                //Reads lines from Product.txt
-                productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
-            }
-
-            for (int i = 0; i < productLines.size(); i++) { //Loops through the Product.txt file
-                String[] currentProductSplit = productLines.get(i).split(","); //Splits the current product line
-                if (chosenProductSplit[0].equals(currentProductSplit[0]) &&
-                        chosenProductSplit[2].equals(currentProductSplit[2]) &&
-                        chosenProductSplit[3].equals(currentProductSplit[3])) { //If the product is found in Product
-                    // .txt
-                    int amountAvailable = Integer.parseInt(currentProductSplit[5]);
-                    if (amountAvailable >= purchaseAmount) { //Checks if there is enough quantity and modifies
-                        // accordingly
-                        amountAvailable = amountAvailable - purchaseAmount;
-                        currentProductSplit[5] = Integer.toString(amountAvailable);
-                        modifiedProduct = String.join(",", currentProductSplit); //Rejoins string
-                        productLines.set(i, modifiedProduct);
-                        modifiedProduct += "," + customerEmail; //Adds the customer email to the
-                        result = "SUCCESS";
-                    } else { //Not enough quantity
-                        result = "NOT ENOUGH QUANTITY";
-                    }
-                    break;
-                }
-            }
-            if (result.isEmpty()) { //Didn't find the product
-                result = "PRODUCT NOT FOUND";
-            } else if (result.equals("SUCCESS")) { //If and only if the product has been changed it modifies the product
-                synchronized (PRODUCTLOCK) {
-                    Files.write(Paths.get("Product.txt"), productLines);
-                }
-                synchronized (PURCHASEHISTORYLOCK) {
-                    //Rewrites files
-                    Files.write(Paths.get("PurchaseHistory.txt"), modifiedProduct.getBytes(),
-                            StandardOpenOption.APPEND);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
+        //Method that buys product directly from page and returns whether it succeeded or not.
     }
 
     
