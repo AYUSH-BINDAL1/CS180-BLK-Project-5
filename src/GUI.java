@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
-public class GUI extends JFrame implements Runnable{
+public class GUI extends JFrame implements Runnable {
 
 
     public void run() {
