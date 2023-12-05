@@ -238,21 +238,6 @@ SellerShopping
 
 Description: Handles all methods pertaining to the seller shopping cart information
 ```java
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-
-/**
- * SellerShopping
- * <p>
- * Handles all methods pertaining to the seller shopping cart information
- *
- * @author Ayush Bindal, Lab #L08
- * @version 11/30/2023
- * <p>
- */
-
 public class SellerShopping {
 
     
@@ -319,15 +304,55 @@ public class ProductSearch {
 
 ProductSort
 
-Description:
+Description: Sorts products by quantity and price for a customer
 ```java
+public class ProductSort {
+
+
+    public static ArrayList<String> sortByIncreasingPriceServer(Object PRODUCTLOCK) {
+        //Sorts all products by min to max price using a selection sort and returns arraylist
+    }
+
+
+    public static ArrayList<String> sortByDecreasingPriceServer(Object PRODUCTLOCK) {
+        //Sorts all products by max to min price using a selection sort and returns arraylist
+    }
+    
+
+    //sorts all products by min to max quantity
+    public static ArrayList<String> sortByIncreasingQuantityServer(Object PRODUCTLOCK) {
+        //sorts all products by min to max quantity using a selection sort and returns arraylist
+    }
+
+    
+    public static ArrayList<String> sortByDecreasingQuantityServer(Object PRODUCTLOCK) {
+        //sorts all products by max to min quantity using a selection sort and returns arraylist
+    }
+
+}
 ```
 
 
 PurchaseHistory
 
-Description:
+Description: Handles all purchase history information for all users
 ```java
+public class PurchaseHistory {
+
+    
+    
+    public static ArrayList<String> viewCustomerPurchaseHistoryServer(String customerEmail, Object PURCHASEHISTORYLOCK) {
+        //Given a customer returns an ArrayList of Strings containing the customer's purchase history
+    }
+    
+    
+    public static String exportCustomerPurchaseHistoryServer(String customerEmail, String path,
+                                                             Object PURCHASEHISTORYLOCK) {
+        //Given a path and customerEmail creates a new txt file with the customer's purchase history 
+    }
+
+
+}
 ```
 
 
@@ -357,8 +382,53 @@ public class CSVHandler {
 
 Statistics
 
-Description:
+Description: Handles all information regarding statistics feature for both customer and seller
 ```java
+public class Statistics {
+    
+    
+    public static ArrayList<String> customerDashboardServer(String sort, Object PURCHASEHISTORYLOCK,
+                                                            Object PRODUCTLOCK) {
+    }
+    
+
+    public static ArrayList<String> customerDashboardSpecificServer(String customerEmail,
+                                                                    String sort, Object PURCHASEHISTORYLOCK) {
+    }
+    
+    
+    public static ArrayList<String> sortCustomerLowtoHighServer(ArrayList<String> toSort) {
+        //sort from low to high using selection sort
+    }
+
+    
+    public static ArrayList<String> sortCustomerHightoLowServer(ArrayList<String> toSort) {
+        //sort from high to low using selection sort
+    }
+
+
+    public static String viewSalesByStoreServer(String sellerEmail, Object PURCHASEHISTORYLOCK) {
+        //Given a seller's email loops through PurchaseHistory.txt and creates a formatted String based on a sale 
+        //at a store.
+    }
+
+
+    public static String generateSellerDashboardServer(String sellerEmail, int rank, Object PURCHASEHISTORYLOCK) {
+        //Creates seller dashboard given the purchase history and sorts
+    }
+
+
+    private static void updatePurchaseCount(ArrayList<String> list, String key, String quantity) {
+        // Find existing entry
+    }
+
+
+    private static void sortList(ArrayList<String> list, int rank) {
+        //Sorts Seller Dashboard based on rank provided by user
+    }
+
+
+}
 ```
 
 ## File Formatting
