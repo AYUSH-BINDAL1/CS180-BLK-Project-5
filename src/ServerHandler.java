@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * ClientHandler
+ * ServerHandler
  * <p>
  * Java class that implements Runnable used to create new Threads for new connections to the Server
  *
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class ServerHandler implements Runnable {
 
-    private Socket clientSocket; //Individual Client Socket
+    private final Socket clientSocket; //Individual Client Socket
     BufferedReader reader; //Reader that reads from the client socket to the server
     BufferedWriter writer; //Writer that writes String results to client socket
     ObjectOutputStream outputStream;  //Output Stream to write an ArrayList to the client socket
@@ -123,9 +123,9 @@ public class ServerHandler implements Runnable {
                         Integer.parseInt(commandSplit[6]), PRODUCTLOCK);
             } else if (command.equalsIgnoreCase("VIEW SALES BY STORE")) {
                 result = Statistics.viewSalesByStoreServer(commandSplit[1], PURCHASEHISTORYLOCK);
-            } else if (command.equalsIgnoreCase("IMPORT CSV")) {
+            } else if (command.equalsIgnoreCase("IMPORT SELLER CSV")) {
                 result = CSVHandler.importSellerCSVServer(commandSplit[1], PRODUCTLOCK);
-            } else if (command.equalsIgnoreCase("EXPORT CSV")) {
+            } else if (command.equalsIgnoreCase("EXPORT SELLER CSV")) {
                 result = CSVHandler.exportSellerCSVServer(commandSplit[1], commandSplit[2], PRODUCTLOCK);
             } else if (command.equalsIgnoreCase("VIEW SELLER STATISTICS")) {
                 result = Statistics.generateSellerDashboardServer(commandSplit[1], Integer.parseInt(commandSplit[2])

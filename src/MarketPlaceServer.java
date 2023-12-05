@@ -34,8 +34,6 @@ public class MarketPlaceServer {
             serverSocket = new ServerSocket(6969); //PORT NUMBER: 6969
             serverSocket.setReuseAddress(true);
 
-            //TODO: IF NEEDED put any booting of Files here.
-
             while (true) {
                 clientSocket = serverSocket.accept(); //Continues to accept connections to the server
                 JOptionPane.showMessageDialog(null, "Connection to Server Established",
@@ -47,6 +45,8 @@ public class MarketPlaceServer {
                 thread.start(); //Starts thread
 
             }
+        } catch (SocketException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

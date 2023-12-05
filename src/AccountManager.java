@@ -1,4 +1,3 @@
-import java.awt.dnd.InvalidDnDOperationException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -67,6 +66,11 @@ public class AccountManager {
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
             int emailIndex = userInformationList.indexOf(oldEmail); //Index of oldEmail in Username.txt
+            int newEmailIndexCheck = userInformationList.indexOf(newEmail); //Checks to see if the newEmail is
+            // already taken
+            if (newEmailIndexCheck != -1) { //If newEmail is already taken
+                return "EMAIL ALREADY TAKEN";
+            }
             userInformationList.set(emailIndex, newEmail); //Sets newEmail at index emailIndex in Username.txt
             synchronized (USERINFOLOCK) {
                 Files.write(Paths.get("Username.txt"), userInformationList);
@@ -273,27 +277,28 @@ public class AccountManager {
         boolean validEmail = validateEmail(email); //Verifies email is valid email;
         if (!validEmail) {
             result = "INVALID EMAIL"; //If email is not valid, returns invalid email to client
-        }
-        try {
-            synchronized (USERINFOLOCK) {
-                //Reads lines from Username.txt
-                userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
-            }
-
-            int emailIndex = userInformationList.indexOf(email); //Index of email in Username.txt
-            if (emailIndex != -1) { //If the email already exists in Username.txt
-                result = "EMAIL ALREADY EXISTS";
-            } else { //If the email does not exist already
-                userInformationList.add(email); //Adds email to Username.txt
-                userInformationList.add(password); //Adds password to Username.txt
-                userInformationList.add(userType); //Adds userType to Username.txt
+        } else {
+            try {
                 synchronized (USERINFOLOCK) {
-                    Files.write(Paths.get("Username.txt"), userInformationList);
+                    //Reads lines from Username.txt
+                    userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
                 }
-                result = "SUCCESS";
+
+                int emailIndex = userInformationList.indexOf(email); //Index of email in Username.txt
+                if (emailIndex != -1) { //If the email already exists in Username.txt
+                    result = "EMAIL ALREADY EXISTS";
+                } else { //If the email does not exist already
+                    userInformationList.add(email); //Adds email to Username.txt
+                    userInformationList.add(password); //Adds password to Username.txt
+                    userInformationList.add(userType); //Adds userType to Username.txt
+                    synchronized (USERINFOLOCK) {
+                        Files.write(Paths.get("Username.txt"), userInformationList);
+                    }
+                    result = "SUCCESS";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return result; //Returns result to run to let client know if the registration succeeded or failed
     }

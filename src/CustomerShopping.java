@@ -1,5 +1,3 @@
-import com.sun.source.tree.IfTree;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,7 +22,6 @@ public class CustomerShopping {
 
     //Given a product in the form of the formatted String EXACTLY as it is in the Product.txt file adds if it is a
     // valid quantity
-    //FIXME: Probably need to check if the chosenProduct exists already.
     public static String addToCartServer(String email, String chosenProduct, Object SHOPPINGCARTLOCK,
                                          Object PRODUCTLOCK) {
         String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
@@ -44,25 +41,29 @@ public class CustomerShopping {
             }
             int productIndex = productLines.indexOf(chosenProduct); //Gets the index where the chosenProduct is
             // found in "Product.txt". This **SHOULD** work if the String is formatted correctly
-            String[] productOnFileSplit = productLines.get(productIndex).split(",");
-            int amountAvailable = Integer.parseInt(productOnFileSplit[5]); //Gets amount avaliable to be bought
+            if(productIndex != -1) {
+                String[] productOnFileSplit = productLines.get(productIndex).split(",");
+                int amountAvailable = Integer.parseInt(productOnFileSplit[5]); //Gets amount available to be bought
 
-            if (purchaseQuantity > amountAvailable) { //Not enough quantity
-                result = "NOT ENOUGH QUANTITY";
+                if (purchaseQuantity > amountAvailable) { //Not enough quantity
+                    result = "NOT ENOUGH QUANTITY";
+                } else {
+                    //Decreases the amount available, changes the value of the split product and reads it to the
+                    // productLines and adds to shoppingCart
+                    amountAvailable = amountAvailable - purchaseQuantity;
+                    productOnFileSplit[5] = Integer.toString(amountAvailable);
+                    productLines.set(productIndex, String.join(",", productOnFileSplit));
+                    result = "ADDED TO CART";
+                    shoppingCartLines.add(chosenProduct + "," + email);
+                    synchronized (SHOPPINGCARTLOCK) {
+                        Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines);
+                    }
+                    synchronized (PRODUCTLOCK) {
+                        Files.write(Paths.get("Product.txt"), productLines);
+                    }
+                }
             } else {
-                //Decreases the amount available, changes the value of the split product and reads it to the
-                // productLines and adds to shoppingCart
-                amountAvailable = amountAvailable - purchaseQuantity;
-                productOnFileSplit[5] = Integer.toString(amountAvailable);
-                productLines.set(productIndex, String.join(",", productOnFileSplit));
-                result = "ADDED TO CART";
-                shoppingCartLines.add(chosenProduct + "," + email);
-                synchronized (SHOPPINGCARTLOCK) {
-                    Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines);
-                }
-                synchronized (PRODUCTLOCK) {
-                    Files.write(Paths.get("Product.txt"), productLines);
-                }
+                result = "INVALID PRODUCT";
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,7 +92,7 @@ public class CustomerShopping {
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             //Removes the product from the shopping cart
-            productLines.remove(chosenProduct);
+            shoppingCartLines.remove(chosenProduct);
             for (int i = 0; i < productLines.size(); i++) {
                 String[] productSplit = productLines.get(i).split(",");
                 if (productSplit[0].equals(chosenProductSplit[0]) && productSplit[2].equals(chosenProductSplit[2])

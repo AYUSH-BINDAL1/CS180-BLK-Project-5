@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
+<<<<<<< HEAD
 public class GUI extends JFrame implements Runnable {
 
 
@@ -13,6 +14,7 @@ public class GUI extends JFrame implements Runnable {
         loginPage();
     }
     // General Login Page
+
     public void loginPage() {
         setTitle("MarketPlace Login");
         setSize(600, 325);

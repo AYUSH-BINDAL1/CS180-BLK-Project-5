@@ -128,7 +128,7 @@ public class SellerShopping {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "SUCESS";
+        return "SUCCESS";
     }
 
     //TODO: Create createNewProductClient method
@@ -182,26 +182,6 @@ public class SellerShopping {
         return productLines;
     }
 
-    //TODO: Create viewShoppingCartsClient method
-    public ArrayList<String> viewShoppingCartsServer(String email, Object PRODUCTLOCK) {
-        ArrayList<String> shoppingCartLines = new ArrayList<>(); //ArrayList of lines from ShoppingCart.txt
-        try {
-            synchronized (PRODUCTLOCK) {
-                //Reads lines from ShoppingCart.txt
-                shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
-            }
-            for (int i = 0; i < shoppingCartLines.size(); i++) {
-                String[] productSplit = shoppingCartLines.get(i).split(","); //Splits the ShoppingCart line
-                if (!productSplit[3].equals(email)) {
-                    shoppingCartLines.remove(i);
-                    i--;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return shoppingCartLines;
-    }
 
 
 }

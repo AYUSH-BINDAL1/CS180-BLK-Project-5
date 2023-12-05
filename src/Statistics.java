@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -216,6 +213,7 @@ public class Statistics {
     public static String viewSalesByStoreServer(String sellerEmail, Object PURCHASEHISTORYLOCK) {
         ArrayList<String> purchaseHistoryLines; //ArrayList of purchaseHistory from PurchaseHistory.txt
         ArrayList<String> stores = new ArrayList<String>(); //ArrayList of Strings contain stores
+        StringBuilder newString = null;
         try {
             synchronized (PURCHASEHISTORYLOCK) {
                 //Reads lines from PurchaseHistory
@@ -230,9 +228,9 @@ public class Statistics {
                     stores.add(purchaseSplit[2]);
                 }
             }
-
+            newString = new StringBuilder();
             for (int i = 0; i < stores.size(); i++) { //Loops through all the stores ArrayList
-                StringBuilder newString = new StringBuilder();
+
                 String currentStore = stores.get(i);
                 newString.append("Store: ").append(currentStore).append("\n"); //Adds the current store to the
                 // StringBuilder
@@ -256,11 +254,12 @@ public class Statistics {
 
                     }
                 }
+                newString.append("\n"); //Adds a new line to the StringBuilder
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return stores.toString(); //Returns formatted String of the stores sales
+        return newString.toString(); //Returns formatted String of the stores sales
     }
 
 
