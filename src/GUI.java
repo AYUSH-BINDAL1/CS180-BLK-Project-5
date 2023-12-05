@@ -6,13 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
-public class GUI extends JFrame {
+public class GUI extends JFrame implements Runnable{
 
-    public GUI() {
-        //loginPage();
-        addProduct();
+
+    public void run() {
+        loginPage();
     }
-
     // General Login Page
     public void loginPage() {
         setTitle("MarketPlace Login");
@@ -191,6 +190,12 @@ public class GUI extends JFrame {
         JButton viewSales = new JButton("View Sales");
         JButton viewStatistics = new JButton("View Seller Statistics");
         JButton csv = new JButton("Export/Import CSV");
+        csv.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                csv();
+            }
+        });
 
         // TODO: implement method to print the the seller's products
 
@@ -452,6 +457,10 @@ public class GUI extends JFrame {
         add(bottom, BorderLayout.SOUTH);
     }
 
+    public void csv() {
+        setup("CSV", 400, 400);
+
+    }
     public void setup(String description, int width, int height) {
         getContentPane().removeAll();
         revalidate();
@@ -464,11 +473,9 @@ public class GUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new GUI().setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(() ->
+                {GUI gui = new GUI();
+                gui.setVisible(true);
+                gui.run();});
     }
 }
