@@ -123,9 +123,9 @@ public class ServerHandler implements Runnable {
                         Integer.parseInt(commandSplit[6]), PRODUCTLOCK);
             } else if (command.equalsIgnoreCase("VIEW SALES BY STORE")) {
                 result = Statistics.viewSalesByStoreServer(commandSplit[1], PURCHASEHISTORYLOCK);
-            } else if (command.equalsIgnoreCase("IMPORT CSV")) {
+            } else if (command.equalsIgnoreCase("IMPORT SELLER CSV")) {
                 result = CSVHandler.importSellerCSVServer(commandSplit[1], PRODUCTLOCK);
-            } else if (command.equalsIgnoreCase("EXPORT CSV")) {
+            } else if (command.equalsIgnoreCase("EXPORT SELLER CSV")) {
                 result = CSVHandler.exportSellerCSVServer(commandSplit[1], commandSplit[2], PRODUCTLOCK);
             } else if (command.equalsIgnoreCase("VIEW SELLER STATISTICS")) {
                 result = Statistics.generateSellerDashboardServer(commandSplit[1], Integer.parseInt(commandSplit[2])

@@ -66,6 +66,11 @@ public class AccountManager {
                 userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
             }
             int emailIndex = userInformationList.indexOf(oldEmail); //Index of oldEmail in Username.txt
+            int newEmailIndexCheck = userInformationList.indexOf(newEmail); //Checks to see if the newEmail is
+            // already taken
+            if (newEmailIndexCheck != -1) { //If newEmail is already taken
+                return "EMAIL ALREADY TAKEN";
+            }
             userInformationList.set(emailIndex, newEmail); //Sets newEmail at index emailIndex in Username.txt
             synchronized (USERINFOLOCK) {
                 Files.write(Paths.get("Username.txt"), userInformationList);

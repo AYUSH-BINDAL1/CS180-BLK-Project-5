@@ -13,7 +13,7 @@ public class GUI extends JFrame {
         CustomerPage();
     }
 
-    // General Login Page
+    //General Login Page
     public void loginPage() {
         setTitle("MarketPlace Login");
         setSize(600, 325);
