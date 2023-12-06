@@ -7,30 +7,52 @@ import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 import java.net.Socket;
 
+
 public class GUI extends JFrame implements Runnable {
-    private Socket socket;
-    private String username;
-    private String password;
-    // True if Customer, False if Seller
-    private boolean custOrSeller;
+    private Socket socket; //Socket that connects to the Server on PORT: 6969
+    private String userEmail; //String representing the current user's email
+    private String password; //String representing the current user's password
+    private String userType; //Either "CUSTOMER" or "SELLER"
+    //private boolean loginSuccessful; //Boolean that checks if login/create account occurred successfully
 
 
+    //Constructor that takes in a Socket that connects to the Server on PORT: 6969
     public GUI(
             //Socket socket
     ) {
         this.socket = socket;
-        this.username = "";
+        this.userEmail = "";
         this.password = "";
-        this.custOrSeller = false;
+        this.userType = "";
+        //this.loginSuccessful = false;
     }
 
+
+    //Run method that handles which pages are displayed
     public void run() {
+        /*
+        do {
+            loginPage();
+        } while (!this.loginSuccessful);
+        */
         modifyProduct("asdf,asdf ");
     }
-    // General Login Page
 
+    /*public Object communicateWithServer(String message) {
+        //Object serverResponse = null;
+        //writer.write(message);
+        //writer.flush();
+        //serverResponse = reader.readObject();
+        //return serverResponse;
+    }
+     */
+
+
+    //Login/Signup Page
     public void loginPage() {
-        setTitle("MarketPlace Login");
+
+
+        setTitle("MarketPlace Login/Create Account");
         setSize(600, 325);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -39,7 +61,7 @@ public class GUI extends JFrame implements Runnable {
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JComboBox<String> userType = new JComboBox<>(new String[]{"Customer", "Seller"});
+        JComboBox<String> userType = new JComboBox<>(new String[]{"CUSTOMER", "SELLER"});
         userType.setVisible(true);
 
         JComboBox<String> createOrLogin = new JComboBox<>(new String[]{"Login", "Create Account"});
@@ -56,53 +78,74 @@ public class GUI extends JFrame implements Runnable {
         info.setHorizontalAlignment(SwingConstants.CENTER);
 
         JTextField email = new JTextField(15);
-        JTextField password = new JTextField(15);
+        JPasswordField password = new JPasswordField(15);
 
         JButton loginButton = new JButton("Login/Create Account");
         passwordLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         loginButton.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
+                String messageToServer = ""; //String that will be sent to the Server
                 String userTypeSelected = (String) userType.getSelectedItem();
                 String createOrLoginSelected = (String) createOrLogin.getSelectedItem();
                 String emailEntered = email.getText();
-                String passwordEntered = password.getText();
+                String passwordEntered = String.valueOf(password.getPassword());
 
-                // checks if it is a valid email or empty
+                //Checks if email is formatted correctly or empty
                 if (!AccountManager.validateEmail(emailEntered) || emailEntered.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Invalid Email"
                             , "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // checks if email is empty
+                //Checks if password is empty
                 if (passwordEntered.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Invalid Password"
                             , "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                // TODO: implement logic
 
+                /*
                 if (createOrLoginSelected.equals("Create Account")) {
-                    if (userTypeSelected.equals("Customer")) {
+                    messageToServer = String.format("REGISTER,%s,%s,%s", emailEntered, passwordEntered,
+                            userTypeSelected);
+                    String result = (String) communicateWithServer(messageToServer);
 
-                    } else if (userTypeSelected.equals("Seller")) {
-
-                    } else {
-                        System.out.println("UserType dropdown Error");
+                    if (result.equals("SUCCESS")) {
+                        JOptionPane.showMessageDialog(null, "Account Creation Success", "Your account has been " +
+                                "created", JOptionPane.INFORMATION_MESSAGE);
+                        loginSuccessful = true;
+                    } else if (result.equals("EMAIL ALREADY EXISTS")) {
+                        JOptionPane.showMessageDialog(null, "Email Taken", "Entered email is already taken.",
+                                JOptionPane.ERROR_MESSAGE);
                     }
+
                 } else if (createOrLoginSelected.equals("Login")) {
-                    if (userTypeSelected.equals("Customer")) {
+                    messageToServer = String.format("LOGIN,%s,%s,%s", emailEntered, passwordEntered,
+                            userTypeSelected);
+                    String result = (String) communicateWithServer(messageToServer);
 
-                    } else if (userTypeSelected.equals("Seller")) {
-
-                    } else {
-                        System.out.println("UserType dropdown Error");
+                    if (result.equals("SUCCESS")) {
+                        JOptionPane.showMessageDialog(null, "Login Success",
+                                "You have been successfully logged in.", JOptionPane.INFORMATION_MESSAGE);
+                        loginSuccessful = true;
+                    } else if (result.equals("INVALID EMAIL")) {
+                        JOptionPane.showMessageDialog(null, "Invalid Email", "Wrong Email.",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else if (result.equals("INVALID PASSWORD")) {
+                        JOptionPane.showMessageDialog(null, "Invalid Password", "Wrong Password.",
+                                JOptionPane.ERROR_MESSAGE);
+                    }  else if (result.equals("INVALID USER TYPE")) {
+                        JOptionPane.showMessageDialog(null, "Invalid User Type", "Wrong User Type.",
+                                JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    System.out.println("Error, the login/create an account dropdown doesn't work");
-                }
 
+                } else {
+                    System.out.println("Error, the Login/Create an account dropdown doesn't work");
+                }
+                 */
             }
         });
 
@@ -122,7 +165,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
-    // Customer Page
+    //Customer Page
     public void CustomerPage() {
         // Remove content from the previous pane
         setup("Customer Page", 800, 500);
@@ -197,6 +240,7 @@ public class GUI extends JFrame implements Runnable {
         add(middle, BorderLayout.CENTER);
     }
 
+    //Seller Page
     public void SellerPage() {
         setup("Seller MarketPlace", 800, 500);
 
