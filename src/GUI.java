@@ -5,13 +5,26 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
+import java.net.Socket;
 
-<<<<<<< HEAD
 public class GUI extends JFrame implements Runnable {
+    private Socket socket;
+    private String username;
+    private String password;
+    // True if Customer, False if Seller
+    private boolean custOrSeller;
 
 
+    public GUI(
+            //Socket socket
+            ) {
+        this.socket = socket;
+        this.username = "";
+        this.password = "";
+        this.custOrSeller = false;
+    }
     public void run() {
-        loginPage();
+        searchBy();
     }
     // General Login Page
 
@@ -54,27 +67,41 @@ public class GUI extends JFrame implements Runnable {
                 String emailEntered = email.getText();
                 String passwordEntered = password.getText();
 
+                // checks if it is a valid email or empty
                 if (!AccountManager.validateEmail(emailEntered) || emailEntered.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Invalid Email"
                             , "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
+                // checks if email is empty
                 if (passwordEntered.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Invalid Password"
                             , "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 // TODO: implement logic
-                 /*
-                if (userTypeSelected.equals("Customer")) {
-                    CustomerPage();
-                } else if (userTypeSelected.equals("Seller")) {
-                    SellerPage();
+
+                if (createOrLoginSelected.equals("Create Account")) {
+                    if (userTypeSelected.equals("Customer")) {
+
+                    } else if (userTypeSelected.equals("Seller")) {
+
+                    } else {
+                        System.out.println("UserType dropdown Error");
+                    }
+                } else if (createOrLoginSelected.equals("Login")) {
+                    if (userTypeSelected.equals("Customer")) {
+
+                    } else if (userTypeSelected.equals("Seller")) {
+
+                    } else {
+                        System.out.println("UserType dropdown Error");
+                    }
                 } else {
-                    System.out.println("Invalid user type");
+                    System.out.println("Error, the login/create an account dropdown doesn't work");
                 }
-                */
+
             }
         });
 
@@ -132,7 +159,13 @@ public class GUI extends JFrame implements Runnable {
             }
         });
         JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By Store", "Sort By Seller"});
-        JComboBox<String> searchBy = new JComboBox<>(new String[]{"Search By Store", "Search by Seller"});
+        JButton searchBy = new JButton("Search By");
+        searchBy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchBy();
+            }
+        });
         JButton viewPurchaseHistory = new JButton("View/Export Purchase History");
         viewPurchaseHistory.addActionListener(new ActionListener() {
             @Override
@@ -406,6 +439,21 @@ public class GUI extends JFrame implements Runnable {
         middle.add(buyAllButton);
         middle.add(removeAllButton);
 
+    }
+
+    public void searchBy() {
+        setup("Search by - Products", 350, 400);
+
+        JPanel top = new JPanel(new GridLayout(2, 1, 6, 6));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JTextField search = new JTextField(15);
+        JButton searchButton = new JButton("Search");
+
+        top.add(search);
+        top.add(searchButton);
+
+        add(top, BorderLayout.NORTH);
     }
 
     public void addProduct() {
