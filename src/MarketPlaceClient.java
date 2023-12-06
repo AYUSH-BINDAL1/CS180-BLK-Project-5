@@ -11,7 +11,7 @@ import java.net.Socket;
  * <p>
  */
 
-public class MarketPlaceClient {
+/* public class MarketPlaceClient {
     public static void main(String[] args) {
         Socket clientSocket;
         GUI clientGUI;
@@ -24,4 +24,4 @@ public class MarketPlaceClient {
             e.printStackTrace();
         }
     }
-}
+} */

@@ -17,14 +17,15 @@ public class GUI extends JFrame implements Runnable {
 
     public GUI(
             //Socket socket
-            ) {
+    ) {
         this.socket = socket;
         this.username = "";
         this.password = "";
         this.custOrSeller = false;
     }
+
     public void run() {
-        searchBy();
+        modifyProduct("asdf,asdf ");
     }
     // General Login Page
 
@@ -174,6 +175,12 @@ public class GUI extends JFrame implements Runnable {
             }
         });
         JButton viewStatistics = new JButton("View store/seller Statistics");
+        viewStatistics.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewStatistics();
+            }
+        });
 
         // TODO: implement method to print the products in Marketplace with a view more button that corresponds to each product
 
@@ -205,6 +212,12 @@ public class GUI extends JFrame implements Runnable {
         });
 
         JButton shoppingCart = new JButton("View Shopping Cart");
+        shoppingCart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewShoppingCart();
+            }
+        });
         JButton editAccount = new JButton("Edit Account");
         editAccount.addActionListener(new ActionListener() {
             @Override
@@ -214,7 +227,6 @@ public class GUI extends JFrame implements Runnable {
         });
 
         JButton deleteAccount = new JButton("Delete Account");
-
         deleteAccount.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -222,8 +234,20 @@ public class GUI extends JFrame implements Runnable {
             }
         });
         JButton addProduct = new JButton("Add Product");
+        addProduct.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addProduct();
+            }
+        });
         JButton viewSales = new JButton("View Sales");
         JButton viewStatistics = new JButton("View Seller Statistics");
+        viewStatistics.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewStatistics();
+            }
+        });
         JButton csv = new JButton("Export/Import CSV");
         csv.addActionListener(new ActionListener() {
             @Override
@@ -231,6 +255,7 @@ public class GUI extends JFrame implements Runnable {
                 csv();
             }
         });
+
 
         // TODO: implement method to print the the seller's products
 
@@ -245,6 +270,38 @@ public class GUI extends JFrame implements Runnable {
 
         add(top, BorderLayout.NORTH);
 
+    }
+
+    public void viewStatistics() {
+        setup("View Statistics", 450, 450);
+
+        JPanel top = new JPanel(new GridLayout(1, 2, 7, 7));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By Store Descending ", "Sort By Store Ascending"
+                , "Sort by Seller Descending", "Sort by Seller Ascending"});
+        sortBy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: add functionality to sort
+            }
+        });
+
+        JButton mainMenu = new JButton("Main Menu");
+        mainMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+// TODO: add functionality to return to main menu
+            }
+        });
+
+        top.add(sortBy);
+        top.add(mainMenu);
+
+        // TODO: implement method to print the statistics
+
+        add(top, BorderLayout.NORTH);
+        add(middle, BorderLayout.CENTER);
     }
 
     public void editAccount() {
@@ -457,7 +514,7 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public void addProduct() {
-        setup("Add Product", 350, 400);
+        setup("Create Product", 350, 400);
 
         JPanel top = new JPanel(new GridLayout(6, 2, 7, 7));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -481,11 +538,11 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-        JButton exit = new JButton("Exit");
+        JButton exit = new JButton("Back Button");
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                // TODO: implement to go back to main menu
             }
         });
 
@@ -507,10 +564,147 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
+
     public void csv() {
         setup("CSV", 400, 400);
 
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new GridLayout(1, 2, 6, 6));
+
+        JComboBox<String> csvType = new JComboBox<>(new String[]{"Import", "Export"});
+        JLabel csvText = new JLabel("<html> <br/> <br/> Please enter the file you want to import or export <br/> <br/> </html>");
+        JTextField fileName = new JTextField(15);
+
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: implement to go back to main menu
+            }
+        });
+        JButton csvButton = new JButton("Import/ Export CSV");
+        csvButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: implement functionality to import or export csv file depending on user selection
+            }
+        });
+
+        middle.add(csvType);
+        middle.add(csvText);
+        middle.add(fileName);
+
+        bottom.add(backButton);
+        bottom.add(csvButton);
+
+        add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
     }
+
+    public void modifyProduct(String product) {
+        setup("Modify Product", 400, 600);
+
+        JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JLabel productModified = new JLabel("Product Modified: " + product);
+
+        JLabel productNameLabel = new JLabel("Enter New Product Name:");
+        JTextField productName = new JTextField(15);
+        JLabel productPriceLabel = new JLabel("Enter New Product Price:");
+        JTextField productPrice = new JTextField(15);
+        JLabel productQuantityLabel = new JLabel("Enter New Product Quantity:");
+        JTextField productQuantity = new JTextField(15);
+        JLabel productStoreLabel = new JLabel("Enter New Product Store:");
+        JTextField productStore = new JTextField(15);
+        JLabel productDescription = new JLabel("Enter New Product Description:");
+        JTextField productDescriptionField = new JTextField(15);
+
+        JButton modifyProduct = new JButton("Modify Product");
+        modifyProduct.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: add functionality to modify product and return to home page
+            }
+        });
+
+        JButton exit = new JButton("Back to Main Menu");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: return to home page
+            }
+        });
+
+        top.add(productModified);
+
+        middle.add(productNameLabel);
+        middle.add(productName);
+        middle.add(productPriceLabel);
+        middle.add(productPrice);
+        middle.add(productQuantityLabel);
+        middle.add(productQuantity);
+        middle.add(productStoreLabel);
+        middle.add(productStore);
+        middle.add(productDescription);
+        middle.add(productDescriptionField);
+
+        bottom.add(exit);
+        bottom.add(modifyProduct);
+
+        add(top, BorderLayout.NORTH);
+        add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
+
+    }
+
+    public void viewShoppingCart() {
+        setup("View Customers Shopping Cart", 400, 400);
+
+        JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JLabel info = new JLabel("<html> <br/> <br/> Shopping Cart <br/> <br/> </html>");
+
+        top.add(info);
+
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: return to home page
+            }
+        });
+
+        bottom.add(backButton);
+
+
+        add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
+    }
+
+    public void viewSales() {
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JLabel info = new JLabel("<html> <br/> <br/> Sales <br/> <br/> </html>");
+
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: return to home page
+            }
+        });
+
+        middle.add(info);
+
+        add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
+    }
+
     public void setup(String description, int width, int height) {
         getContentPane().removeAll();
         revalidate();
@@ -524,8 +718,10 @@ public class GUI extends JFrame implements Runnable {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() ->
-                {GUI gui = new GUI();
-                gui.setVisible(true);
-                gui.run();});
+        {
+            GUI gui = new GUI();
+            gui.setVisible(true);
+            gui.run();
+        });
     }
 }
