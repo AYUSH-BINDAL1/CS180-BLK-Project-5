@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
+import java.net.Socket;
 
 public class GUI extends JFrame implements Runnable {
 
