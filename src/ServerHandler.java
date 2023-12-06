@@ -80,7 +80,8 @@ public class ServerHandler implements Runnable {
                 result =  CustomerShopping.buyProductServer(commandSplit[1], commandSplit[2], PURCHASEHISTORYLOCK,
                         PRODUCTLOCK);
             } else if (command.equalsIgnoreCase("CHECKOUT CART")) {
-                result = CustomerShopping.checkoutCartServer(commandSplit[1], SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK);
+                result = CustomerShopping.checkoutCartServer(commandSplit[1], SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK,
+                        PRODUCTLOCK);
             } else if (command.equalsIgnoreCase("ADD PRODUCT TO CART")) {
                 result = CustomerShopping.addToCartServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK, PRODUCTLOCK);
             } else if (command.equalsIgnoreCase("REMOVE PRODUCT FROM CART")) {
