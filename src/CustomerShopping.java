@@ -37,7 +37,6 @@ public class CustomerShopping {
             synchronized (PRODUCTLOCK) {
                 //Reads lines from Product.txt
                 productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
-
             }
             int productIndex = productLines.indexOf(chosenProduct); //Gets the index where the chosenProduct is
             // found in "Product.txt". This **SHOULD** work if the String is formatted correctly
@@ -50,16 +49,10 @@ public class CustomerShopping {
                 } else {
                     //Decreases the amount available, changes the value of the split product and reads it to the
                     // productLines and adds to shoppingCart
-                    amountAvailable = amountAvailable - purchaseQuantity;
-                    productOnFileSplit[5] = Integer.toString(amountAvailable);
-                    productLines.set(productIndex, String.join(",", productOnFileSplit));
                     result = "ADDED TO CART";
                     shoppingCartLines.add(chosenProduct + "," + email);
                     synchronized (SHOPPINGCARTLOCK) {
                         Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines);
-                    }
-                    synchronized (PRODUCTLOCK) {
-                        Files.write(Paths.get("Product.txt"), productLines);
                     }
                 }
             } else {
@@ -172,6 +165,9 @@ public class CustomerShopping {
                         currentProductSplit[5] = Integer.toString(amountAvailable);
                         modifiedProduct = String.join(",", currentProductSplit); //Rejoins string
                         productLines.set(i, modifiedProduct);
+                        if(amountAvailable == 0) { //If the product is out of stock it removes it
+                            productLines.remove(i);
+                        }
                         modifiedProduct += "," + customerEmail; //Adds the customer email to the
                         result = "SUCCESS";
                     } else { //Not enough quantity
@@ -200,7 +196,8 @@ public class CustomerShopping {
 
     //TODO: Create checkoutCartClient method
     //Given the customerEmail checks out their cart
-    public static String checkoutCartServer(String email, Object SHOPPINGCARTLOCK, Object PURCHASEHISTORYLOCK) {
+    public static String checkoutCartServer(String email, Object SHOPPINGCARTLOCK, Object PURCHASEHISTORYLOCK,
+                                            Object PRODUCTLOCK) {
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
         ArrayList<String> toAdd = new ArrayList<String>(); //ArrayList to add to PurchaseHistory.txt
         String result = ""; //Result to return to run method
@@ -211,8 +208,13 @@ public class CustomerShopping {
             }
             for (int i = 0; i < shoppingCartLines.size(); i++) {
                 String[] shoppingCartSplit = shoppingCartLines.get(i).split(",");
+                String currentProduct = shoppingCartSplit[0] + "," + shoppingCartSplit[1] + "," +
+                        shoppingCartSplit[2] + "," + shoppingCartSplit[3] + "," + shoppingCartSplit[4] +
+                        "," + shoppingCartSplit[5];
                 if (shoppingCartSplit[6].equals(email)) { //If the customer email matches it removes it from
                     // the shoppingCart ArrayList and adds it to the toAdd ArrayList to be added
+                    buyProductServer(shoppingCartSplit[6], currentProduct
+                            ,PURCHASEHISTORYLOCK, PRODUCTLOCK);
                     toAdd.add(shoppingCartLines.get(i));
                     shoppingCartLines.remove(i);
                     i--; //Accounts for removal
@@ -223,11 +225,6 @@ public class CustomerShopping {
             } else {
                 synchronized (SHOPPINGCARTLOCK) {
                     Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines); //Rewrites text file
-                }
-                synchronized (PURCHASEHISTORYLOCK) {
-                    //Rewrites files
-                    Files.write(Paths.get("PurchaseHistory.txt"), toAdd,
-                            StandardOpenOption.APPEND); //Appends the list to the text file
                 }
                 result = "SUCCESS";
             }
