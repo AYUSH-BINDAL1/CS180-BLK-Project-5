@@ -39,7 +39,7 @@ public class MarketPlaceServer {
   
     public static void main(String[] args) {
         
-
+        
         //Starts ServerSocket at PORT: 6969
         //Continually accepts connections from Clients
         //Starts a new instance of ServerHandler and creates a new thread for that instance
@@ -399,4 +399,4 @@ When Split\
 3 = Seller Email\
 4 = Price\
 5 = Quantity\
-6 = Customer Name (For Shopping Cart/Purchase History)\
+6 = Customer Name (For Shopping Cart/Purchase History)

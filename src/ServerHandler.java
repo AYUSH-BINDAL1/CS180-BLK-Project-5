@@ -64,74 +64,83 @@ public class ServerHandler implements Runnable {
             command = commandSplit[0];
             if (command.equalsIgnoreCase("REGISTER")) {
                 result = AccountManager.registerServer(commandSplit[1], commandSplit[2], commandSplit[3],
-                        USERINFOLOCK);
+                        USERINFOLOCK);  //Parameters: email, password, userType
             } else if (command.equalsIgnoreCase("LOGIN")) {
-                result = AccountManager.loginServer(commandSplit[1], commandSplit[2], commandSplit[3], USERINFOLOCK);
+                result = AccountManager.loginServer(commandSplit[1], commandSplit[2], commandSplit[3], USERINFOLOCK); //Parameters: email, password, userType
             } else if (command.equalsIgnoreCase("EDIT USERNAME")) {
                 result = AccountManager.updateEmailFiles(commandSplit[1], commandSplit[2], USERINFOLOCK,
-                        SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK, PRODUCTLOCK);
+                        SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK, PRODUCTLOCK); //Parameters: oldEmail, newEmail
             } else if (command.equalsIgnoreCase("EDIT PASSWORD")) {
                 result = AccountManager.updatePasswordFiles(commandSplit[1], commandSplit[2], commandSplit[3],
-                        USERINFOLOCK);
+                        USERINFOLOCK); //Parameters: oldEmail, oldPassword, newPassword
             } else if (command.equalsIgnoreCase("DELETE ACCOUNT")) {
                 result = AccountManager.deleteAccount(commandSplit[1], commandSplit[2], USERINFOLOCK,
-                        SHOPPINGCARTLOCK, PRODUCTLOCK);
+                        SHOPPINGCARTLOCK, PRODUCTLOCK); //Parameters: email, password
             } else if (command.equalsIgnoreCase("BUY PRODUCT")) {
                 result =  CustomerShopping.buyProductServer(commandSplit[1], commandSplit[2], PURCHASEHISTORYLOCK,
-                        PRODUCTLOCK);
+                        PRODUCTLOCK); //Parameters: email, chosenProduct (Formatted String)
             } else if (command.equalsIgnoreCase("CHECKOUT CART")) {
-                result = CustomerShopping.checkoutCartServer(commandSplit[1], SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK);
+                result = CustomerShopping.checkoutCartServer(commandSplit[1], SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK); //Parameters: email
             } else if (command.equalsIgnoreCase("ADD PRODUCT TO CART")) {
-                result = CustomerShopping.addToCartServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                result = CustomerShopping.addToCartServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK,
+                        PRODUCTLOCK); //Parameter: email, chosenProduct (Formatted String)
+            } else if (command.equalsIgnoreCase("VIEW CART")) {
             } else if (command.equalsIgnoreCase("REMOVE PRODUCT FROM CART")) {
-                result = CustomerShopping.removeProductServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                result = CustomerShopping.removeProductServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK,
+                        PRODUCTLOCK); //Parameter: email, chonenProduct (Formatted String)
             } else if (command.equalsIgnoreCase("SEARCH BY NAME")) {
-                resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
+                resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK); //Parameter: Search Query
             } else if (command.equalsIgnoreCase("SEARCH BY STORE")) {
-                resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
+                resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK); //Parameter: Search Query
             } else if (command.equalsIgnoreCase("SEARCH BY DESCRIPTION")) {
-                resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
+                resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK); //Parameter: Search Query
             } else if (command.equalsIgnoreCase("SORT INCREASING PRICE")) {
-                resultList = ProductSort.sortByIncreasingPriceServer(PRODUCTLOCK);
+                resultList = ProductSort.sortByIncreasingPriceServer(PRODUCTLOCK); //Parameter: NONE
             } else if (command.equalsIgnoreCase("SORT DECREASING PRICE")) {
-                resultList = ProductSort.sortByDecreasingPriceServer(PRODUCTLOCK);
+                resultList = ProductSort.sortByDecreasingPriceServer(PRODUCTLOCK); //Parameter: NONE
             } else if (command.equalsIgnoreCase("SORT INCREASING QUANTITY")) {
-                resultList = ProductSort.sortByIncreasingQuantityServer(PRODUCTLOCK);
+                resultList = ProductSort.sortByIncreasingQuantityServer(PRODUCTLOCK); //Parameter: NONE
             } else if (command.equalsIgnoreCase("SORT DECREASING QUANTITY")) {
-                resultList = ProductSort.sortByDecreasingQuantityServer(PRODUCTLOCK);
+                resultList = ProductSort.sortByDecreasingQuantityServer(PRODUCTLOCK); //Parameter: NONE
             } else if (command.equalsIgnoreCase("VIEW PURCHASE HISTORY")) {
-                resultList = PurchaseHistory.viewCustomerPurchaseHistoryServer(commandSplit[1], PURCHASEHISTORYLOCK);
+                resultList = PurchaseHistory.viewCustomerPurchaseHistoryServer(commandSplit[1], PURCHASEHISTORYLOCK); //Parameter: email
             } else if (command.equalsIgnoreCase("EXPORT PURCHASE HISTORY")) {
                 result = PurchaseHistory.exportCustomerPurchaseHistoryServer(commandSplit[1], commandSplit[2],
-                        PURCHASEHISTORYLOCK);
+                        PURCHASEHISTORYLOCK); //Parameter: email, FileName
             } else if (command.equalsIgnoreCase("VIEW CUSTOMER STATISTICS")) {
                 resultList = Statistics.customerDashboardServer(commandSplit[1],PURCHASEHISTORYLOCK, PRODUCTLOCK);
             } else if (command.equalsIgnoreCase("VIEW CUSTOMER STATISTICS")) {
                 resultList = Statistics.customerDashboardSpecificServer(commandSplit[1],
                         commandSplit[2], PURCHASEHISTORYLOCK);
             } else if (command.equalsIgnoreCase("VIEW SELLER PRODUCTS")) {
-                resultList = SellerShopping.viewSellerProducts(commandSplit[1], PRODUCTLOCK);
+                resultList = SellerShopping.viewSellerProducts(commandSplit[1], PRODUCTLOCK); //Parameter: Email
             } else if (command.equalsIgnoreCase("MODIFY PRODUCT")) {
                 result = SellerShopping.modifyProductServer(commandSplit[1], commandSplit[2],
                         commandSplit[3], commandSplit[4], Double.parseDouble(commandSplit[5]),
                         Integer.parseInt(commandSplit[6]), commandSplit[7], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                //Parameter: Product Name, Description, Store, Seller Email, Price, Quantity, oldProduct (Formatted
+                // String)
             } else if (command.equalsIgnoreCase("DELETE PRODUCT")) {
                 result = SellerShopping.deleteProductServer(commandSplit[1], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                //oldProduct (Formatted String)
             } else if (command.equalsIgnoreCase("CREATE NEW PRODUCT")) {
                 result = SellerShopping.createNewProductServer(commandSplit[1], commandSplit[2],
                         commandSplit[3], commandSplit[4], Double.parseDouble(commandSplit[5]),
-                        Integer.parseInt(commandSplit[6]), PRODUCTLOCK);
+                        Integer.parseInt(commandSplit[6]), PRODUCTLOCK); //Parameter: Product Name, Description, Store, Seller Email, Price, Quantity
             } else if (command.equalsIgnoreCase("VIEW SALES BY STORE")) {
-                result = Statistics.viewSalesByStoreServer(commandSplit[1], PURCHASEHISTORYLOCK);
+                result = Statistics.viewSalesByStoreServer(commandSplit[1], PURCHASEHISTORYLOCK); //Parameter: Seller
+                // Name
             } else if (command.equalsIgnoreCase("IMPORT SELLER CSV")) {
-                result = CSVHandler.importSellerCSVServer(commandSplit[1], PRODUCTLOCK);
+                result = CSVHandler.importSellerCSVServer(commandSplit[1], PRODUCTLOCK); //Parameter: Path
             } else if (command.equalsIgnoreCase("EXPORT SELLER CSV")) {
                 result = CSVHandler.exportSellerCSVServer(commandSplit[1], commandSplit[2], PRODUCTLOCK);
+                //Parameter: path, sellerEmail
             } else if (command.equalsIgnoreCase("VIEW SELLER STATISTICS")) {
                 result = Statistics.generateSellerDashboardServer(commandSplit[1], Integer.parseInt(commandSplit[2])
-                        , PURCHASEHISTORYLOCK);
+                        , PURCHASEHISTORYLOCK); //Parameter: sellerEmail, rank (integer either 1 or 0)
             } else if (command.equalsIgnoreCase("VIEW SELLER SHOPPING CART")) {
-                resultList = SellerShopping.getSellerShoppingCartServer(commandSplit[1], PRODUCTLOCK);
+                resultList = SellerShopping.getSellerShoppingCartServer(commandSplit[1], PRODUCTLOCK); //Parameter:
+                // sellerEmail
             } else if (command.equalsIgnoreCase("EXIT PROGRAM")) {
                 exitProgram();
             }
