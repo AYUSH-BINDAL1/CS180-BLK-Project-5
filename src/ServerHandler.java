@@ -18,8 +18,7 @@ public class ServerHandler implements Runnable {
 
     private final Socket clientSocket; //Individual Client Socket
     BufferedReader reader; //Reader that reads from the client socket to the server
-    BufferedWriter writer; //Writer that writes String results to client socket
-    ObjectOutputStream outputStream;  //Output Stream to write an ArrayList to the client socket
+    ObjectOutputStream writer;  //Output Stream to write an ArrayList to the client socket
     private static Object USERINFOLOCK; //LOCK for synchronizing Username.txt
     private static Object SHOPPINGCARTLOCK; //LOCK for synchronizing ShoppingCart.txt
     private static Object PURCHASEHISTORYLOCK; //LOCK for synchronizing PurchaseHistory.txt
@@ -37,8 +36,7 @@ public class ServerHandler implements Runnable {
         ServerHandler.PRODUCTLOCK = PRODUCTLOCK;
         try {
             reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); //Creates reader
-            writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream())); //Creates writer
-            outputStream = new ObjectOutputStream(clientSocket.getOutputStream()); //Creates output stream
+            writer = new ObjectOutputStream(clientSocket.getOutputStream()); //Creates output stream
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,6 +55,7 @@ public class ServerHandler implements Runnable {
             resultList.clear();
             try {
                 clientMessage = reader.readLine();
+                System.out.println(clientMessage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -136,16 +135,20 @@ public class ServerHandler implements Runnable {
             } else if (command.equalsIgnoreCase("EXIT PROGRAM")) {
                 exitProgram();
             }
-
-            if(result.isEmpty()) {
+            System.out.println(result);
+            if (result.isEmpty()) {
                 try {
-                    outputStream.writeObject(resultList);
+                    writer.writeObject(resultList);
+                    writer.reset();
+                    writer.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } else if(resultList.isEmpty()) {
                 try {
-                    writer.write(result);
+                    writer.writeObject(result);
+                    writer.reset();
+                    writer.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

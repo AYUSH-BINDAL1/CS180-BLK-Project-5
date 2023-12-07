@@ -36,7 +36,7 @@ public class MarketPlaceServer {
 
             while (true) {
                 clientSocket = serverSocket.accept(); //Continues to accept connections to the server
-                JOptionPane.showMessageDialog(null, "Connection to Server Established",
+                JOptionPane.showMessageDialog(null, "Successfully Connected. Welcome to the Marketplace.",
                         "Connection Established", JOptionPane.INFORMATION_MESSAGE);
                 serverHandler = new ServerHandler(clientSocket, USERINFOLOCK, SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK,
                         PRODUCTLOCK); //Creates new serverHandler with clientSocket; //Creates new serverHandler with

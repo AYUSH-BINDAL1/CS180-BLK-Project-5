@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -11,17 +12,21 @@ import java.net.Socket;
  * <p>
  */
 
-/* public class MarketPlaceClient {
-    public static void main(String[] args) {
-        Socket clientSocket;
-        GUI clientGUI;
-        try {
-            clientSocket = new Socket("localhost", 6969);
-            clientGUI = new GUI(newSocket);
-            Thread newThread = new Thread(newGUI);
-            newThread.start();
-        } catch (IOException e) {
-            e.printStackTrace();
+public class MarketPlaceClient {
+        public static void main(String[] args) {
+            Socket clientSocket;
+            GUI clientGUI;
+            try {
+                clientSocket = new Socket("localhost", 6969);
+                clientGUI = new GUI(clientSocket);
+                Thread newThread = new Thread(clientGUI);
+                SwingUtilities.invokeLater(() -> {
+                    clientGUI.setVisible(true);
+                });
+                newThread.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-} */
+

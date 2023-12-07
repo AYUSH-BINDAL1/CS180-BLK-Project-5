@@ -6,28 +6,75 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 import java.net.Socket;
+import java.io.*;
 
 public class GUI extends JFrame implements Runnable {
     private Socket socket;
-    private String username;
+    private String email;
     private String password;
-    // True if Customer, False if Seller
-    private boolean custOrSeller;
+    private String userType;
+    private ObjectInputStream reader;
+    private BufferedWriter writer;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 
 
-    public GUI(
-            //Socket socket
-    ) {
+    public GUI(Socket socket) {
         this.socket = socket;
-        this.username = "";
+        this.email = "";
         this.password = "";
-        this.custOrSeller = false;
+        this.userType = "";
+        try {
+            reader = new ObjectInputStream(socket.getInputStream());
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void run() {
-        modifyProduct("asdf,asdf ");
+        loginPage(); //General Login Page
     }
-    // General Login Page
+
+
+    public Object communicateWithServer(String message) {
+        System.out.println(message);
+        Object serverResponse = null;
+        try {
+            writer.write(message);
+            writer.newLine();
+            writer.flush();
+            serverResponse = reader.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println(serverResponse);
+        return serverResponse;
+    }
 
     public void loginPage() {
         setTitle("MarketPlace Login");
@@ -39,7 +86,7 @@ public class GUI extends JFrame implements Runnable {
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JComboBox<String> userType = new JComboBox<>(new String[]{"Customer", "Seller"});
+        JComboBox<String> userType = new JComboBox<>(new String[]{"CUSTOMER", "SELLER"});
         userType.setVisible(true);
 
         JComboBox<String> createOrLogin = new JComboBox<>(new String[]{"Login", "Create Account"});
@@ -56,17 +103,19 @@ public class GUI extends JFrame implements Runnable {
         info.setHorizontalAlignment(SwingConstants.CENTER);
 
         JTextField email = new JTextField(15);
-        JTextField password = new JTextField(15);
+        JPasswordField password = new JPasswordField(15);
 
         JButton loginButton = new JButton("Login/Create Account");
         passwordLabel.setHorizontalAlignment(SwingConstants.CENTER);
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("clicked Login butotn");
+                String messageToServer = "";
                 String userTypeSelected = (String) userType.getSelectedItem();
                 String createOrLoginSelected = (String) createOrLogin.getSelectedItem();
                 String emailEntered = email.getText();
-                String passwordEntered = password.getText();
+                String passwordEntered = String.valueOf(password.getPassword());
 
                 // checks if it is a valid email or empty
                 if (!AccountManager.validateEmail(emailEntered) || emailEntered.isEmpty()) {
@@ -84,25 +133,53 @@ public class GUI extends JFrame implements Runnable {
                 // TODO: implement logic
 
                 if (createOrLoginSelected.equals("Create Account")) {
-                    if (userTypeSelected.equals("Customer")) {
-
-                    } else if (userTypeSelected.equals("Seller")) {
-
-                    } else {
-                        System.out.println("UserType dropdown Error");
+                    messageToServer = String.format("REGISTER,%s,%s,%s", emailEntered, passwordEntered,
+                            userTypeSelected);
+                    String result = (String) communicateWithServer(messageToServer);
+                    System.out.println(result);
+                    if (result.equals("SUCCESS")) {
+                        JOptionPane.showMessageDialog(null, "Account Creation Success", "Your account has been " +
+                                "created", JOptionPane.INFORMATION_MESSAGE);
+                        setEmail(emailEntered);
+                        setPassword(passwordEntered);
+                        setUserType(userTypeSelected);
+                        if (userTypeSelected.equals("CUSTOMER")) {
+                            CustomerPage();
+                        } else if (userTypeSelected.equals("SELLER")) {
+                            SellerPage();
+                        }
+                    } else if (result.equals("EMAIL ALREADY EXISTS")) {
+                        JOptionPane.showMessageDialog(null, "Email Taken", "Entered email is already taken.",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 } else if (createOrLoginSelected.equals("Login")) {
-                    if (userTypeSelected.equals("Customer")) {
-
-                    } else if (userTypeSelected.equals("Seller")) {
-
-                    } else {
-                        System.out.println("UserType dropdown Error");
+                    messageToServer = String.format("LOGIN,%s,%s,%s", emailEntered, passwordEntered,
+                            userTypeSelected);
+                    String result = (String) communicateWithServer(messageToServer);
+                    if (result.equals("SUCCESS")) {
+                        JOptionPane.showMessageDialog(null, "Login Success",
+                                "You have been successfully logged in.", JOptionPane.INFORMATION_MESSAGE);
+                        setEmail(emailEntered);
+                        setPassword(passwordEntered);
+                        setUserType(userTypeSelected);
+                        if (userTypeSelected.equals("CUSTOMER")) {
+                            CustomerPage();
+                        } else if (userTypeSelected.equals("SELLER")) {
+                            SellerPage();
+                        }
+                    } else if (result.equals("INVALID EMAIL")) {
+                        JOptionPane.showMessageDialog(null, "Invalid Email, Does not exist", "Email Does not exist.",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else if (result.equals("INVALID PASSWORD")) {
+                        JOptionPane.showMessageDialog(null, "Invalid Password", "Wrong Password.",
+                                JOptionPane.ERROR_MESSAGE);
+                    }  else if (result.equals("INVALID USER TYPE")) {
+                        JOptionPane.showMessageDialog(null, "Invalid User Type", "Wrong User Type.",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    System.out.println("Error, the login/create an account dropdown doesn't work");
+                    System.out.println("Error, the Login/Create an account dropdown doesn't work");
                 }
-
             }
         });
 
@@ -716,12 +793,4 @@ public class GUI extends JFrame implements Runnable {
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() ->
-        {
-            GUI gui = new GUI();
-            gui.setVisible(true);
-            gui.run();
-        });
-    }
 }
