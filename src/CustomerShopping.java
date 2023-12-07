@@ -17,9 +17,6 @@ import java.util.ArrayList;
 public class CustomerShopping {
 
 
-    //TODO: Create addToCartClient method
-
-
     //Given a product in the form of the formatted String EXACTLY as it is in the Product.txt file adds if it is a
     // valid quantity
     public static String addToCartServer(String email, String chosenProduct, Object SHOPPINGCARTLOCK,
@@ -65,8 +62,6 @@ public class CustomerShopping {
     }
 
 
-    //TODO: Create removeProductClient method
-
 
     //Given a product from a customer's shopping cart attempts to remove it and add it back to Product.txt
     //FIXME: Probably need to check if the chosenProduct is in the shopping cart first
@@ -110,7 +105,7 @@ public class CustomerShopping {
         return "SUCCESS";
     }
 
-    //TODO: Create getCustomerShoppingCartClient method
+
     public static ArrayList<String> getCustomerShoppingCartServer(String email, Object SHOPPINGCARTLOCK) {
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
         ArrayList<String> returnList = new ArrayList<String>(); //Result to return to run method
@@ -130,9 +125,6 @@ public class CustomerShopping {
         }
         return returnList; //Returns the result to run method
     }
-
-
-    //TODO: Create buyProductClient method
 
 
     //Method that buys product directly from page and returns whether it succeeded or not.
@@ -194,7 +186,7 @@ public class CustomerShopping {
         return result;
     }
 
-    //TODO: Create checkoutCartClient method
+
     //Given the customerEmail checks out their cart
     public static String checkoutCartServer(String email, Object SHOPPINGCARTLOCK, Object PURCHASEHISTORYLOCK,
                                             Object PRODUCTLOCK) {

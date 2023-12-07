@@ -16,9 +16,6 @@ import java.util.ArrayList;
 public class CSVHandler {
 
 
-    //TODO: Create importSellerCSVClient method
-
-
     //Given a path to a seller's CSV file, import the seller's products into the Product.txt file.
     public static String importSellerCSVServer(String path, Object PRODUCTLOCK) {
         try {
@@ -52,9 +49,6 @@ public class CSVHandler {
         }
         return "SUCCESS";
     }
-
-
-    //TODO: Create importSellerCSVClient method
 
 
     //Given the sellerEmail and path writes Products the seller owns to a new CSV file

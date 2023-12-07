@@ -18,9 +18,6 @@ import java.util.regex.Pattern;
 public class AccountManager {
 
 
-    // TODO: Create editAccountDetailsClient Method
-
-
     //Given a newPassword and email, updates Username.txt accordingly
     public static String updatePasswordFiles(String email, String oldPassword, String newPassword,
                                              Object USERINFOLOCK) {
@@ -140,9 +137,6 @@ public class AccountManager {
     }
 
 
-    //TODO: Create deleteAccountClient Method
-
-
     public static String deleteAccount(String email, String password, Object USERINFOLOCK,
                                        Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         String result = ""; //Result to send back to run
@@ -157,7 +151,7 @@ public class AccountManager {
                 deleteAccountFiles(email, USERINFOLOCK, SHOPPINGCARTLOCK, PRODUCTLOCK);
                 result = "SUCCESS";
             } else {
-                result = "INVALID PASSWORD";
+                result = "INCORRECT PASSWORD";
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -229,9 +223,6 @@ public class AccountManager {
     }
 
 
-    // TODO: Create loginClient Method
-
-
     //Method that takes email, password, and userType and if they match with an account in the Username.txt sends
     // message back to run in ServerHandler
     public static String loginServer(String email, String password, String userType, Object USERINFOLOCK) {
@@ -252,10 +243,10 @@ public class AccountManager {
                     if (userInformationList.get(emailIndex + 2).equals(userType)) { //If the userType is valid
                         result = "SUCCESS"; //Login Successful
                     } else { //Invalid User Type
-                        result = "INVALID USER TYPE";
+                        result = "INCORRECT USER TYPE";
                     }
                 } else { //Invalid Password
-                    result = "INVALID PASSWORD";
+                    result = "INCORRECT PASSWORD";
                 }
             } else {  //If the Username.txt doesn't contain the email
                 result = "INVALID EMAIL";
@@ -265,9 +256,6 @@ public class AccountManager {
         }
         return result; //Returns result to run to let client know if the login succeeded or failed
     }
-
-
-    // TODO: Create registerClient Method
 
 
     //Method that takes email, password, userType and if valid and not existing adds to the Username.txt file
@@ -311,7 +299,6 @@ public class AccountManager {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-
 
 
 }

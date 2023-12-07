@@ -1,5 +1,6 @@
 # CS180-BLK-Project-5
-The capstone project for Purdue's CS180 - BLK course.
+The capstone project for Purdue's CS180 - BLK course.\
+A fully functioning Marketplace with full GUI, Client-Server Interaction, and Multiple User Connections.
 ## How to use our code:
 To use our code, first compile and run MarketPlaceServer.java using the following terminal commands.\
 In the terminal run:

@@ -16,9 +16,6 @@ import java.util.ArrayList;
 public class PurchaseHistory {
 
 
-    //TODO: Create viewCustomerPurchaseHistoryClient method
-
-
     //Given a customer returns an ArrayList of Strings containing the customer's purchase history
     public static ArrayList<String> viewCustomerPurchaseHistoryServer(String customerEmail, Object PURCHASEHISTORYLOCK) {
         ArrayList<String> returnList = new ArrayList<>();
@@ -43,9 +40,6 @@ public class PurchaseHistory {
         }
         return returnList; //Returns ArrayList
     }
-
-
-    //TODO: Create exportCustomerPurchaseHistoryClient method
 
 
     //Given a path and customerEmail creates a new txt file with the customer's purchase history

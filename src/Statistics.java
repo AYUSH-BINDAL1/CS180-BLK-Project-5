@@ -18,9 +18,6 @@ import java.util.Comparator;
 public class Statistics {
 
 
-    //TODO: Create customerDashboardClient method
-
-
     public static ArrayList<String> customerDashboardServer(String sort, Object PURCHASEHISTORYLOCK,
                                                             Object PRODUCTLOCK) {
         //seller store product quantity
@@ -89,9 +86,6 @@ public class Statistics {
     }
 
 
-    //TODO: Create customerDashboardSpecificClient method
-
-
     public static ArrayList<String> customerDashboardSpecificServer(String customerEmail,
                                                                     String sort, Object PURCHASEHISTORYLOCK) {
         // Seller store product quantity
@@ -146,9 +140,6 @@ public class Statistics {
     }
 
 
-    //TODO: Create sortCustomerLowtoHighClient method
-
-
     //sort from low to high
     public static ArrayList<String> sortCustomerLowtoHighServer(ArrayList<String> toSort) {
         // selection sort
@@ -175,12 +166,6 @@ public class Statistics {
     }
 
 
-    //TODO: Create sortCustomerHightoLowClient method
-
-
-    //TODO: Create sortCustomerHightoLowServer method
-
-
     //sort from high to low
     public static ArrayList<String> sortCustomerHightoLowServer(ArrayList<String> toSort) {
         // selection sort
@@ -205,9 +190,6 @@ public class Statistics {
         }
         return toSort;
     }
-
-
-    //TODO: Create viewSalesByStoreClient method
 
 
     public static String viewSalesByStoreServer(String sellerEmail, Object PURCHASEHISTORYLOCK) {
@@ -263,8 +245,6 @@ public class Statistics {
     }
 
 
-    //TODO: Create generateSellerDashboardServer method
-    //TODO: Create generateSellerDashboardClient method
     public static String generateSellerDashboardServer(String sellerEmail, int rank, Object PURCHASEHISTORYLOCK) {
 
         ArrayList<String> purchaseHistoryLines; //ArrayList of purchaseHistory from PurchaseHistory.txt
