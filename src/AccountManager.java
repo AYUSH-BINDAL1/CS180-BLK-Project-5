@@ -270,6 +270,7 @@ public class AccountManager {
                 synchronized (USERINFOLOCK) {
                     //Reads lines from Username.txt
                     userInformationList = (ArrayList<String>) Files.readAllLines(Paths.get("Username.txt"));
+                    Thread.sleep(1000);
                 }
 
                 int emailIndex = userInformationList.indexOf(email); //Index of email in Username.txt
@@ -286,6 +287,8 @@ public class AccountManager {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
         return result; //Returns result to run to let client know if the registration succeeded or failed
