@@ -143,11 +143,7 @@ public class GUI extends JFrame implements Runnable {
                         setEmail(emailEntered);
                         setPassword(passwordEntered);
                         setUserType(userTypeSelected);
-                        if (userTypeSelected.equals("CUSTOMER")) {
-                            CustomerPage();
-                        } else if (userTypeSelected.equals("SELLER")) {
-                            SellerPage();
-                        }
+                        returnHome();
                     } else if (result.equals("EMAIL ALREADY EXISTS")) {
                         JOptionPane.showMessageDialog(null, "Email Taken", "Entered email is already taken.",
                                 JOptionPane.ERROR_MESSAGE);
@@ -162,18 +158,14 @@ public class GUI extends JFrame implements Runnable {
                         setEmail(emailEntered);
                         setPassword(passwordEntered);
                         setUserType(userTypeSelected);
-                        if (userTypeSelected.equals("CUSTOMER")) {
-                            CustomerPage();
-                        } else if (userTypeSelected.equals("SELLER")) {
-                            SellerPage();
-                        }
+                        returnHome();
                     } else if (result.equals("INVALID EMAIL")) {
                         JOptionPane.showMessageDialog(null, "Invalid Email, Does not exist", "Email Does not exist.",
                                 JOptionPane.ERROR_MESSAGE);
                     } else if (result.equals("INVALID PASSWORD")) {
                         JOptionPane.showMessageDialog(null, "Invalid Password", "Wrong Password.",
                                 JOptionPane.ERROR_MESSAGE);
-                    }  else if (result.equals("INVALID USER TYPE")) {
+                    } else if (result.equals("INVALID USER TYPE")) {
                         JOptionPane.showMessageDialog(null, "Invalid User Type", "Wrong User Type.",
                                 JOptionPane.ERROR_MESSAGE);
                     }
@@ -206,6 +198,7 @@ public class GUI extends JFrame implements Runnable {
 
         JPanel top = new JPanel(new GridLayout(4, 2, 5, 5));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         JButton exit = new JButton("Exit");
         exit.addActionListener(new ActionListener() {
@@ -261,6 +254,14 @@ public class GUI extends JFrame implements Runnable {
 
         // TODO: implement method to print the products in Marketplace with a view more button that corresponds to each product
 
+        JButton refresh = new JButton("Refresh");
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: implement refresh button
+            }
+        });
+
         top.add(exit);
         top.add(shoppingCart);
         top.add(editAccount);
@@ -270,8 +271,11 @@ public class GUI extends JFrame implements Runnable {
         top.add(viewPurchaseHistory);
         top.add(viewStatistics);
 
+        bottom.add(refresh);
+
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
     }
 
     public void SellerPage() {
@@ -279,6 +283,7 @@ public class GUI extends JFrame implements Runnable {
 
         JPanel top = new JPanel(new GridLayout(4, 2, 5, 5));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         JButton exit = new JButton("Exit");
         exit.addActionListener(new ActionListener() {
@@ -336,6 +341,14 @@ public class GUI extends JFrame implements Runnable {
 
         // TODO: implement method to print the the seller's products
 
+        JButton refresh = new JButton("Refresh");
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: implement refresh button
+            }
+        });
+
         top.add(exit);
         top.add(shoppingCart);
         top.add(editAccount);
@@ -368,14 +381,15 @@ public class GUI extends JFrame implements Runnable {
         mainMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-// TODO: add functionality to return to main menu
+                returnHome();
             }
         });
 
         top.add(sortBy);
         top.add(mainMenu);
 
-        // TODO: implement method to print the statistics
+        // TODO: implement method to print the statistics *note*
+        //  statistics is general and used by both seller and customer
 
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
@@ -407,19 +421,51 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add functionality
-                /*
                 String userChangeTypeSelected = (String) userChangeType.getSelectedItem();
                 String currentCredentialEntered = currentCredential.getText();
                 String newCredentialEntered = newCredential.getText();
 
+
+                String messageToServer;
+
                 if (userChangeTypeSelected.equals("Change Password")) {
-
+                    if(!currentCredentialEntered.equals(getPassword())) {
+                        JOptionPane.showMessageDialog(null, "Current Password entered is incorrect",
+                                "Password Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    messageToServer = String.format("EDIT USERNAME,%s,%s");
+                    String result = (String) communicateWithServer(messageToServer);
+                    if (result.equals("SUCCESS")) {
+                        setPassword(newCredentialEntered);
+                        JOptionPane.showMessageDialog(null, "Password changed successfully",
+                                "Password Change Success", JOptionPane.INFORMATION_MESSAGE);
+                        returnHome();
+                    } else if (result.equals("INVALID PASSWORD")) {
+                        JOptionPane.showMessageDialog(null, "Current Password entered is incorrect",
+                                "Password Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else if (userChangeTypeSelected.equals("Change Username")) {
-
+                    if (!currentCredentialEntered.equals(getEmail())) {
+                        JOptionPane.showMessageDialog(null, "Current Username/Email entered is incorrect",
+                                "Username Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    messageToServer = String.format("EDIT USERNAME,%s,%s");
+                    String result = (String) communicateWithServer(messageToServer);
+                    if (result.equals("SUCCESS")) {
+                        setEmail(newCredentialEntered);
+                        JOptionPane.showMessageDialog(null, "Username changed successfully",
+                                "Username Change Success", JOptionPane.INFORMATION_MESSAGE);
+                        returnHome();
+                    } else if (result.equals("EMAIL ALREADY TAKEN")) {
+                        JOptionPane.showMessageDialog(null, "New Email entered is already taken",
+                                "Username Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
                     System.out.println("UserChangeType Error");
                 }
-                */
+
             }
         });
 
@@ -455,14 +501,36 @@ public class GUI extends JFrame implements Runnable {
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement delete account functionality, makes sure it deletes account and returns to home page
+                if (!usernameCredential.equals(getEmail())) {
+                    JOptionPane.showMessageDialog(null, "Username entered is incorrect",
+                            "Incorrect username/email entered", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!passwordCredential.equals(getPassword())) {
+                    JOptionPane.showMessageDialog(null, "Password entered is incorrect",
+                            "Incorrect password entered", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                String messageToServer = String.format("DELETE ACCOUNT,%s,%s",
+                        usernameCredential, passwordCredential);
+                String result = (String) communicateWithServer(messageToServer);
+                if (result.equals("SUCCESS")) {
+                    JOptionPane.showMessageDialog(null, "Account deleted successfully",
+                            "Account Deletion Success", JOptionPane.INFORMATION_MESSAGE);
+                    System.exit(0);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Incorrect Password Entered",
+                            "Password ERROR", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         JButton returnToMain = new JButton("Return to Main Menu");
         returnToMain.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO: implement functionality to return to home page depending on if seller or customer
+                returnHome();
             }
         });
 
@@ -498,7 +566,7 @@ public class GUI extends JFrame implements Runnable {
         returnToMain.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement functionality to return to home page depending on if seller or customer
+                returnHome();
             }
         });
 
@@ -547,7 +615,7 @@ public class GUI extends JFrame implements Runnable {
         returnToMain.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement functionality to return to home page depending on if seller or customer
+                CustomerPage();
             }
         });
 
@@ -555,7 +623,16 @@ public class GUI extends JFrame implements Runnable {
         buyAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement functionality to buy all items in shopping cart and return to home page
+                String messageToServer = String.format("CHECKOUT CART,%s", getEmail());
+                String result = (String) communicateWithServer(messageToServer);
+                if (result.equals("SUCCESS")) {
+                    JOptionPane.showMessageDialog(null, "Purchase successful",
+                            "Purchase Success", JOptionPane.INFORMATION_MESSAGE);
+                    returnHome();
+                } else if (result.equals("EMPTY CART")) {
+                    JOptionPane.showMessageDialog(null, "Cart is empty",
+                            "Empty Cart", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         JButton removeAllButton = new JButton("Remove All");
@@ -611,7 +688,31 @@ public class GUI extends JFrame implements Runnable {
         addProduct.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: add functionality to add product to database and return to home page
+                try {
+                    double price = Double.parseDouble(productPrice.getText());
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Invalid price entered",
+                            "Price ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+
+                try {
+                    int quantity = Integer.parseInt(productQuantity.getText());
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Invalid quantity entered",
+                            "Quantity ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+
+                String messageToServer = String.format("CREATE NEW PRODUCT,%s,%s,%s,%s,%s", productName,
+                        productDescription, productStore, productPrice, productQuantity);
+                String result = (String) communicateWithServer(messageToServer);
+                if (result.equals("SUCCESS")) {
+                    JOptionPane.showMessageDialog(null, "Product added successfully",
+                            "Product Creation Success", JOptionPane.INFORMATION_MESSAGE);
+                    returnHome();
+                } else if (result.equals("PRODUCT ALREADY EXISTS")) {
+                    JOptionPane.showMessageDialog(null, "Product already exists",
+                            "Product Already Exists", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -619,7 +720,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement to go back to main menu
+                SellerPage();
             }
         });
 
@@ -656,7 +757,7 @@ public class GUI extends JFrame implements Runnable {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement to go back to main menu
+                SellerPage();
             }
         });
         JButton csvButton = new JButton("Import/ Export CSV");
@@ -703,6 +804,28 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add functionality to modify product and return to home page
+                try {
+                    double price = Double.parseDouble(productPrice.getText());
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Invalid price entered",
+                            "Price ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+
+                try {
+                    int quantity = Integer.parseInt(productQuantity.getText());
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Invalid quantity entered",
+                            "Quantity ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+
+                String messageToServer = String.format("MODIFY PRODUCT,%s,%s,%s,%s,%s,%s", productName,
+                        productDescription, productStore, productPrice, productQuantity,product);
+                String result = (String) communicateWithServer(messageToServer);
+                if (result.equals("SUCCESS")) {
+                    JOptionPane.showMessageDialog(null, "Product modified successfully",
+                            "SUCCESSFUL MODIFICATION", JOptionPane.INFORMATION_MESSAGE);
+                    returnHome();
+                }
             }
         });
 
@@ -710,7 +833,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: return to home page
+                SellerPage();
             }
         });
 
@@ -751,7 +874,7 @@ public class GUI extends JFrame implements Runnable {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: return to home page
+                SellerPage();
             }
         });
 
@@ -772,10 +895,11 @@ public class GUI extends JFrame implements Runnable {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: return to home page
+                SellerPage();
             }
         });
 
+        // TODO: add fucntionality to print sales
         middle.add(info);
 
         add(middle, BorderLayout.CENTER);
@@ -791,6 +915,14 @@ public class GUI extends JFrame implements Runnable {
         setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+    }
+
+    public void returnHome() {
+        if (userType.equals("CUSTOMER")) {
+            CustomerPage();
+        } else if (userType.equals("SELLER")) {
+            SellerPage();
+        }
     }
 
 }
