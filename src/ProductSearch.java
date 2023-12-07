@@ -16,9 +16,6 @@ import java.util.ArrayList;
 public class ProductSearch {
 
 
-    //TODO: Create searchByNameClient method
-
-
     //Given searched product name, return ArrayList of products that contain that searched term
     public static ArrayList<String> searchByNameServer(String productName, Object PRODUCTLOCK) {
         ArrayList<String> allProducts;
@@ -43,9 +40,6 @@ public class ProductSearch {
     }
 
 
-    //TODO: Create searchByStoreClient method
-
-
     //Given searched product store, return ArrayList of products that contain that searched term
     public static ArrayList<String> searchByStoreServer(String storeName, Object PRODUCTLOCK) {
         ArrayList<String> allProducts;
@@ -68,9 +62,6 @@ public class ProductSearch {
         }
         return searchedProducts;  //returns searched products
     }
-
-
-    //TODO: Create searchByDescriptionClient method
 
 
     //Given searched product description, return ArrayList of products that contain that searched term

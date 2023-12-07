@@ -16,9 +16,6 @@ import java.util.ArrayList;
 public class ProductSort {
 
 
-    //TODO: Create sortByIncreasingPriceClient method
-
-
     //Sorts all products by min to max price
     public static ArrayList<String> sortByIncreasingPriceServer(Object PRODUCTLOCK) {
         ArrayList<String> allProducts = new ArrayList<>();
@@ -53,9 +50,6 @@ public class ProductSort {
 
         return allProducts; //returns product arraylist
     }
-
-
-    //TODO: Create sortByDecreasingPriceClient method
 
 
     //sorts all products by max to min price
@@ -93,9 +87,6 @@ public class ProductSort {
     }
 
 
-    //TODO: Create sortByIncreasingQuantityClient method
-
-
     //sorts all products by min to max quantity
     public static ArrayList<String> sortByIncreasingQuantityServer(Object PRODUCTLOCK) {
         ArrayList<String> allProducts = new ArrayList<>();
@@ -129,9 +120,6 @@ public class ProductSort {
         }
         return allProducts; //returns product arraylist
     }
-
-
-    //TODO: Create sortByDecreasingQuantityClient method
 
 
     //sorts all products by max to min quantity
