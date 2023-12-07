@@ -18,6 +18,10 @@ javac MarketPlaceClient.java
 ```console
 java MarketPlaceClient
 ```
+If you want to start another instance of the Client on the same machine simply rerun in the terminal:
+```console
+java MarketPlaceCLient
+```
 After that simply follow the prompts!
 
 ## Submissions on BrightSpace and Vocareum
