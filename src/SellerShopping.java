@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class SellerShopping {
 
-    //TODO: Create getSellerShoppingCartClient method
+
 
     //Gets all products from ShoppingCart.txt and returns all products that belong to the seller
     public static ArrayList<String> getSellerShoppingCartServer(String sellerEmail, Object SHOPPINGCARTLOCK) {
@@ -131,7 +131,7 @@ public class SellerShopping {
         return "SUCCESS";
     }
 
-    //TODO: Create createNewProductClient method
+
     public static String createNewProductServer(String productName, String productDescription, String storeName,
                                                 String sellerEmail, double price, int quantity, Object PRODUCTLOCK) {
         ArrayList<String> productLines; //ArrayList of lines from Product.txt
@@ -161,7 +161,6 @@ public class SellerShopping {
     }
 
 
-    //TODO: Create viewAllProductsClient method
     public static ArrayList<String> viewSellerProducts(String email, Object PRODUCTLOCK) {
         ArrayList<String> productLines = new ArrayList<>(); //ArrayList of lines from Product.txt
         try {

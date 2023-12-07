@@ -151,7 +151,7 @@ public class AccountManager {
                 deleteAccountFiles(email, USERINFOLOCK, SHOPPINGCARTLOCK, PRODUCTLOCK);
                 result = "SUCCESS";
             } else {
-                result = "INVALID PASSWORD";
+                result = "INCORRECT PASSWORD";
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -243,10 +243,10 @@ public class AccountManager {
                     if (userInformationList.get(emailIndex + 2).equals(userType)) { //If the userType is valid
                         result = "SUCCESS"; //Login Successful
                     } else { //Invalid User Type
-                        result = "INVALID USER TYPE";
+                        result = "INCORRECT USER TYPE";
                     }
                 } else { //Invalid Password
-                    result = "INVALID PASSWORD";
+                    result = "INCORRECT PASSWORD";
                 }
             } else {  //If the Username.txt doesn't contain the email
                 result = "INVALID EMAIL";
