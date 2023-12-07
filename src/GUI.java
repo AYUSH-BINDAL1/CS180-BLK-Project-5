@@ -167,14 +167,14 @@ public class GUI extends JFrame implements Runnable {
                         } else if (userTypeSelected.equals("SELLER")) {
                             SellerPage();
                         }
-                    } else if (result.equals("INVALID EMAIL")) {
+                    } else if (result.equals("INCORRECT EMAIL")) {
                         JOptionPane.showMessageDialog(null, "Invalid Email, Does not exist", "Email Does not exist.",
                                 JOptionPane.ERROR_MESSAGE);
-                    } else if (result.equals("INVALID PASSWORD")) {
-                        JOptionPane.showMessageDialog(null, "Invalid Password", "Wrong Password.",
+                    } else if (result.equals("INCORRECT PASSWORD")) {
+                        JOptionPane.showMessageDialog(null, "Invalid Password", "Wrong Password For Email.",
                                 JOptionPane.ERROR_MESSAGE);
-                    }  else if (result.equals("INVALID USER TYPE")) {
-                        JOptionPane.showMessageDialog(null, "Invalid User Type", "Wrong User Type.",
+                    }  else if (result.equals("INCORRECT USER TYPE")) {
+                        JOptionPane.showMessageDialog(null, "Invalid User Type", "Wrong User Type For Email.",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
@@ -211,6 +211,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
                 System.exit(0);
             }
         });
