@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.io.*;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -61,7 +63,9 @@ public class ServerHandler implements Runnable {
             }
             commandSplit = clientMessage.split(",");
             command = commandSplit[0];
-            if (command.equalsIgnoreCase("REGISTER")) {
+            if(command.equalsIgnoreCase("GET ALL PRODUCTS")) {
+                resultList = ServerHandler.getAllProducts(); //Formatted String: GET ALL PRODUCTS
+            } else if (command.equalsIgnoreCase("REGISTER")) {
                 result = AccountManager.registerServer(commandSplit[1], commandSplit[2], commandSplit[3],
                         USERINFOLOCK); //Formatted String: REGISTER,email,password,userType
             } else if (command.equalsIgnoreCase("LOGIN")) {
@@ -155,7 +159,6 @@ public class ServerHandler implements Runnable {
             if (result.isEmpty()) {
                 try {
                     writer.writeObject(resultList);
-                    writer.reset();
                     writer.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -163,7 +166,6 @@ public class ServerHandler implements Runnable {
             } else if(resultList.isEmpty()) {
                 try {
                     writer.writeObject(result);
-                    writer.reset();
                     writer.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -171,6 +173,20 @@ public class ServerHandler implements Runnable {
             }
 
         } while (!command.equalsIgnoreCase("EXIT PROGRAM"));
+    }
+
+    //Returns ArrayList of All Products in Product.txt
+    public static ArrayList<String> getAllProducts() {
+        ArrayList<String> productLines = new ArrayList<String>();
+        try {
+            //Reads lines from Product.txt
+            synchronized (PRODUCTLOCK) {
+                productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return productLines;
     }
 
 

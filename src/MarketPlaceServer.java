@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -28,6 +29,27 @@ public class MarketPlaceServer {
         ServerSocket serverSocket; //Creates ServerSocket
         Socket clientSocket; //Creates clientSocket
         ServerHandler serverHandler; //Creates ServerHandler
+
+        File usernameFile = new File("Username.txt");
+        File shoppingCartFile = new File("ShoppingCart.txt");
+        File purchaseHistoryFile = new File("PurchaseHistory.txt");
+        File productFile = new File("Product.txt");
+        try {
+            if (!usernameFile.exists()) {
+                usernameFile.createNewFile();
+            }
+            if (!shoppingCartFile.exists()) {
+                shoppingCartFile.createNewFile();
+            }
+            if (!purchaseHistoryFile.exists()) {
+                purchaseHistoryFile.createNewFile();
+            }
+            if (!productFile.exists()) {
+                productFile.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         try {
 
