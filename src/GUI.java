@@ -203,6 +203,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
                 System.exit(0);
             }
         });
@@ -288,6 +289,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
                 System.exit(0);
             }
         });
@@ -528,6 +530,7 @@ public class GUI extends JFrame implements Runnable {
                 if (result.equals("SUCCESS")) {
                     JOptionPane.showMessageDialog(null, "Account deleted successfully",
                             "Account Deletion Success", JOptionPane.INFORMATION_MESSAGE);
+                    communicateWithServer("EXIT");
                     System.exit(0);
                 } else {
                     JOptionPane.showMessageDialog(null, "Incorrect Password Entered",
@@ -567,6 +570,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
                 System.exit(0);
             }
         });
@@ -586,12 +590,13 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fileNameInput = fileName.getText();
-                String messageToServer = String.format("EXPORT PURCHASE HISTORY,%s,%s", getEmail(),fileNameInput);
-                if (!fileNameInput.contains(".txt")) {
-                    JOptionPane.showMessageDialog(null, "Please make sure to make your file a .txt file", "Export " +
+
+                if (!fileNameInput.endsWith(".txt")|| !fileNameInput.matches(".*\\.txt$")) {
+                    JOptionPane.showMessageDialog(null, "Please make sure you have a .txt file", "Export " +
                             "Failure", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                String messageToServer = String.format("EXPORT PURCHASE HISTORY,%s,%s", getEmail(),fileNameInput);
                 String result = (String) communicateWithServer(messageToServer);
                 if (result.equals("SUCCESS")) {
                     JOptionPane.showMessageDialog(null, "Purchase history exported successfully",
@@ -600,7 +605,9 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-        //TODO: implement functionality to import customer purchase history and print to screen
+        //TODO: implement functionality to import customer purchase history and
+        //
+        // print to screen
 
 
         top.add(exit);
@@ -627,6 +634,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
                 System.exit(0);
             }
         });

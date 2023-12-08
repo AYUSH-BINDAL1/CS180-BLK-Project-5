@@ -61,10 +61,8 @@ public class PurchaseHistory {
                     i--; //Accounts for removal of line
                 }
             }
-            purchaseHistoryLines.add(0,"PurchaseHistory Format: ProductName,ProductDescription,StoreName,SellerEmail," +
-                    "Price,QuantitiyPurchased,CustomerEmail");
-            purchaseHistoryLines.add(1,"ProductName,ProductDescription,StoreName,SellerEmail,Price," +
-                    "QuantitiyPurchased,CustomerEmail");
+            purchaseHistoryLines.add(0,"Product Name,Product Description,Store Name,Seller Email," +
+                    "Price,Amount,Customer Email");
 
             synchronized (PURCHASEHISTORYLOCK) {
                 Files.write(Paths.get(path), purchaseHistoryLines);
