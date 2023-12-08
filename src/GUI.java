@@ -164,7 +164,7 @@ public class GUI extends JFrame implements Runnable {
                         JOptionPane.showMessageDialog(null, "This email doesn't exist.", "Unknown Email",
                                 JOptionPane.ERROR_MESSAGE);
                     } else if (result.equals("INCORRECT PASSWORD")) {
-                        JOptionPane.showMessageDialog(null, "Wrong Password For This Account","Invalid Password",
+                        JOptionPane.showMessageDialog(null, "Wrong Password For This Account", "Invalid Password",
                                 JOptionPane.ERROR_MESSAGE);
                     } else if (result.equals("INCORRECT USER TYPE")) {
                         JOptionPane.showMessageDialog(null, "Wrong User Type For This Account.", "Invalid User Type",
@@ -325,7 +325,13 @@ public class GUI extends JFrame implements Runnable {
                 addProduct();
             }
         });
-        JButton viewSales = new JButton("View Sales");
+        JButton viewSales = new JButton("View Sales By Store");
+        viewSales.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewSales();
+            }
+        });
         JButton viewStatistics = new JButton("View Seller Statistics");
         viewStatistics.addActionListener(new ActionListener() {
             @Override
@@ -432,7 +438,7 @@ public class GUI extends JFrame implements Runnable {
                 String messageToServer;
 
                 if (userChangeTypeSelected.equals("Change Password")) {
-                    if(!currentCredentialEntered.equals(getPassword())) {
+                    if (!currentCredentialEntered.equals(getPassword())) {
                         JOptionPane.showMessageDialog(null, "Old Password Does Not Match",
                                 "Password Error", JOptionPane.ERROR_MESSAGE);
                         return;
@@ -513,8 +519,8 @@ public class GUI extends JFrame implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 String usernameCredentialEntered = usernameCredential.getText();
                 String passwordCredentialEntered = passwordCredential.getText();
-                System.out.println("EMAIL ONE"+getEmail());
-                System.out.println("EMAIL TWO"+usernameCredentialEntered);
+                System.out.println("EMAIL ONE" + getEmail());
+                System.out.println("EMAIL TWO" + usernameCredentialEntered);
                 if (!usernameCredentialEntered.equals(getEmail())) {
                     JOptionPane.showMessageDialog(null, "Username entered is incorrect",
                             "Incorrect username/email entered", JOptionPane.ERROR_MESSAGE);
@@ -593,12 +599,12 @@ public class GUI extends JFrame implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 String fileNameInput = fileName.getText();
 
-                if (!fileNameInput.endsWith(".txt")|| !fileNameInput.matches(".*\\.txt$")) {
+                if (!fileNameInput.endsWith(".txt") || !fileNameInput.matches(".*\\.txt$")) {
                     JOptionPane.showMessageDialog(null, "Please make sure you have a .txt file", "Export " +
                             "Failure", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                String messageToServer = String.format("EXPORT PURCHASE HISTORY,%s,%s", getEmail(),fileNameInput);
+                String messageToServer = String.format("EXPORT PURCHASE HISTORY,%s,%s", getEmail(), fileNameInput);
                 String result = (String) communicateWithServer(messageToServer);
                 if (result.equals("SUCCESS")) {
                     JOptionPane.showMessageDialog(null, "Purchase history exported successfully",
@@ -725,7 +731,7 @@ public class GUI extends JFrame implements Runnable {
                     double price = Double.parseDouble(productPrice.getText());
                     int quantity = Integer.parseInt(productQuantity.getText());
                     String messageToServer = String.format("CREATE NEW PRODUCT,%s,%s,%s,%s,%s,%s", productName.getText(),
-                            productDescription.getText(), productStore.getText(),getEmail(), productPrice.getText(),
+                            productDescription.getText(), productStore.getText(), getEmail(), productPrice.getText(),
                             productQuantity.getText());
                     String result = (String) communicateWithServer(messageToServer);
                     if (result.equals("PRODUCT CREATED")) {
@@ -800,19 +806,19 @@ public class GUI extends JFrame implements Runnable {
                 String csvTypeInput = csvType.getSelectedItem().toString();
                 String messageToServer;
                 String result;
-                if(!fileNameInput.endsWith(".csv") || !fileNameInput.matches(".*\\.csv$")) {
+                if (!fileNameInput.endsWith(".csv") || !fileNameInput.matches(".*\\.csv$")) {
                     JOptionPane.showMessageDialog(null, "Please make sure your file is a .csv file", "Import/Export " +
                             "Failure", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if((csvTypeInput.equals("Import"))) {
+                if ((csvTypeInput.equals("Import"))) {
                     messageToServer = String.format("IMPORT SELLER CSV,%s", fileNameInput);
                     result = (String) communicateWithServer(messageToServer);
                     if (result.equals("SUCCESS")) {
                         JOptionPane.showMessageDialog(null, "Your file has been imported", "Export CSV" +
                                 "Success", JOptionPane.INFORMATION_MESSAGE);
                         returnHome();
-                    }  else if(result.equals("PATH DOES NOT EXIST")) {
+                    } else if (result.equals("PATH DOES NOT EXIST")) {
                         JOptionPane.showMessageDialog(null, "Your file path does not exist", "File Failure", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } else if (csvTypeInput.equals("Export")) {
@@ -822,7 +828,7 @@ public class GUI extends JFrame implements Runnable {
                         JOptionPane.showMessageDialog(null, "Your file has been exported", "Export CSV" +
                                 "Success", JOptionPane.INFORMATION_MESSAGE);
                         returnHome();
-                    } else if(result.equals("PATH TAKEN")) {
+                    } else if (result.equals("PATH TAKEN")) {
                         JOptionPane.showMessageDialog(null, "Your file path is already taken. Try a different one",
                                 "File Failure", JOptionPane.INFORMATION_MESSAGE);
                     }
@@ -881,7 +887,7 @@ public class GUI extends JFrame implements Runnable {
                 }
 
                 String messageToServer = String.format("MODIFY PRODUCT,%s,%s,%s,%s,%s,%s", productName,
-                        productDescription, productStore, productPrice, productQuantity,product);
+                        productDescription, productStore, productPrice, productQuantity, product);
                 String result = (String) communicateWithServer(messageToServer);
                 if (result.equals("SUCCESS")) {
                     JOptionPane.showMessageDialog(null, "Product modified successfully",
@@ -948,10 +954,13 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public void viewSales() {
+        setup("View Sales By Store", 400, 400);
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel info = new JLabel("<html> <br/> <br/> Sales <br/> <br/> </html>");
+        JLabel info = new JLabel("<html> <br/> <br/> Sales By Store <br/> <br/> </html>");
+        String messageToServer = "VIEW SALES BY STORE," + getEmail();
+        String response = (String) communicateWithServer(messageToServer);
 
         JButton backButton = new JButton("Back to Main Menu");
         backButton.addActionListener(new ActionListener() {
@@ -961,7 +970,7 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-        // TODO: add fucntionality to print sales
+        // TODO: add functionality to print sales
         middle.add(info);
 
         add(middle, BorderLayout.CENTER);

@@ -156,7 +156,7 @@ public class ServerHandler implements Runnable {
                     }
                     writer.flush();
                 } else {
-                    Thread.sleep(100); // Wait for a short duration if no data is available
+                    Thread.sleep(100); //Wait for a short duration if no data is available
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
