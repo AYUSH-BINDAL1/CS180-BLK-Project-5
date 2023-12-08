@@ -917,6 +917,8 @@ public class GUI extends JFrame implements Runnable {
         setLocationRelativeTo(null);
     }
 
+
+
     public void returnHome() {
         if (userType.equals("CUSTOMER")) {
             CustomerPage();
