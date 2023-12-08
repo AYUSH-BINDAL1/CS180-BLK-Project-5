@@ -721,28 +721,27 @@ public class GUI extends JFrame implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 try {
                     double price = Double.parseDouble(productPrice.getText());
-                } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(null, "Invalid price entered",
-                            "Price ERROR", JOptionPane.ERROR_MESSAGE);
-                }
-
-                try {
                     int quantity = Integer.parseInt(productQuantity.getText());
-                } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(null, "Invalid quantity entered",
-                            "Quantity ERROR", JOptionPane.ERROR_MESSAGE);
-                }
-
-                String messageToServer = String.format("CREATE NEW PRODUCT,%s,%s,%s,%s,%s", productName,
-                        productDescription, productStore, productPrice, productQuantity);
-                String result = (String) communicateWithServer(messageToServer);
-                if (result.equals("SUCCESS")) {
-                    JOptionPane.showMessageDialog(null, "Product added successfully",
-                            "Product Creation Success", JOptionPane.INFORMATION_MESSAGE);
-                    returnHome();
-                } else if (result.equals("PRODUCT ALREADY EXISTS")) {
-                    JOptionPane.showMessageDialog(null, "Product already exists",
-                            "Product Already Exists", JOptionPane.ERROR_MESSAGE);
+                    String messageToServer = String.format("CREATE NEW PRODUCT,%s,%s,%s,%s,%s,%s", productName.getText(),
+                            productDescription.getText(), productStore.getText(),getEmail(), productPrice.getText(),
+                            productQuantity.getText());
+                    String result = (String) communicateWithServer(messageToServer);
+                    if (result.equals("PRODUCT CREATED")) {
+                        JOptionPane.showMessageDialog(null, "Product added successfully",
+                                "Product Creation Success", JOptionPane.INFORMATION_MESSAGE);
+                        returnHome();
+                    } else if (result.equals("PRODUCT ALREADY EXISTS")) {
+                        JOptionPane.showMessageDialog(null, "Product already exists",
+                                "Product Already Exists", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException exception) {
+                    if (!productPrice.getText().matches("^\\d*\\.?\\d+$")) {
+                        JOptionPane.showMessageDialog(null, "Invalid price entered",
+                                "Price ERROR", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid quantity entered",
+                                "Quantity ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
