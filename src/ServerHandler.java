@@ -159,7 +159,6 @@ public class ServerHandler implements Runnable {
             if (result.isEmpty()) {
                 try {
                     writer.writeObject(resultList);
-                    writer.reset();
                     writer.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -167,7 +166,6 @@ public class ServerHandler implements Runnable {
             } else if(resultList.isEmpty()) {
                 try {
                     writer.writeObject(result);
-                    writer.reset();
                     writer.flush();
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -110,7 +110,6 @@ public class GUI extends JFrame implements Runnable {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("clicked Login butotn");
                 String messageToServer = "";
                 String userTypeSelected = (String) userType.getSelectedItem();
                 String createOrLoginSelected = (String) createOrLogin.getSelectedItem();
@@ -119,15 +118,15 @@ public class GUI extends JFrame implements Runnable {
 
                 // checks if it is a valid email or empty
                 if (!AccountManager.validateEmail(emailEntered) || emailEntered.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Invalid Email"
-                            , "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Must Be A Valid Email!"
+                            , "Invalid Email", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 // checks if email is empty
                 if (passwordEntered.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Invalid Password"
-                            , "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Password Cannot Be Empty"
+                            , "Invalid Password", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 // TODO: implement logic
@@ -138,14 +137,14 @@ public class GUI extends JFrame implements Runnable {
                     String result = (String) communicateWithServer(messageToServer);
                     System.out.println(result);
                     if (result.equals("SUCCESS")) {
-                        JOptionPane.showMessageDialog(null, "Account Creation Success", "Your account has been " +
-                                "created", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Your account has been created", "Account Creation " +
+                                "Success", JOptionPane.INFORMATION_MESSAGE);
                         setEmail(emailEntered);
                         setPassword(passwordEntered);
                         setUserType(userTypeSelected);
                         returnHome();
                     } else if (result.equals("EMAIL ALREADY EXISTS")) {
-                        JOptionPane.showMessageDialog(null, "Email Taken", "Entered email is already taken.",
+                        JOptionPane.showMessageDialog(null, "Entered email is already taken.", "Email Taken",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 } else if (createOrLoginSelected.equals("Login")) {
@@ -153,20 +152,20 @@ public class GUI extends JFrame implements Runnable {
                             userTypeSelected);
                     String result = (String) communicateWithServer(messageToServer);
                     if (result.equals("SUCCESS")) {
-                        JOptionPane.showMessageDialog(null, "Login Success",
-                                "You have been successfully logged in.", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "You have been successfully logged in.",
+                                "Login Success", JOptionPane.INFORMATION_MESSAGE);
                         setEmail(emailEntered);
                         setPassword(passwordEntered);
                         setUserType(userTypeSelected);
                         returnHome();
                     } else if (result.equals("INVALID EMAIL")) {
-                        JOptionPane.showMessageDialog(null, "Invalid Email, Does not exist", "Email Does not exist.",
+                        JOptionPane.showMessageDialog(null, "This email doesn't exist.", "Unknown Email",
                                 JOptionPane.ERROR_MESSAGE);
-                    } else if (result.equals("INVALID PASSWORD")) {
-                        JOptionPane.showMessageDialog(null, "Invalid Password", "Wrong Password.",
+                    } else if (result.equals("INCORRECT PASSWORD")) {
+                        JOptionPane.showMessageDialog(null, "Wrong Password For This Account","Invalid Password",
                                 JOptionPane.ERROR_MESSAGE);
-                    } else if (result.equals("INVALID USER TYPE")) {
-                        JOptionPane.showMessageDialog(null, "Invalid User Type", "Wrong User Type.",
+                    } else if (result.equals("INCORRECT USER TYPE")) {
+                        JOptionPane.showMessageDialog(null, "Wrong User Type For This Account.", "Invalid User Type",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
@@ -244,7 +243,7 @@ public class GUI extends JFrame implements Runnable {
                 viewPurchaseHistory();
             }
         });
-        JButton viewStatistics = new JButton("View store/seller Statistics");
+        JButton viewStatistics = new JButton("View store/Customer Statistics");
         viewStatistics.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -430,33 +429,33 @@ public class GUI extends JFrame implements Runnable {
 
                 if (userChangeTypeSelected.equals("Change Password")) {
                     if(!currentCredentialEntered.equals(getPassword())) {
-                        JOptionPane.showMessageDialog(null, "Current Password entered is incorrect",
+                        JOptionPane.showMessageDialog(null, "Old Password Does Not Match",
                                 "Password Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    messageToServer = String.format("EDIT USERNAME,%s,%s");
+                    messageToServer = String.format("EDIT PASSWORD,%s,%s,%s", getEmail(), getPassword(), newCredentialEntered);
                     String result = (String) communicateWithServer(messageToServer);
-                    if (result.equals("SUCCESS")) {
-                        setPassword(newCredentialEntered);
-                        JOptionPane.showMessageDialog(null, "Password changed successfully",
+                    if (result.equals("PASSWORD UPDATED")) {
+                        JOptionPane.showMessageDialog(null, "Your Password Has Been Changed",
                                 "Password Change Success", JOptionPane.INFORMATION_MESSAGE);
+                        setPassword(newCredentialEntered);
                         returnHome();
                     } else if (result.equals("INVALID PASSWORD")) {
-                        JOptionPane.showMessageDialog(null, "Current Password entered is incorrect",
+                        JOptionPane.showMessageDialog(null, "Old Password Does Not Match",
                                 "Password Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else if (userChangeTypeSelected.equals("Change Username")) {
                     if (!currentCredentialEntered.equals(getEmail())) {
-                        JOptionPane.showMessageDialog(null, "Current Username/Email entered is incorrect",
+                        JOptionPane.showMessageDialog(null, "Old Username Does Not Match",
                                 "Username Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    messageToServer = String.format("EDIT USERNAME,%s,%s");
+                    messageToServer = String.format("EDIT USERNAME,%s,%s", getEmail(), newCredentialEntered);
                     String result = (String) communicateWithServer(messageToServer);
                     if (result.equals("SUCCESS")) {
-                        setEmail(newCredentialEntered);
                         JOptionPane.showMessageDialog(null, "Username changed successfully",
                                 "Username Change Success", JOptionPane.INFORMATION_MESSAGE);
+                        setEmail(newCredentialEntered);
                         returnHome();
                     } else if (result.equals("EMAIL ALREADY TAKEN")) {
                         JOptionPane.showMessageDialog(null, "New Email entered is already taken",
@@ -495,26 +494,30 @@ public class GUI extends JFrame implements Runnable {
         JLabel passwordLabel = new JLabel("Enter password:");
         JTextField usernameCredential = new JTextField(15);
         JTextField passwordCredential = new JTextField(15);
+
         JLabel info = new JLabel("<html> <br/> <br/>**Disclaimer** This action is irreversible!<br/> <br/> </html>");
 
         JButton delete = new JButton("Delete Account");
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!usernameCredential.equals(getEmail())) {
+                String usernameCredentialEntered = usernameCredential.getText();
+                String passwordCredentialEntered = passwordCredential.getText();
+                System.out.println("EMAIL ONE"+getEmail());
+                System.out.println("EMAIL TWO"+usernameCredentialEntered);
+                if (!usernameCredentialEntered.equals(getEmail())) {
                     JOptionPane.showMessageDialog(null, "Username entered is incorrect",
                             "Incorrect username/email entered", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
-                if (!passwordCredential.equals(getPassword())) {
+                System.out.println(getPassword());
+                if (!passwordCredentialEntered.equals(getPassword())) {
                     JOptionPane.showMessageDialog(null, "Password entered is incorrect",
                             "Incorrect password entered", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                String messageToServer = String.format("DELETE ACCOUNT,%s,%s",
-                        usernameCredential, passwordCredential);
+                String messageToServer = String.format("DELETE ACCOUNT,%s,%s", usernameCredentialEntered, passwordCredentialEntered);
                 String result = (String) communicateWithServer(messageToServer);
                 if (result.equals("SUCCESS")) {
                     JOptionPane.showMessageDialog(null, "Account deleted successfully",
@@ -522,7 +525,7 @@ public class GUI extends JFrame implements Runnable {
                     System.exit(0);
                 } else {
                     JOptionPane.showMessageDialog(null, "Incorrect Password Entered",
-                            "Password ERROR", JOptionPane.ERROR_MESSAGE);
+                            "Password Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

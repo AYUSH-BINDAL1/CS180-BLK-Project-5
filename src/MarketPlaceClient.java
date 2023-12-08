@@ -15,7 +15,7 @@ import java.net.Socket;
 public class MarketPlaceClient {
         public static void main(String[] args) {
             Socket clientSocket; //New Client Socket
-            GUI clientGUI;
+            GUI clientGUI; //New Client GUI
             try {
                 clientSocket = new Socket("localhost", 6969); //Connects to Port: 6969
                 clientGUI = new GUI(clientSocket); //Creates new GUI
