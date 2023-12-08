@@ -65,8 +65,16 @@ public class AccountManager {
             int emailIndex = userInformationList.indexOf(oldEmail); //Index of oldEmail in Username.txt
             int newEmailIndexCheck = userInformationList.indexOf(newEmail); //Checks to see if the newEmail is
             // already taken
+
+            if (newEmail.equals(oldEmail)) { //If the newEmail is the same as the oldEmail
+                return "EMAILS ARE THE SAME";
+            }
+
             if (newEmailIndexCheck != -1) { //If newEmail is already taken
                 return "EMAIL ALREADY TAKEN";
+            }
+            if(!validateEmail(newEmail)) { //If the newEmail is invalid
+                return "INVALID EMAIL FORMAT";
             }
             userInformationList.set(emailIndex, newEmail); //Sets newEmail at index emailIndex in Username.txt
             synchronized (USERINFOLOCK) {

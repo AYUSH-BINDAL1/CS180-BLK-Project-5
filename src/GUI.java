@@ -460,6 +460,12 @@ public class GUI extends JFrame implements Runnable {
                     } else if (result.equals("EMAIL ALREADY TAKEN")) {
                         JOptionPane.showMessageDialog(null, "New Email entered is already taken",
                                 "Username Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (result.equals("INVALID EMAIL FORMAT")) {
+                        JOptionPane.showMessageDialog(null, "New email is in an invalid format",
+                                "Username Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (result.equals("EMAILS ARE THE SAME")) {
+                        JOptionPane.showMessageDialog(null, "New email is same as old email",
+                                "Username Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     System.out.println("UserChangeType Error");
