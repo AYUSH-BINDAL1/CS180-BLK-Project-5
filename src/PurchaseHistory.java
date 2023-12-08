@@ -45,6 +45,7 @@ public class PurchaseHistory {
     //Given a path and customerEmail creates a new txt file with the customer's purchase history
     public static String exportCustomerPurchaseHistoryServer(String customerEmail, String path,
                                                              Object PURCHASEHISTORYLOCK) {
+
         try {
             ArrayList<String> purchaseHistoryLines; // List of all purchase lines (lines containing product
             // information)
@@ -60,6 +61,11 @@ public class PurchaseHistory {
                     i--; //Accounts for removal of line
                 }
             }
+            purchaseHistoryLines.add(0,"PurchaseHistory Format: ProductName,ProductDescription,StoreName,SellerEmail," +
+                    "Price,QuantitiyPurchased,CustomerEmail");
+            purchaseHistoryLines.add(1,"ProductName,ProductDescription,StoreName,SellerEmail,Price," +
+                    "QuantitiyPurchased,CustomerEmail");
+
             synchronized (PURCHASEHISTORYLOCK) {
                 Files.write(Paths.get(path), purchaseHistoryLines);
             }

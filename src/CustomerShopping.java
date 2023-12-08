@@ -70,6 +70,7 @@ public class CustomerShopping {
         String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
         ArrayList<String> productLines; //ArrayList of lines from Product.txt
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
+
         try {
             synchronized (SHOPPINGCARTLOCK) {
                 //Reads lines from ShoppingCart.txt

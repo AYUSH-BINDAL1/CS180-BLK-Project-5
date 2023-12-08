@@ -585,7 +585,18 @@ public class GUI extends JFrame implements Runnable {
         exportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement functionality to export purchase history to a file
+                String fileNameInput = fileName.getText();
+                String messageToServer = String.format("EXPORT PURCHASE HISTORY,%s,%s", getEmail(),fileNameInput);
+                if (!fileNameInput.contains(".txt")) {
+                    JOptionPane.showMessageDialog(null, "Please make sure to make your file a .txt file", "Export " +
+                            "Failure", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String result = (String) communicateWithServer(messageToServer);
+                if (result.equals("SUCCESS")) {
+                    JOptionPane.showMessageDialog(null, "Purchase history exported successfully",
+                            "Purchase History Export Success", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         });
 
@@ -644,11 +655,13 @@ public class GUI extends JFrame implements Runnable {
                 }
             }
         });
-        JButton removeAllButton = new JButton("Remove All");
-        removeAllButton.addActionListener(new ActionListener() {
+        JTextField removedItem = new JTextField(15);
+        JButton removeItemButton = new JButton("Remove item");
+        removeItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement functionality to remove all items in shopping cart
+                // TODO: implement functionality to remove an item in shopping cart
+                //question how do we get the item ??
             }
         });
 
@@ -657,7 +670,8 @@ public class GUI extends JFrame implements Runnable {
         top.add(exit);
         top.add(returnToMain);
         middle.add(buyAllButton);
-        middle.add(removeAllButton);
+        middle.add(removedItem);
+        middle.add(removeItemButton);
 
     }
 
@@ -773,7 +787,30 @@ public class GUI extends JFrame implements Runnable {
         csvButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement functionality to import or export csv file depending on user selection
+                String fileNameInput = fileName.getText();
+                String messageToServer;
+                String result;
+                if(!fileNameInput.contains(".csv")) {
+                    JOptionPane.showMessageDialog(null, "Please make sure your file is a .csv file", "Import/Export " +
+                            "Failure", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if(csvType.equals("Import")) {
+                    messageToServer = String.format("IMPORT SELLER CSV,%s", fileNameInput);
+                    result = (String) communicateWithServer(messageToServer);
+                    if (result.equals("SUCCESS")) {
+                        JOptionPane.showMessageDialog(null, "Your file has been imported", "Export CSV" +
+                                "Success", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else if (csvType.equals("Export")) {
+                    messageToServer = String.format("EXPORT SELLER CSV,%s,%s", fileNameInput, getEmail());
+                    result = (String) communicateWithServer(messageToServer);
+                    if (result.equals("SUCCESS")) {
+                        JOptionPane.showMessageDialog(null, "Your file has been exported", "Export CSV" +
+                                "Success", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+
             }
         });
 
