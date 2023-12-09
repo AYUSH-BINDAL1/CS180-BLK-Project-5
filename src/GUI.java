@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class GUI extends JFrame implements Runnable {
     private Socket socket;
@@ -980,6 +981,89 @@ public class GUI extends JFrame implements Runnable {
 
         add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
+    }
+
+    public JPanel customerProducts() {
+        String messageToServer = "GET ALL PRODUCTS";
+        ArrayList<String> products;
+        try {
+            products = (ArrayList<String>) communicateWithServer(messageToServer);
+        } catch (Exception e) {
+            System.out.println("GET ALL PRODUCTS, arraylistError");
+            return error("Getting Products Error");
+        }
+
+        if (products == null) {
+            return error("No Products");
+        }
+
+        JPanel panel = new JPanel(new GridLayout(products.size(), 5, 10, 10));
+        for (String product: products) {
+            String[] productInfo = product.split(",");
+            try {
+                panel.add(new JLabel(productInfo[0]));
+                panel.add(new JLabel(productInfo[2]));
+                panel.add(new JLabel(productInfo[4]));
+            } catch (Exception e) {
+                System.out.println("index out of bound exception");
+                return error("ERROR, SERVER ERROR sending products");
+            }
+
+            JButton viewProduct = new JButton("View Product");
+            viewProduct.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    viewProduct(product);
+                }
+            });
+
+
+            JButton addToCart = new JButton("Add to Cart");
+            addToCart.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // TODO: IMPLEMENT ADD TO CART and change method in server
+                    // include the store and quantity
+                }
+            });
+
+            JButton buyProduct = new JButton("Buy Product");
+            buyProduct.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // TODO implement buying product and change method in server
+                    // include the store and quantity
+                }
+            });
+            panel.add(viewProduct);
+            panel.add(buyProduct);
+        }
+        return panel;
+    }
+
+
+    // TODO: finish this
+    public void viewProduct(String product) {
+        String[] productInfo = product.split(",");
+        setup("View Product", 400, 400);
+        JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    }
+
+
+    public JPanel error(String message) {
+        JPanel error = new JPanel();
+        error.add(new JLabel(message));
+        return new JPanel();
+    }
+
+    public JPanel printStatistics(ArrayList<String> Statistics) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        for (String statistic : Statistics) {
+            panel.add(new JLabel(statistic));
+        }
+        return panel;
     }
 
     public void setup(String description, int width, int height) {
