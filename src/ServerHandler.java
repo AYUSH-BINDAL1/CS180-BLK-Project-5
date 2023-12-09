@@ -55,7 +55,7 @@ public class ServerHandler implements Runnable {
             try {
                 if (reader.ready()) { // Check if data is available to read
                     clientMessage = reader.readLine();
-                     commandSplit = clientMessage.split(",");
+                    commandSplit = clientMessage.split(",");
                     command = commandSplit[0];
                     switch (command.toUpperCase()) {
                         // Formatted String: GET ALL PRODUCTS
