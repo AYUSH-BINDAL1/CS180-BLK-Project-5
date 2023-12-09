@@ -78,7 +78,7 @@ public class Statistics {
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
         // CustomerUsername, productName, quantity, price, sellerUsername, store
-        if(sort == "HIGH TO LOW") {
+        if(sort.equals("HIGH TO LOW")) {
             return sortCustomerHightoLowServer(sortedBought);
         } else {
             return sortCustomerLowtoHighServer(sortedBought);
@@ -132,7 +132,7 @@ public class Statistics {
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
         // CustomerUsername, productName, quantity, price, sellerUsername, store
-        if(sort == "HIGH TO LOW") {
+        if(sort.equals("HIGH TO LOW")) {
             return sortCustomerHightoLowServer(sortedBought);
         } else {
             return sortCustomerLowtoHighServer(sortedBought);
