@@ -7,7 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 import java.net.Socket;
 import java.io.*;
-import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class GUI extends JFrame implements Runnable {
     private Socket socket;
@@ -130,6 +131,8 @@ public class GUI extends JFrame implements Runnable {
                             , "Invalid Password", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                // TODO: implement logic
+
                 if (createOrLoginSelected.equals("Create Account")) {
                     messageToServer = String.format("REGISTER,%s,%s,%s", emailEntered, passwordEntered,
                             userTypeSelected);
@@ -161,7 +164,7 @@ public class GUI extends JFrame implements Runnable {
                         JOptionPane.showMessageDialog(null, "This email doesn't exist.", "Unknown Email",
                                 JOptionPane.ERROR_MESSAGE);
                     } else if (result.equals("INCORRECT PASSWORD")) {
-                        JOptionPane.showMessageDialog(null, "Wrong Password For This Account","Invalid Password",
+                        JOptionPane.showMessageDialog(null, "Wrong Password For This Account", "Invalid Password",
                                 JOptionPane.ERROR_MESSAGE);
                     } else if (result.equals("INCORRECT USER TYPE")) {
                         JOptionPane.showMessageDialog(null, "Wrong User Type For This Account.", "Invalid User Type",
@@ -195,13 +198,14 @@ public class GUI extends JFrame implements Runnable {
         setup("Customer Page", 800, 500);
 
         JPanel top = new JPanel(new GridLayout(4, 2, 5, 5));
-        JPanel products = customerProducts();
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         JButton exit = new JButton("Exit");
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
                 System.exit(0);
             }
         });
@@ -272,7 +276,7 @@ public class GUI extends JFrame implements Runnable {
         bottom.add(refresh);
 
         add(top, BorderLayout.NORTH);
-        add(products, BorderLayout.CENTER);
+        add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
     }
 
@@ -287,6 +291,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
                 System.exit(0);
             }
         });
@@ -320,7 +325,13 @@ public class GUI extends JFrame implements Runnable {
                 addProduct();
             }
         });
-        JButton viewSales = new JButton("View Sales");
+        JButton viewSales = new JButton("View Sales By Store");
+        viewSales.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewSales();
+            }
+        });
         JButton viewStatistics = new JButton("View Seller Statistics");
         viewStatistics.addActionListener(new ActionListener() {
             @Override
@@ -366,26 +377,11 @@ public class GUI extends JFrame implements Runnable {
         JPanel top = new JPanel(new GridLayout(1, 2, 7, 7));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JComboBox<String> sortBy;
-        if (userType.equals("CUSTOMER")) {
-            sortBy = new JComboBox<>(new String[]{"Sort By Store Descending ", "Sort By Store Ascending"
-                    , "Sort by Seller Descending", "Sort by Seller Ascending"});
-        } else {
-            sortBy = new JComboBox<>(new String[]{"Sort By Store Descending ", "Sort By Store Ascending"
-                    , "Sort by Product Descending", "Sort by Product Ascending"});
-        }
-
-        ArrayList<String> statistics;
-        if (userType.equals("CUSTOMER")) {
-            statistics = (ArrayList<String>) communicateWithServer("VIEW CUSTOMER STATISTICS" + "," + email);
-        } else {
-            statistics = (ArrayList<String>) communicateWithServer("VIEW SEllER STATISTICS" + "," + email);
-        }
-
+        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By Store Descending ", "Sort By Store Ascending"
+                , "Sort by Seller Descending", "Sort by Seller Ascending"});
         sortBy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                middle.removeAll();
                 // TODO: add functionality to sort
             }
         });
@@ -403,9 +399,6 @@ public class GUI extends JFrame implements Runnable {
 
         // TODO: implement method to print the statistics *note*
         //  statistics is general and used by both seller and customer
-
-
-        middle.add(printStatistics(statistics));
 
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
@@ -445,7 +438,7 @@ public class GUI extends JFrame implements Runnable {
                 String messageToServer;
 
                 if (userChangeTypeSelected.equals("Change Password")) {
-                    if(!currentCredentialEntered.equals(getPassword())) {
+                    if (!currentCredentialEntered.equals(getPassword())) {
                         JOptionPane.showMessageDialog(null, "Old Password Does Not Match",
                                 "Password Error", JOptionPane.ERROR_MESSAGE);
                         return;
@@ -526,8 +519,8 @@ public class GUI extends JFrame implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 String usernameCredentialEntered = usernameCredential.getText();
                 String passwordCredentialEntered = passwordCredential.getText();
-                System.out.println("EMAIL ONE"+getEmail());
-                System.out.println("EMAIL TWO"+usernameCredentialEntered);
+                System.out.println("EMAIL ONE" + getEmail());
+                System.out.println("EMAIL TWO" + usernameCredentialEntered);
                 if (!usernameCredentialEntered.equals(getEmail())) {
                     JOptionPane.showMessageDialog(null, "Username entered is incorrect",
                             "Incorrect username/email entered", JOptionPane.ERROR_MESSAGE);
@@ -545,6 +538,7 @@ public class GUI extends JFrame implements Runnable {
                 if (result.equals("SUCCESS")) {
                     JOptionPane.showMessageDialog(null, "Account deleted successfully",
                             "Account Deletion Success", JOptionPane.INFORMATION_MESSAGE);
+                    communicateWithServer("EXIT");
                     System.exit(0);
                 } else {
                     JOptionPane.showMessageDialog(null, "Incorrect Password Entered",
@@ -584,6 +578,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
                 System.exit(0);
             }
         });
@@ -603,12 +598,13 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fileNameInput = fileName.getText();
-                String messageToServer = String.format("EXPORT PURCHASE HISTORY,%s,%s", getEmail(),fileNameInput);
-                if (!fileNameInput.contains(".txt")) {
-                    JOptionPane.showMessageDialog(null, "Please make sure to make your file a .txt file", "Export " +
+
+                if (!fileNameInput.endsWith(".txt") || !fileNameInput.matches(".*\\.txt$")) {
+                    JOptionPane.showMessageDialog(null, "Please make sure you have a .txt file", "Export " +
                             "Failure", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                String messageToServer = String.format("EXPORT PURCHASE HISTORY,%s,%s", getEmail(), fileNameInput);
                 String result = (String) communicateWithServer(messageToServer);
                 if (result.equals("SUCCESS")) {
                     JOptionPane.showMessageDialog(null, "Purchase history exported successfully",
@@ -617,7 +613,9 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-        //TODO: implement functionality to import customer purchase history and print to screen
+        //TODO: implement functionality to import customer purchase history and
+        //
+        // print to screen
 
 
         top.add(exit);
@@ -644,6 +642,7 @@ public class GUI extends JFrame implements Runnable {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
                 System.exit(0);
             }
         });
@@ -704,8 +703,6 @@ public class GUI extends JFrame implements Runnable {
         top.add(search);
         top.add(searchButton);
 
-        // TODO: display products
-
         add(top, BorderLayout.NORTH);
     }
 
@@ -732,28 +729,27 @@ public class GUI extends JFrame implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 try {
                     double price = Double.parseDouble(productPrice.getText());
-                } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(null, "Invalid price entered",
-                            "Price ERROR", JOptionPane.ERROR_MESSAGE);
-                }
-
-                try {
                     int quantity = Integer.parseInt(productQuantity.getText());
-                } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(null, "Invalid quantity entered",
-                            "Quantity ERROR", JOptionPane.ERROR_MESSAGE);
-                }
-
-                String messageToServer = String.format("CREATE NEW PRODUCT,%s,%s,%s,%s,%s", productName,
-                        productDescription, productStore, productPrice, productQuantity);
-                String result = (String) communicateWithServer(messageToServer);
-                if (result.equals("SUCCESS")) {
-                    JOptionPane.showMessageDialog(null, "Product added successfully",
-                            "Product Creation Success", JOptionPane.INFORMATION_MESSAGE);
-                    returnHome();
-                } else if (result.equals("PRODUCT ALREADY EXISTS")) {
-                    JOptionPane.showMessageDialog(null, "Product already exists",
-                            "Product Already Exists", JOptionPane.ERROR_MESSAGE);
+                    String messageToServer = String.format("CREATE NEW PRODUCT,%s,%s,%s,%s,%s,%s", productName.getText(),
+                            productDescription.getText(), productStore.getText(), getEmail(), productPrice.getText(),
+                            productQuantity.getText());
+                    String result = (String) communicateWithServer(messageToServer);
+                    if (result.equals("PRODUCT CREATED")) {
+                        JOptionPane.showMessageDialog(null, "Product added successfully",
+                                "Product Creation Success", JOptionPane.INFORMATION_MESSAGE);
+                        returnHome();
+                    } else if (result.equals("PRODUCT ALREADY EXISTS")) {
+                        JOptionPane.showMessageDialog(null, "Product already exists",
+                                "Product Already Exists", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException exception) {
+                    if (!productPrice.getText().matches("^\\d*\\.?\\d+$")) {
+                        JOptionPane.showMessageDialog(null, "Invalid price entered",
+                                "Price ERROR", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid quantity entered",
+                                "Quantity ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -807,29 +803,36 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fileNameInput = fileName.getText();
+                String csvTypeInput = csvType.getSelectedItem().toString();
                 String messageToServer;
                 String result;
-                if(!fileNameInput.contains(".csv")) {
+                if (!fileNameInput.endsWith(".csv") || !fileNameInput.matches(".*\\.csv$")) {
                     JOptionPane.showMessageDialog(null, "Please make sure your file is a .csv file", "Import/Export " +
                             "Failure", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if(csvType.equals("Import")) {
+                if ((csvTypeInput.equals("Import"))) {
                     messageToServer = String.format("IMPORT SELLER CSV,%s", fileNameInput);
                     result = (String) communicateWithServer(messageToServer);
                     if (result.equals("SUCCESS")) {
                         JOptionPane.showMessageDialog(null, "Your file has been imported", "Export CSV" +
                                 "Success", JOptionPane.INFORMATION_MESSAGE);
+                        returnHome();
+                    } else if (result.equals("PATH DOES NOT EXIST")) {
+                        JOptionPane.showMessageDialog(null, "Your file path does not exist", "File Failure", JOptionPane.INFORMATION_MESSAGE);
                     }
-                } else if (csvType.equals("Export")) {
+                } else if (csvTypeInput.equals("Export")) {
                     messageToServer = String.format("EXPORT SELLER CSV,%s,%s", fileNameInput, getEmail());
                     result = (String) communicateWithServer(messageToServer);
                     if (result.equals("SUCCESS")) {
                         JOptionPane.showMessageDialog(null, "Your file has been exported", "Export CSV" +
                                 "Success", JOptionPane.INFORMATION_MESSAGE);
+                        returnHome();
+                    } else if (result.equals("PATH TAKEN")) {
+                        JOptionPane.showMessageDialog(null, "Your file path is already taken. Try a different one",
+                                "File Failure", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
-
             }
         });
 
@@ -884,7 +887,7 @@ public class GUI extends JFrame implements Runnable {
                 }
 
                 String messageToServer = String.format("MODIFY PRODUCT,%s,%s,%s,%s,%s,%s", productName,
-                        productDescription, productStore, productPrice, productQuantity,product);
+                        productDescription, productStore, productPrice, productQuantity, product);
                 String result = (String) communicateWithServer(messageToServer);
                 if (result.equals("SUCCESS")) {
                     JOptionPane.showMessageDialog(null, "Product modified successfully",
@@ -935,8 +938,6 @@ public class GUI extends JFrame implements Runnable {
 
         top.add(info);
 
-        // TODO: view shopping cart for customer
-
         JButton backButton = new JButton("Back to Main Menu");
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -953,10 +954,13 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public void viewSales() {
+        setup("View Sales By Store", 400, 400);
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel info = new JLabel("<html> <br/> <br/> Sales <br/> <br/> </html>");
+        JLabel info = new JLabel("<html> <br/> <br/> Sales By Store <br/> <br/> </html>");
+        String messageToServer = "VIEW SALES BY STORE," + getEmail();
+        String response = (String) communicateWithServer(messageToServer);
 
         JButton backButton = new JButton("Back to Main Menu");
         backButton.addActionListener(new ActionListener() {
@@ -966,20 +970,11 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-        // TODO: add fucntionality to print sales
+        // TODO: add functionality to print sales
         middle.add(info);
 
         add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
-    }
-
-    // TODO: finish this
-    public void viewProduct(String product) {
-        String[] productInfo = product.split(",");
-        setup("View Product", 400, 400);
-        JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
     }
 
     public void setup(String description, int width, int height) {
@@ -992,77 +987,6 @@ public class GUI extends JFrame implements Runnable {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
-
-    public JPanel customerProducts() {
-        String messageToServer = "GET ALL PRODUCTS";
-        ArrayList<String> products;
-        try {
-            products = (ArrayList<String>) communicateWithServer(messageToServer);
-        } catch (Exception e) {
-            System.out.println("GET ALL PRODUCTS, arraylistError");
-            return error("Getting Products Error");
-        }
-
-        if (products == null) {
-            return error("No Products");
-        }
-
-        JPanel panel = new JPanel(new GridLayout(products.size(), 5, 10, 10));
-        for (String product: products) {
-            String[] productInfo = product.split(",");
-            try {
-                panel.add(new JLabel(productInfo[0]));
-                panel.add(new JLabel(productInfo[2]));
-                panel.add(new JLabel(productInfo[4]));
-            } catch (Exception e) {
-                System.out.println("index out of bound exception");
-                return error("ERROR, SERVER ERROR sending products");
-            }
-
-            JButton viewProduct = new JButton("View Product");
-            viewProduct.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    viewProduct(product);
-                }
-            });
-
-
-            JButton addToCart = new JButton("Add to Cart");
-            addToCart.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                   // TODO: IMPLEMENT ADD TO CART and change method in server
-                    // include the store and quantity
-                }
-            });
-
-            JButton buyProduct = new JButton("Buy Product");
-            buyProduct.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // TODO implement buying product and change method in server
-                    // include the store and quantity
-                }
-            });
-        }
-        return panel;
-    }
-
-    public JPanel error(String message) {
-        JPanel error = new JPanel();
-        error.add(new JLabel(message));
-        return new JPanel();
-    }
-
-    public JPanel printStatistics(ArrayList<String> Statistics) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        for (String statistic : Statistics) {
-            panel.add(new JLabel(statistic));
-        }
-        return panel;
-    }
-
 
     public void returnHome() {
         if (userType.equals("CUSTOMER")) {
