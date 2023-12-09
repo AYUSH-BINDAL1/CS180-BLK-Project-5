@@ -956,6 +956,7 @@ public class GUI extends JFrame implements Runnable {
 
     public void viewSales() {
         setup("View Sales By Store", 400, 400);
+        JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
@@ -972,7 +973,10 @@ public class GUI extends JFrame implements Runnable {
         });
 
         // TODO: add functionality to print sales
-        middle.add(info);
+        top.add(info);
+        middle.add(new JLabel("<html> <br/> <br/>" + response + "<br/> <br/> </html>"));
+        bottom.add(backButton);
+        add(top, BorderLayout.NORTH);
 
         add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
