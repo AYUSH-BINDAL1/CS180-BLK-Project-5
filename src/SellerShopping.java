@@ -157,7 +157,7 @@ public class SellerShopping {
             e.printStackTrace();
 
         }
-        return "SUCCESS";
+        return "PRODUCT CREATED";
     }
 
 
