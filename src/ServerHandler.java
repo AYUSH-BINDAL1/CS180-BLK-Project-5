@@ -57,104 +57,181 @@ public class ServerHandler implements Runnable {
                     clientMessage = reader.readLine();
                      commandSplit = clientMessage.split(",");
                     command = commandSplit[0];
-                    if(command.equalsIgnoreCase("GET ALL PRODUCTS")) {
-                        resultList = ServerHandler.getAllProducts(); //Formatted String: GET ALL PRODUCTS
-                    } else if (command.equalsIgnoreCase("REGISTER")) {
-                        result = AccountManager.registerServer(commandSplit[1], commandSplit[2], commandSplit[3],
-                                USERINFOLOCK); //Formatted String: REGISTER,email,password,userType
-                    } else if (command.equalsIgnoreCase("LOGIN")) {
-                        result = AccountManager.loginServer(commandSplit[1], commandSplit[2], commandSplit[3], USERINFOLOCK); ////Formatted String: LOGIN,email,password,userType
-                    } else if (command.equalsIgnoreCase("EDIT USERNAME")) {
-                        result = AccountManager.updateEmailFiles(commandSplit[1], commandSplit[2], USERINFOLOCK,
-                                //Formatted String: EDIT USERNAME,oldEmail,newEmail
-                                SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK, PRODUCTLOCK);
-                    } else if (command.equalsIgnoreCase("EDIT PASSWORD")) {
-                        result = AccountManager.updatePasswordFiles(commandSplit[1], commandSplit[2], commandSplit[3],
-                                USERINFOLOCK); //FORMATTED STRING: EDIT PASSWORD,email,oldPassword,newPassword
-                    } else if (command.equalsIgnoreCase("DELETE ACCOUNT")) {
-                        result = AccountManager.deleteAccount(commandSplit[1], commandSplit[2], USERINFOLOCK,
-                                SHOPPINGCARTLOCK, PRODUCTLOCK); //FORMATTED STRING: DELETE ACCOUNT,email,password
-                    } else if (command.equalsIgnoreCase("BUY PRODUCT")) {
-                        result =  CustomerShopping.buyProductServer(commandSplit[1], commandSplit[2], PURCHASEHISTORYLOCK,
-                                PRODUCTLOCK); //FORMATTED STRING: BUY PRODUCT,email,chosenProduct
-                    } else if (command.equalsIgnoreCase("CHECKOUT CART")) {
-                        result = CustomerShopping.checkoutCartServer(commandSplit[1], SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK,
-                                PRODUCTLOCK); //FORMATTED STRING: CHECKOUT CART,email
-                    } else if (command.equalsIgnoreCase("ADD PRODUCT TO CART")) {
-                        result = CustomerShopping.addToCartServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK,
-                                PRODUCTLOCK); //FORMATTED STRING: ADD PRODUCT TO CART,email,chosenProduct
-                    } else if (command.equalsIgnoreCase("REMOVE PRODUCT FROM CART")) {
-                        result = CustomerShopping.removeProductServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK,
-                                PRODUCTLOCK); //FORMATTED STRING: REMOVE PRODUCT FROM CART,email,chosenProduct
-                    } else if (command.equalsIgnoreCase("SEARCH BY NAME")) {
-                        resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK); //FORMATTED STRING: SEARCH BY NAME,name
-                    } else if (command.equalsIgnoreCase("SEARCH BY STORE")) {
-                        resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK); //FORMATTED STRING: SEARCH BY STORE,store
-                    } else if (command.equalsIgnoreCase("SEARCH BY DESCRIPTION")) {
-                        resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK); //FORMATTED STRING:
-                        // SEARCH BY DESCRIPTION,description
-                    } else if (command.equalsIgnoreCase("SORT INCREASING PRICE")) {
-                        resultList = ProductSort.sortByIncreasingPriceServer(PRODUCTLOCK); //FORMATTED STRING: SORT INCREASING PRICE
-                    } else if (command.equalsIgnoreCase("SORT DECREASING PRICE")) {
-                        resultList = ProductSort.sortByDecreasingPriceServer(PRODUCTLOCK); //FORMATTED STRING: SORT DECREASING PRICE
-                    } else if (command.equalsIgnoreCase("SORT INCREASING QUANTITY")) {
-                        resultList = ProductSort.sortByIncreasingQuantityServer(PRODUCTLOCK); //FORMATTED STRING: SORT
-                        // INCREASING QUANTITY
-                    } else if (command.equalsIgnoreCase("SORT DECREASING QUANTITY")) {
-                        resultList = ProductSort.sortByDecreasingQuantityServer(PRODUCTLOCK); //FORMATTED STRING: SORT
-                        // DECREASING QUANTITY
-                    } else if (command.equalsIgnoreCase("VIEW PURCHASE HISTORY")) {
-                        resultList = PurchaseHistory.viewCustomerPurchaseHistoryServer(commandSplit[1], PURCHASEHISTORYLOCK); //FORMATTED STRING:
-                        // VIEW PURCHASE HISTORY,email
-                    } else if (command.equalsIgnoreCase("EXPORT PURCHASE HISTORY")) {
-                        result = PurchaseHistory.exportCustomerPurchaseHistoryServer(commandSplit[1], commandSplit[2],
-                                PURCHASEHISTORYLOCK); //FORMATTED STRING: EXPORT PURCHASE HISTORY,email,file path
-                    } else if (command.equalsIgnoreCase("VIEW CUSTOMER STATISTICS")) {
-                        resultList = Statistics.customerDashboardServer(commandSplit[1],PURCHASEHISTORYLOCK, PRODUCTLOCK);
-                    } else if (command.equalsIgnoreCase("VIEW CUSTOMER STATISTICS")) {
-                        resultList = Statistics.customerDashboardSpecificServer(commandSplit[1],
-                                commandSplit[2], PURCHASEHISTORYLOCK);
-                    } else if (command.equalsIgnoreCase("VIEW SELLER PRODUCTS")) {
-                        resultList = SellerShopping.viewSellerProducts(commandSplit[1], PRODUCTLOCK); //FORMATTED STRING: VIEW SELLER PRODUCTS,email
-                    } else if (command.equalsIgnoreCase("MODIFY PRODUCT")) {
-                        result = SellerShopping.modifyProductServer(commandSplit[1], commandSplit[2],
-                                commandSplit[3], commandSplit[4], Double.parseDouble(commandSplit[5]),
-                                Integer.parseInt(commandSplit[6]), commandSplit[7], SHOPPINGCARTLOCK, PRODUCTLOCK);
-                        //FORMATTED STRING: MODIFY PRODUCT,email,Product Name,Product Description,Store Name, Seller Email,
+                    switch (command.toUpperCase()) {
+                        // Formatted String: GET ALL PRODUCTS
+                        case "GET ALL PRODUCTS":
+                            resultList = ServerHandler.getAllProducts();
+                            break;
+
+                        // Formatted String: REGISTER,email,password,userType
+                        case "REGISTER":
+                            result = AccountManager.registerServer(commandSplit[1], commandSplit[2], commandSplit[3], USERINFOLOCK);
+                            break;
+
+                        // Formatted String: LOGIN,email,password,userType
+                        case "LOGIN":
+                            result = AccountManager.loginServer(commandSplit[1], commandSplit[2], commandSplit[3], USERINFOLOCK);
+                            break;
+
+                        // Formatted String: EDIT USERNAME,oldEmail,newEmail
+                        case "EDIT USERNAME":
+                            result = AccountManager.updateEmailFiles(commandSplit[1], commandSplit[2], USERINFOLOCK,
+                                    SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK, PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: EDIT PASSWORD,email,oldPassword,newPassword
+                        case "EDIT PASSWORD":
+                            result = AccountManager.updatePasswordFiles(commandSplit[1], commandSplit[2], commandSplit[3], USERINFOLOCK);
+                            break;
+
+                        // Formatted String: DELETE ACCOUNT,email,password
+                        case "DELETE ACCOUNT":
+                            result = AccountManager.deleteAccount(commandSplit[1], commandSplit[2], USERINFOLOCK,
+                                    SHOPPINGCARTLOCK, PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: BUY PRODUCT,email,chosenProduct
+                        case "BUY PRODUCT":
+                            result = CustomerShopping.buyProductServer(commandSplit[1], commandSplit[2], PURCHASEHISTORYLOCK, PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: CHECKOUT CART,email
+                        case "CHECKOUT CART":
+                            result = CustomerShopping.checkoutCartServer(commandSplit[1], SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK, PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: ADD PRODUCT TO CART,email,chosenProduct
+                        case "ADD PRODUCT TO CART":
+                            result = CustomerShopping.addToCartServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: REMOVE PRODUCT FROM CART,email,chosenProduct
+                        case "REMOVE PRODUCT FROM CART":
+                            result = CustomerShopping.removeProductServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: SEARCH BY NAME,name
+                        case "SEARCH BY NAME":
+                            resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
+                            // Formatted String: SEARCH BY STORE,store
+                        case "SEARCH BY STORE":
+                            resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
+                            // Formatted String: SEARCH BY DESCRIPTION,description
+                        case "SEARCH BY DESCRIPTION":
+                            resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: SORT INCREASING PRICE
+                        case "SORT INCREASING PRICE":
+                            resultList = ProductSort.sortByIncreasingPriceServer(PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: SORT DECREASING PRICE
+                        case "SORT DECREASING PRICE":
+                            resultList = ProductSort.sortByDecreasingPriceServer(PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: SORT INCREASING QUANTITY
+                        case "SORT INCREASING QUANTITY":
+                            resultList = ProductSort.sortByIncreasingQuantityServer(PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: SORT DECREASING QUANTITY
+                        case "SORT DECREASING QUANTITY":
+                            resultList = ProductSort.sortByDecreasingQuantityServer(PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: VIEW PURCHASE HISTORY,email
+                        case "VIEW PURCHASE HISTORY":
+                            resultList = PurchaseHistory.viewCustomerPurchaseHistoryServer(commandSplit[1], PURCHASEHISTORYLOCK);
+                            break;
+
+                        // Formatted String: EXPORT PURCHASE HISTORY,email,file path
+                        case "EXPORT PURCHASE HISTORY":
+                            result = PurchaseHistory.exportCustomerPurchaseHistoryServer(commandSplit[1], commandSplit[2],
+                                    PURCHASEHISTORYLOCK);
+                            break;
+
+                        // Formatted String: VIEW CUSTOMER STATISTICS,email
+                        case "VIEW CUSTOMER STATISTICS":
+                            resultList = Statistics.customerDashboardServer(commandSplit[1], PURCHASEHISTORYLOCK, PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: VIEW CUSTOMER STATISTICS SPECIFIC,email,rank (Either 1 or 0)
+                        case "VIEW CUSTOMER STATISTICS SPECIFIC":
+                            resultList = Statistics.customerDashboardSpecificServer(commandSplit[1], commandSplit[2],
+                                    PURCHASEHISTORYLOCK);
+                            break;
+
+                        // Formatted String: VIEW SELLER PRODUCTS,email
+                        case "VIEW SELLER PRODUCTS":
+                            resultList = SellerShopping.viewSellerProducts(commandSplit[1], PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: MODIFY PRODUCT,email,Product Name,Product Description,Store Name, Seller Email,
                         // Price,Quantity,Chosen Product
-                    } else if (command.equalsIgnoreCase("DELETE PRODUCT")) {
-                        result = SellerShopping.deleteProductServer(commandSplit[1], SHOPPINGCARTLOCK, PRODUCTLOCK);
-                        //FORMATTED STRING: DELETE PRODUCT,Chosen Product
-                    } else if (command.equalsIgnoreCase("CREATE NEW PRODUCT")) {
-                        result = SellerShopping.createNewProductServer(commandSplit[1], commandSplit[2],
-                                commandSplit[3], commandSplit[4], Double.parseDouble(commandSplit[5]),
-                                Integer.parseInt(commandSplit[6]), PRODUCTLOCK); //FORMATTED STRING: CREATE NEW PRODUCT,
-                        // Product Name,Product Description,Store Name, Seller Email,Price,Quantity
-                    } else if (command.equalsIgnoreCase("VIEW SALES BY STORE")) {
-                        result = Statistics.viewSalesByStoreServer(commandSplit[1], PURCHASEHISTORYLOCK); //FORMATTED
-                        // STRING:  VIEW SALES BY STORE,sellerEmail
-                    } else if (command.equalsIgnoreCase("IMPORT SELLER CSV")) {
-                        result = CSVHandler.importSellerCSVServer(commandSplit[1], PRODUCTLOCK); //FORMATTED STRING: IMPORT
-                        // SELLER CSV,File path
-                    } else if (command.equalsIgnoreCase("EXPORT SELLER CSV")) {
-                        result = CSVHandler.exportSellerCSVServer(commandSplit[1], commandSplit[2], PRODUCTLOCK);
-                        //FORMATTED STRING: EXPORT SELLER CSV,File Path,Seller Email
-                    } else if (command.equalsIgnoreCase("VIEW SELLER STATISTICS")) {
-                        result = Statistics.generateSellerDashboardServer(commandSplit[1], Integer.parseInt(commandSplit[2])
-                                , PURCHASEHISTORYLOCK); //FORMATTED STRING: VIEW SELLER STATISTICS,sellerEmail,rank (Either
-                        // 1 or 0)
-                    } else if (command.equalsIgnoreCase("VIEW SELLER SHOPPING CART")) {
-                        resultList = SellerShopping.getSellerShoppingCartServer(commandSplit[1], PRODUCTLOCK); //FORMATTED
-                        // STRING: VIEW SELLER SHOPPING CART,sellerEmail
-                    } else if (command.equalsIgnoreCase("EXIT PROGRAM")) {
-                        exitProgram();
+                        case "MODIFY PRODUCT":
+                            result = SellerShopping.modifyProductServer(commandSplit[1], commandSplit[2],
+                                    commandSplit[3], commandSplit[4], Double.parseDouble(commandSplit[5]),
+                                    Integer.parseInt(commandSplit[6]), commandSplit[7], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: DELETE PRODUCT,Chosen Product
+                        case "DELETE PRODUCT":
+                            result = SellerShopping.deleteProductServer(commandSplit[1], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: CREATE NEW PRODUCT,Product Name,Product Description,Store Name, Seller Email,Price,Quantity
+                        case "CREATE NEW PRODUCT":
+                            result = SellerShopping.createNewProductServer(commandSplit[1], commandSplit[2],
+                                    commandSplit[3], commandSplit[4], Double.parseDouble(commandSplit[5]),
+                                    Integer.parseInt(commandSplit[6]), PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: VIEW SALES BY STORE,sellerEmail
+                        case "VIEW SALES BY STORE":
+                            result = Statistics.viewSalesByStoreServer(commandSplit[1], PURCHASEHISTORYLOCK);
+                            break;
+
+                        // Formatted String: IMPORT SELLER CSV,File path
+                        case "IMPORT SELLER CSV":
+                            result = CSVHandler.importSellerCSVServer(commandSplit[1], PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: EXPORT SELLER CSV,File Path,Seller Email
+                        case "EXPORT SELLER CSV":
+                            result = CSVHandler.exportSellerCSVServer(commandSplit[1], commandSplit[2], PRODUCTLOCK);
+                            break;
+
+                        // Formatted String: VIEW SELLER STATISTICS,sellerEmail,rank (Either 1 or 0)
+                        case "VIEW SELLER STATISTICS":
+                            result = Statistics.generateSellerDashboardServer(commandSplit[1], Integer.parseInt(commandSplit[2]),
+                                    PURCHASEHISTORYLOCK);
+                            break;
+
+                        // Formatted String: VIEW SELLER SHOPPING CART,sellerEmail
+                        case "VIEW SELLER SHOPPING CART":
+                            resultList = SellerShopping.getSellerShoppingCartServer(commandSplit[1], PRODUCTLOCK);
+                            break;
+
+                        // Exit the program
+                        case "EXIT PROGRAM":
+                            exitProgram();
+                            break;
+
+                        default:
+                            // Handle unknown command
+                            break;
                     }
+
                     if (!result.isEmpty()) {
                         writer.writeObject(result);
                     } else {
                         writer.writeObject(resultList);
                     }
                     writer.flush();
+                    result = "";
+                    resultList.clear();
                 } else {
                     Thread.sleep(100); //Wait for a short duration if no data is available
                 }
