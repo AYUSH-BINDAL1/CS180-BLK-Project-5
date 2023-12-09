@@ -55,7 +55,7 @@ public class CSVHandler {
             return "PATH DOES NOT EXIST";
         }
     }
-
+    
 
     //Given the sellerEmail and path writes Products the seller owns to a new CSV file
     public static String exportSellerCSVServer(String path, String sellerEmail, Object PRODUCTLOCK) {
