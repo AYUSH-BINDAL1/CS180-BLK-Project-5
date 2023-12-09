@@ -241,7 +241,11 @@ public class Statistics {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return newString.toString(); //Returns formatted String of the stores sales
+        if(newString.isEmpty()) {
+            return "NO SALES";
+        } else {
+            return newString.toString(); //Returns formatted String of the stores sales
+        }
     }
 
 
