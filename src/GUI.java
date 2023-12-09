@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 import java.net.Socket;
 import java.io.*;
+import java.util.ArrayList;
 
 public class GUI extends JFrame implements Runnable {
     private Socket socket;
@@ -129,8 +130,6 @@ public class GUI extends JFrame implements Runnable {
                             , "Invalid Password", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                // TODO: implement logic
-
                 if (createOrLoginSelected.equals("Create Account")) {
                     messageToServer = String.format("REGISTER,%s,%s,%s", emailEntered, passwordEntered,
                             userTypeSelected);
@@ -196,7 +195,7 @@ public class GUI extends JFrame implements Runnable {
         setup("Customer Page", 800, 500);
 
         JPanel top = new JPanel(new GridLayout(4, 2, 5, 5));
-        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel products = customerProducts();
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         JButton exit = new JButton("Exit");
@@ -273,7 +272,7 @@ public class GUI extends JFrame implements Runnable {
         bottom.add(refresh);
 
         add(top, BorderLayout.NORTH);
-        add(middle, BorderLayout.CENTER);
+        add(products, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
     }
 
@@ -367,11 +366,26 @@ public class GUI extends JFrame implements Runnable {
         JPanel top = new JPanel(new GridLayout(1, 2, 7, 7));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By Store Descending ", "Sort By Store Ascending"
-                , "Sort by Seller Descending", "Sort by Seller Ascending"});
+        JComboBox<String> sortBy;
+        if (userType.equals("CUSTOMER")) {
+            sortBy = new JComboBox<>(new String[]{"Sort By Store Descending ", "Sort By Store Ascending"
+                    , "Sort by Seller Descending", "Sort by Seller Ascending"});
+        } else {
+            sortBy = new JComboBox<>(new String[]{"Sort By Store Descending ", "Sort By Store Ascending"
+                    , "Sort by Product Descending", "Sort by Product Ascending"});
+        }
+
+        ArrayList<String> statistics;
+        if (userType.equals("CUSTOMER")) {
+            statistics = (ArrayList<String>) communicateWithServer("VIEW CUSTOMER STATISTICS" + "," + email);
+        } else {
+            statistics = (ArrayList<String>) communicateWithServer("VIEW SEllER STATISTICS" + "," + email);
+        }
+
         sortBy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                middle.removeAll();
                 // TODO: add functionality to sort
             }
         });
@@ -389,6 +403,9 @@ public class GUI extends JFrame implements Runnable {
 
         // TODO: implement method to print the statistics *note*
         //  statistics is general and used by both seller and customer
+
+
+        middle.add(printStatistics(statistics));
 
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
@@ -687,6 +704,8 @@ public class GUI extends JFrame implements Runnable {
         top.add(search);
         top.add(searchButton);
 
+        // TODO: display products
+
         add(top, BorderLayout.NORTH);
     }
 
@@ -916,6 +935,8 @@ public class GUI extends JFrame implements Runnable {
 
         top.add(info);
 
+        // TODO: view shopping cart for customer
+
         JButton backButton = new JButton("Back to Main Menu");
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -952,6 +973,15 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
+    // TODO: finish this
+    public void viewProduct(String product) {
+        String[] productInfo = product.split(",");
+        setup("View Product", 400, 400);
+        JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    }
+
     public void setup(String description, int width, int height) {
         getContentPane().removeAll();
         revalidate();
@@ -963,6 +993,75 @@ public class GUI extends JFrame implements Runnable {
         setLocationRelativeTo(null);
     }
 
+    public JPanel customerProducts() {
+        String messageToServer = "GET ALL PRODUCTS";
+        ArrayList<String> products;
+        try {
+            products = (ArrayList<String>) communicateWithServer(messageToServer);
+        } catch (Exception e) {
+            System.out.println("GET ALL PRODUCTS, arraylistError");
+            return error("Getting Products Error");
+        }
+
+        if (products == null) {
+            return error("No Products");
+        }
+
+        JPanel panel = new JPanel(new GridLayout(products.size(), 5, 10, 10));
+        for (String product: products) {
+            String[] productInfo = product.split(",");
+            try {
+                panel.add(new JLabel(productInfo[0]));
+                panel.add(new JLabel(productInfo[2]));
+                panel.add(new JLabel(productInfo[4]));
+            } catch (Exception e) {
+                System.out.println("index out of bound exception");
+                return error("ERROR, SERVER ERROR sending products");
+            }
+
+            JButton viewProduct = new JButton("View Product");
+            viewProduct.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    viewProduct(product);
+                }
+            });
+
+
+            JButton addToCart = new JButton("Add to Cart");
+            addToCart.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                   // TODO: IMPLEMENT ADD TO CART and change method in server
+                    // include the store and quantity
+                }
+            });
+
+            JButton buyProduct = new JButton("Buy Product");
+            buyProduct.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // TODO implement buying product and change method in server
+                    // include the store and quantity
+                }
+            });
+        }
+        return panel;
+    }
+
+    public JPanel error(String message) {
+        JPanel error = new JPanel();
+        error.add(new JLabel(message));
+        return new JPanel();
+    }
+
+    public JPanel printStatistics(ArrayList<String> Statistics) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        for (String statistic : Statistics) {
+            panel.add(new JLabel(statistic));
+        }
+        return panel;
+    }
 
 
     public void returnHome() {
