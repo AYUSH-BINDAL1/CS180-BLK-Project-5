@@ -55,7 +55,7 @@ public class ServerHandler implements Runnable {
             try {
                 if (reader.ready()) { // Check if data is available to read
                     clientMessage = reader.readLine();
-                     commandSplit = clientMessage.split(",");
+                    commandSplit = clientMessage.split(",");
                     command = commandSplit[0];
                     if(command.equalsIgnoreCase("GET ALL PRODUCTS")) {
                         resultList = ServerHandler.getAllProducts(); //Formatted String: GET ALL PRODUCTS
@@ -155,6 +155,8 @@ public class ServerHandler implements Runnable {
                         writer.writeObject(resultList);
                     }
                     writer.flush();
+                    result = "";
+                    resultList.clear();
                 } else {
                     Thread.sleep(100); //Wait for a short duration if no data is available
                 }

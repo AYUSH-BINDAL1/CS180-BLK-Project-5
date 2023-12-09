@@ -19,6 +19,7 @@ public class MarketPlaceServer {
 
     //Creates "global" Object LOCKS for synchronizing specific files
     public static final Object USERINFOLOCK = new Object();
+
     public static final Object SHOPPINGCARTLOCK = new Object();
     public static final Object PURCHASEHISTORYLOCK = new Object();
     public static final Object PRODUCTLOCK = new Object();

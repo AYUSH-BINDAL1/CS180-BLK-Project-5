@@ -1,10 +1,8 @@
 import javax.swing.*;
 import javax.swing.JOptionPane;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.GridLayout;
 import java.net.Socket;
 import java.io.*;
 import java.nio.file.Path;
@@ -273,6 +271,8 @@ public class GUI extends JFrame implements Runnable {
         top.add(searchBy);
         top.add(viewPurchaseHistory);
         top.add(viewStatistics);
+
+        middle.add(customerProducts());
 
         bottom.add(refresh);
 
@@ -990,23 +990,25 @@ public class GUI extends JFrame implements Runnable {
             products = (ArrayList<String>) communicateWithServer(messageToServer);
         } catch (Exception e) {
             System.out.println("GET ALL PRODUCTS, arraylistError");
-            return error("Getting Products Error");
+            return errorPanel("ERROR, SERVER ERROR sending products");
         }
 
         if (products == null) {
-            return error("No Products");
+            return errorPanel("No Products");
         }
-
-        JPanel panel = new JPanel(new GridLayout(products.size(), 5, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(products.size(), 1, 5, 5));
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.setPreferredSize(new Dimension(600, 800));
         for (String product: products) {
+            JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
             String[] productInfo = product.split(",");
             try {
-                panel.add(new JLabel(productInfo[0]));
-                panel.add(new JLabel(productInfo[2]));
-                panel.add(new JLabel(productInfo[4]));
+                component.add(new JLabel(productInfo[0]));
+                component.add(new JLabel(productInfo[2]));
+                component.add(new JLabel(productInfo[4]));
             } catch (Exception e) {
                 System.out.println("index out of bound exception");
-                return error("ERROR, SERVER ERROR sending products");
+                return errorPanel("ERROR, SERVER ERROR sending products");
             }
 
             JButton viewProduct = new JButton("View Product");
@@ -1035,10 +1037,16 @@ public class GUI extends JFrame implements Runnable {
                     // include the store and quantity
                 }
             });
-            panel.add(viewProduct);
-            panel.add(buyProduct);
+            component.add(viewProduct);
+            component.add(buyProduct);
+            panel.add(component);
         }
-        return panel;
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(600, 500));
+        JPanel view = new JPanel();
+        view.add(scrollPane);
+        return view;
     }
 
 
@@ -1052,10 +1060,16 @@ public class GUI extends JFrame implements Runnable {
     }
 
 
-    public JPanel error(String message) {
+    public JPanel errorPanel(String message) {
         JPanel error = new JPanel();
         error.add(new JLabel(message));
-        return new JPanel();
+        return error;
+    }
+
+    public JScrollPane errorScroll(String message) {
+        JScrollPane error = new JScrollPane();
+        error.add(new JLabel(message));
+        return error;
     }
 
     public JPanel printStatistics(ArrayList<String> Statistics) {
@@ -1076,6 +1090,8 @@ public class GUI extends JFrame implements Runnable {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
+
+    
 
     public void returnHome() {
         if (userType.equals("CUSTOMER")) {
