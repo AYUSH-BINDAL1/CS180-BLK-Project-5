@@ -26,7 +26,8 @@ public class CustomerShopping {
         String result = "";
         ArrayList<String> productLines; //ArrayList of lines from Product.txt
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
-        try {
+        boolean inCart = false; //Checks if the product is already in the cart
+            try {
             synchronized (SHOPPINGCARTLOCK) {
                 //Reads lines from ShoppingCart.txt
                 shoppingCartLines = (ArrayList<String>) Files.readAllLines(Paths.get("ShoppingCart.txt"));
@@ -46,8 +47,25 @@ public class CustomerShopping {
                 } else {
                     //Decreases the amount available, changes the value of the split product and reads it to the
                     // productLines and adds to shoppingCart
+                    for (int i = 0; i < shoppingCartLines.size(); i++) {
+                        String[] shoppingCartSplit = shoppingCartLines.get(i).split(",");
+                        String currentShoppingLine = shoppingCartSplit[0] + "," + shoppingCartSplit[1] + "," +
+                                shoppingCartSplit[2] + "," + shoppingCartSplit[3] + "," + shoppingCartSplit[4] +
+                                "," + shoppingCartSplit[5];
+                        if (   shoppingCartSplit[0].equals(chosenProductSplit[0]) &&
+                                shoppingCartSplit[2].equals(chosenProductSplit[2]) &&
+                                shoppingCartSplit[3].equals(chosenProductSplit[3]) &&
+                                shoppingCartSplit[6].equals(email)) {
+                            shoppingCartSplit[5] =
+                                    String.valueOf(Integer.parseInt(shoppingCartSplit[5]) + purchaseQuantity);
+                            productLines.set(i, String.join(",", shoppingCartSplit));
+                            inCart = true;
+                        }
+                    }
                     result = "ADDED TO CART";
-                    shoppingCartLines.add(chosenProduct + "," + email);
+                    if (!inCart) {
+                        shoppingCartLines.add(chosenProduct + "," + email);
+                    }
                     synchronized (SHOPPINGCARTLOCK) {
                         Files.write(Paths.get("ShoppingCart.txt"), shoppingCartLines);
                     }
