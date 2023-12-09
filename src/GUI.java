@@ -731,7 +731,8 @@ public class GUI extends JFrame implements Runnable {
                     double price = Double.parseDouble(productPrice.getText());
                     int quantity = Integer.parseInt(productQuantity.getText());
                     String messageToServer = String.format("CREATE NEW PRODUCT,%s,%s,%s,%s,%s,%s", productName.getText(),
-                            productDescription.getText(), productStore.getText(), getEmail(), productPrice.getText(),
+                            productDescriptionField.getText(), productStore.getText(), getEmail(),
+                            productPrice.getText(),
                             productQuantity.getText());
                     String result = (String) communicateWithServer(messageToServer);
                     if (result.equals("PRODUCT CREATED")) {
