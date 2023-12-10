@@ -245,4 +245,18 @@ public class CustomerShopping {
         return result;
     }
 
+    //Returns ArrayList of All Products in Product.txt
+    public static ArrayList<String> getAllProducts(Object PRODUCTLOCK) {
+        ArrayList<String> productLines = new ArrayList<String>();
+        try {
+            //Reads lines from Product.txt
+            synchronized (PRODUCTLOCK) {
+                productLines = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return productLines;
+    }
+
 }

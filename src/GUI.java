@@ -337,7 +337,7 @@ public class GUI extends JFrame implements Runnable {
         viewStatistics.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                viewSellerStatistics();
+                viewStatistics();
             }
         });
         JButton csv = new JButton("Export/Import CSV");
@@ -412,51 +412,6 @@ public class GUI extends JFrame implements Runnable {
         add(middle, BorderLayout.CENTER);
     }
 
-    public void viewSellerStatistics() {
-        setup("View Seller Statistics", 450, 450);
-
-        JPanel top = new JPanel(new GridLayout(1, 2, 7, 7));
-        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
-        JLabel info = new JLabel("<html> <br/> <br/> Seller Statistics <br/> <br/> </html>");
-        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort High To Low", "Sort Low To High"});
-        String formattedResponse = "";
-        sortBy.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String sortBySelected = (String) sortBy.getSelectedItem();
-                String formattedString = "";
-                if (sortBySelected.equals("Sort High To Low")) {
-                    formattedString = String.format("VIEW SELLER STATISTICS,%s,%s",getEmail(),"1");
-                } else if (sortBySelected.equals("Sort Low To High")) {
-                    formattedString = String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "2");
-                }
-                String response = (String) communicateWithServer(formattedString);
-                String formattedResponse = "<html><body><pre>" + response + "</pre></body></html>";
-                middle.removeAll(); // Clear previous components
-                middle.add(printStringStatistics(formattedResponse)); // Add updated component
-                middle.revalidate(); // Revalidate to update the panel
-                middle.repaint(); // Repaint to ensure changes are visible
-            }
-        });
-
-        JButton mainMenu = new JButton("Return To Main Menu");
-        mainMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                returnHome();
-            }
-        });
-
-        top.add(info);
-        top.add(sortBy);
-        bottom.add(mainMenu);
-        add(top, BorderLayout.NORTH);
-        add(middle, BorderLayout.CENTER);
-        add(bottom, BorderLayout.SOUTH);
-    }
-
     public void editAccount() {
         setup("Edit Account", 450, 450);
 
@@ -479,13 +434,6 @@ public class GUI extends JFrame implements Runnable {
                 "**A confirmation message should appear if done correctly**</html>");
 
         JButton change = new JButton("Change Username/Password");
-        JButton backButton = new JButton("Return To Main Menu");
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                returnHome();
-            }
-        });
         change.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -500,11 +448,6 @@ public class GUI extends JFrame implements Runnable {
                     if (!currentCredentialEntered.equals(getPassword())) {
                         JOptionPane.showMessageDialog(null, "Old Password Does Not Match",
                                 "Password Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    if(newCredentialEntered.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "New Password Cannot Be Empty!",
-                                "Empty Password", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     messageToServer = String.format("EDIT PASSWORD,%s,%s,%s", getEmail(), getPassword(), newCredentialEntered);
@@ -558,7 +501,6 @@ public class GUI extends JFrame implements Runnable {
         middle.add(info);
 
         bottom.add(change);
-        bottom.add(backButton);
 
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
@@ -574,7 +516,7 @@ public class GUI extends JFrame implements Runnable {
         JLabel usernameLabel = new JLabel("Enter username:");
         JLabel passwordLabel = new JLabel("Enter password:");
         JTextField usernameCredential = new JTextField(15);
-        JPasswordField passwordCredential = new JPasswordField(15);
+        JTextField passwordCredential = new JTextField(15);
 
         JLabel info = new JLabel("<html> <br/> <br/>**Disclaimer** This action is irreversible!<br/> <br/> </html>");
 
@@ -583,7 +525,7 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String usernameCredentialEntered = usernameCredential.getText();
-                String passwordCredentialEntered = String.valueOf(passwordCredential.getPassword());
+                String passwordCredentialEntered = passwordCredential.getText();
                 System.out.println("EMAIL ONE" + getEmail());
                 System.out.println("EMAIL TWO" + usernameCredentialEntered);
                 if (!usernameCredentialEntered.equals(getEmail())) {
@@ -635,59 +577,72 @@ public class GUI extends JFrame implements Runnable {
     public void viewPurchaseHistory() {
         setup("View Purchase History", 400, 450);
 
-        JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JPanel middle = new JPanel(new BorderLayout());
+
+        JPanel top = new JPanel(new GridLayout(2, 2, 6, 6));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        String formattedString = String.format("VIEW PURCHASE HISTORY,%s", getEmail());
-        ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(formattedString);
-
-        JButton returnToMain = new JButton("Return to Main Menu");
-        returnToMain.addActionListener(e -> returnHome());
-
-        JLabel info = new JLabel("<html> <br/> <br/> View/Export Your Purchase History: <br/> <br/> " + "</html>");
-
-        JPanel historyPanel = new JPanel(new GridLayout(0, 1));
-        historyPanel.add(info);
-        historyPanel.add(printPurchaseHistory(purchaseHistory));
-
-        middle.add(historyPanel, BorderLayout.CENTER);
-
-        JPanel exportPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton exportButton = new JButton("Export Purchase History");
-        JTextField fileName = new JTextField(15);
-        exportButton.addActionListener(e -> {
-            String fileNameInput = fileName.getText();
-
-            if (!fileNameInput.endsWith(".txt") || !fileNameInput.matches(".*\\.txt$")) {
-                JOptionPane.showMessageDialog(null, "Please make sure you have a .txt file", "Export Failure",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            String messageToServer = String.format("EXPORT PURCHASE HISTORY,%s,%s", getEmail(), fileNameInput);
-            String result = (String) communicateWithServer(messageToServer);
-
-            if (result.equals("SUCCESS")) {
-                JOptionPane.showMessageDialog(null, "Purchase history exported successfully",
-                        "Purchase History Export Success", JOptionPane.INFORMATION_MESSAGE);
+        JButton exit = new JButton("Exit");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                communicateWithServer("EXIT");
+                System.exit(0);
             }
         });
 
-        exportPanel.add(fileName);
-        exportPanel.add(exportButton);
+        JButton returnToMain = new JButton("Return to Main Menu");
+        returnToMain.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                returnHome();
+            }
+        });
 
-        middle.add(exportPanel, BorderLayout.SOUTH);
+        JLabel info = new JLabel("<html> <br/> <br/> Export History file as: <br/> <br/> </html>");
+        JTextField fileName = new JTextField(15);
+        JButton exportButton = new JButton("Export");
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fileNameInput = fileName.getText();
 
-        top.add(info);
+                if (!fileNameInput.endsWith(".txt") || !fileNameInput.matches(".*\\.txt$")) {
+                    JOptionPane.showMessageDialog(null, "Please make sure you have a .txt file", "Export " +
+                            "Failure", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String messageToServer = String.format("EXPORT PURCHASE HISTORY,%s,%s", getEmail(), fileNameInput);
+                String result = (String) communicateWithServer(messageToServer);
+                if (result.equals("SUCCESS")) {
+                    JOptionPane.showMessageDialog(null, "Purchase history exported successfully",
+                            "Purchase History Export Success", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
 
-        bottom.add(returnToMain);
+
+        top.add(exit);
+        top.add(returnToMain);
+
+        middle.add(info);
+        middle.add(fileName);
+        middle.add(exportButton);
 
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
+
+        //TODO: implement functionality to import customer purchase history and
+        ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(String.format("VIEW PURCHASE HISTORY,%s", "aa"));
+        if (purchaseHistory.isEmpty()) {
+            add(error("No Products"), BorderLayout.SOUTH);
+            return;
+        }
+
+        bottom.add(printStatistics(purchaseHistory));
+
         add(bottom, BorderLayout.SOUTH);
     }
-
 
     public void customerShoppingCart() {
         setup("Customer Shopping Cart", 400, 400);
@@ -813,7 +768,7 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-        JButton exit = new JButton("Return To Main Menu");
+        JButton exit = new JButton("Back Button");
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -850,7 +805,7 @@ public class GUI extends JFrame implements Runnable {
         JLabel csvText = new JLabel("<html> <br/> <br/> Please enter the file you want to import or export <br/> <br/> </html>");
         JTextField fileName = new JTextField(15);
 
-        JButton backButton = new JButton("Return to Main Menu");
+        JButton backButton = new JButton("Back to Main Menu");
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -899,9 +854,8 @@ public class GUI extends JFrame implements Runnable {
         middle.add(csvText);
         middle.add(fileName);
 
-        bottom.add(csvButton);
         bottom.add(backButton);
-
+        bottom.add(csvButton);
 
         add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
@@ -957,7 +911,7 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-        JButton exit = new JButton("Return to Main Menu");
+        JButton exit = new JButton("Back to Main Menu");
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -994,28 +948,30 @@ public class GUI extends JFrame implements Runnable {
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel info = new JLabel("<html> <br/> <br/> Customer's Shopping Carts <br/> <br/> </html>");
+        JLabel info = new JLabel("<html> <br/> <br/> Shopping Cart <br/> <br/> </html>");
+
         top.add(info);
 
-        JButton backButton = new JButton("Return to Main Menu");
+        JButton backButton = new JButton("Back to Main Menu");
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SellerPage();
             }
         });
+
         bottom.add(backButton);
 
         String messageToServer = String.format("VIEW SELLER SHOPPING CART,%s", getEmail());
 
         ArrayList<String> shoppingCart = (ArrayList<String>) communicateWithServer(messageToServer);
-        System.out.println("*****"+shoppingCart);
+
         if (shoppingCart.isEmpty()) {
             middle.add(new JLabel("Your shopping cart is empty"));
         } else {
-            middle.add(printShoppingCarts(shoppingCart));
+            middle.add(printStatistics(shoppingCart));
         }
-        add(top, BorderLayout.NORTH);
+
         add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
     }
@@ -1029,11 +985,8 @@ public class GUI extends JFrame implements Runnable {
         JLabel info = new JLabel("<html> <br/> <br/> Sales By Store <br/> <br/> </html>");
         String messageToServer = "VIEW SALES BY STORE," + getEmail();
         String response = (String) communicateWithServer(messageToServer);
-        // Wrap response in <html> and <body> tags to use <pre> for preserving formatting
-        String formattedResponse = "<html><body><pre>" + response + "</pre></body></html>";
 
-
-        JButton backButton = new JButton("Return to Main Menu");
+        JButton backButton = new JButton("Back to Main Menu");
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1041,12 +994,12 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-
+        // TODO: add functionality to print sales
         top.add(info);
-        middle.add(printStringStatistics(formattedResponse));
+        middle.add(new JLabel("<html> <br/> <br/>" + response + "<br/> <br/> </html>"));
         bottom.add(backButton);
-
         add(top, BorderLayout.NORTH);
+
         add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
     }
@@ -1259,104 +1212,10 @@ public class GUI extends JFrame implements Runnable {
         panel.setPreferredSize(new Dimension(600, 800));
         for (String statistic : statistics) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            JLabel label = new JLabel(statistic);
-            component.add(label);
             panel.add(component);
         }
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, 500));
-        JPanel view = new JPanel();
-        view.add(scrollPane);
-        return view;
-    }
-
-    public JPanel printShoppingCarts(ArrayList<String> statistics) {
-        JPanel panel = new JPanel(new GridLayout(statistics.size(), 1, 4, 5));
-        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, 800));
-        for (String statistic : statistics) {
-            String[] statisticsSplit = statistic.split(",");
-            String formattedInfo = String.format(
-                    "%s | " +
-                            "%s | " +
-                            "%s | " +
-                            "%s | " +
-                            "$%s | " +
-                            "%s",
-                    statisticsSplit[6],
-                    statisticsSplit[0],
-                    statisticsSplit[1],
-                    statisticsSplit[2],
-                    statisticsSplit[4],
-                    statisticsSplit[5]
-            );
-
-            JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            JLabel label = new JLabel("<html>" + formattedInfo.replaceAll("\n", "<br>") + "</html>");
-            component.add(label);
-            panel.add(component);
-        }
-        JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, 500));
-        JPanel view = new JPanel();
-        view.add(scrollPane);
-        return view;
-    }
-
-    public JPanel printPurchaseHistory(ArrayList<String> statistics) {
-        JPanel panel = new JPanel(new GridLayout(statistics.size(), 1, 4, 5));
-        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, 800));
-        if(!statistics.isEmpty()) {
-            for (String statistic : statistics) {
-                String[] statisticsSplit = statistic.split(",");
-                String formattedInfo = String.format(
-                        "%s | " +
-                                "%s | " +
-                                "%s | " +
-                                "%s | " +
-                                "$%s | " +
-                                "%s",
-                        statisticsSplit[0],
-                        statisticsSplit[1],
-                        statisticsSplit[2],
-                        statisticsSplit[3],
-                        statisticsSplit[4],
-                        statisticsSplit[5]
-                );
-
-                JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
-                JLabel label = new JLabel("<html>" + formattedInfo.replaceAll("\n", "<br>") + "</html>");
-                component.add(label);
-                panel.add(component);
-            }
-        } else {
-            JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            JLabel label = new JLabel("<html>" + "NO PURCHASE HISTORY ON FILE" + "</html>");
-            component.add(label);
-            panel.add(component);
-        }
-        JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, 500));
-        JPanel view = new JPanel();
-        view.add(scrollPane);
-        return view;
-    }
-
-    public JPanel printStringStatistics(String info) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, 800));
-        JLabel component = new JLabel(info);
-        panel.add(component);
-        JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setPreferredSize(new Dimension(600, 500));
         JPanel view = new JPanel();
         view.add(scrollPane);
