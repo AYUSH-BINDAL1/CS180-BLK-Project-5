@@ -1,6 +1,6 @@
 # CS180-BLK-Project-5
 The capstone project for Purdue's CS180 - BLK course.\
-A fully functioning Marketplace with full GUI, Client-Server Interaction, and Multiple User Connections.
+A fully functioning Marketplace with Concurrency, Server-Client Interactions, and a GUI Interface.
 ## How to use our code:
 To use our code, first compile and run MarketPlaceServer.java using the following terminal commands.\
 In the terminal run:
@@ -23,6 +23,7 @@ If you want to start another instance of the Client on the same machine simply r
 java MarketPlaceCLient
 ```
 After that simply follow the prompts!
+**NOTE: You may need to minimize any current windows to find the Marketplace.
 
 ## Submissions on BrightSpace and Vocareum
 ____ Submitted Vocareum Workspace\
@@ -35,7 +36,7 @@ ____ Submitted Presentation on Brightspace
 MarketPlaceServer
 
 Description: ONLY handles connections to ServerSocket and creation of Threads/Runnable Class. Also creates 
-individual locks for each of the files. Also will handle booting of TXT files being used
+individual locks for each of the files. Also, will handle booting of TXT files being used
 
 ```java
 public class MarketPlaceServer {
@@ -44,7 +45,7 @@ public class MarketPlaceServer {
   
     public static void main(String[] args) {
         
-        
+        //Creates four txt files if they don't already exist 
         //Starts ServerSocket at PORT: 6969
         //Continually accepts connections from Clients
         //Starts a new instance of ServerHandler and creates a new thread for that instance
@@ -67,7 +68,7 @@ public class ServerHandler implements Runnable {
     }
 
     public void run() {
-        //Constantly looks for information sent over the Socket in the form of a formatted String seperated by commas
+        //Looks for information sent over the Socket in the form of a formatted String seperated by commas
         //Once split the 0th index will always be the command followed by any other information needed by other 
         //methods.
         //Depending on if the String is empty or the ArrayList is empty it will send back the according data type 
