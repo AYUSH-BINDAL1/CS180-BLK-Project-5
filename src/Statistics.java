@@ -298,7 +298,7 @@ public class Statistics {
 
 
                     // List of customers with the number of items they have purchased
-                    sellerDashboard.append("\nCustomers:\n");
+                    sellerDashboard.append("\nCustomer Purchase Count:\n");
                     if (customerPurchaseCount.isEmpty()) {
                         sellerDashboard.append("    No data! No current products sold for this store!");
                     }
@@ -307,7 +307,7 @@ public class Statistics {
                     }
 
                     // List of products with the number of sales
-                    sellerDashboard.append("Products:\n");
+                    sellerDashboard.append("Product Sales Count:\n");
                     if (productSalesCount.isEmpty()) {
                         sellerDashboard.append("    No data! No current products sold for this store!");
                     }

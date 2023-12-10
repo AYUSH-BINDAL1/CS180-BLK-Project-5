@@ -337,7 +337,7 @@ public class GUI extends JFrame implements Runnable {
         viewStatistics.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                viewStatistics();
+                viewSellerStatistics();
             }
         });
         JButton csv = new JButton("Export/Import CSV");
@@ -410,6 +410,51 @@ public class GUI extends JFrame implements Runnable {
 
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
+    }
+
+    public void viewSellerStatistics() {
+        setup("View Seller Statistics", 450, 450);
+
+        JPanel top = new JPanel(new GridLayout(1, 2, 7, 7));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JLabel info = new JLabel("<html> <br/> <br/> Seller Statistics <br/> <br/> </html>");
+        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort High To Low", "Sort Low To High"});
+        String formattedResponse = "";
+        sortBy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String sortBySelected = (String) sortBy.getSelectedItem();
+                String formattedString = "";
+                if (sortBySelected.equals("Sort High To Low")) {
+                    formattedString = String.format("VIEW SELLER STATISTICS,%s,%s",getEmail(),"1");
+                } else if (sortBySelected.equals("Sort Low To High")) {
+                    formattedString = String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "2");
+                }
+                String response = (String) communicateWithServer(formattedString);
+                String formattedResponse = "<html><body><pre>" + response + "</pre></body></html>";
+                middle.removeAll(); // Clear previous components
+                middle.add(printStringStatistics(formattedResponse)); // Add updated component
+                middle.revalidate(); // Revalidate to update the panel
+                middle.repaint(); // Repaint to ensure changes are visible
+            }
+        });
+
+        JButton mainMenu = new JButton("Return To Main Menu");
+        mainMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                returnHome();
+            }
+        });
+
+        top.add(info);
+        top.add(sortBy);
+        bottom.add(mainMenu);
+        add(top, BorderLayout.NORTH);
+        add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
     }
 
     public void editAccount() {
