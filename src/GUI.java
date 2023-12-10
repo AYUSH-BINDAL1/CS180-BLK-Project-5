@@ -502,6 +502,11 @@ public class GUI extends JFrame implements Runnable {
                                 "Password Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                    if(newCredentialEntered.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "New Password Cannot Be Empty!",
+                                "Empty Password", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     messageToServer = String.format("EDIT PASSWORD,%s,%s,%s", getEmail(), getPassword(), newCredentialEntered);
                     String result = (String) communicateWithServer(messageToServer);
                     if (result.equals("PASSWORD UPDATED")) {
