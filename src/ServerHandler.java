@@ -178,7 +178,7 @@ public class ServerHandler implements Runnable {
 
                         // Formatted String: DELETE PRODUCT,Chosen Product
                         case "DELETE PRODUCT":
-                            result = SellerShopping.deleteProductServer(commandSplit[1], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                            result = SellerShopping.deleteProductServer(clientMessage, SHOPPINGCARTLOCK, PRODUCTLOCK);
                             break;
 
                         // Formatted String: CREATE NEW PRODUCT,Product Name,Product Description,Store Name, Seller Email,Price,Quantity
