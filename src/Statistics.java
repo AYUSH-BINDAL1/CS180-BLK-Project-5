@@ -231,7 +231,7 @@ public class Statistics {
 
                         //Adds the revenue from the sale and customer information to the StringBuilder
                         newString.append("    Product: ").append(currentPurchaseSplit[0]).append("\n");
-                        newString.append("        Customer Information: ").append(currentPurchaseSplit[6]).append("\n");
+                        newString.append("        Customer Info: ").append(currentPurchaseSplit[6]).append("\n");
                         newString.append("        Revenue: ").append(revenueFromSale).append("\n");
 
                     }
@@ -351,9 +351,9 @@ public class Statistics {
         Comparator<String> comparator;
         comparator = Comparator.comparingInt(s -> Integer.parseInt(s.split(": ")[1]));
 
-        if (rank == 1) {
+        if (rank == 1) { //Sort from high to low if rank is 1
             Collections.sort(list, comparator.reversed());
-        } else {
+        } else { //Sorts from low to high if rank is 2
             Collections.sort(list, comparator);
         }
     }
