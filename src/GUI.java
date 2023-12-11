@@ -506,8 +506,7 @@ public class GUI extends JFrame implements Runnable {
                             formattedString = String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "1");
                     case "Sort Low To High" ->
                             formattedString = String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "2");
-                    default ->
-                            formattedString = "";
+                    default -> formattedString = "";
                 }
                 String response = (String) communicateWithServer(formattedString);
                 String formattedResponse = "<html><body><pre>" + response + "</pre></body></html>";
@@ -517,6 +516,7 @@ public class GUI extends JFrame implements Runnable {
                 middle.repaint(); // Repaint to ensure changes are visible
             }
         });
+
 
         JButton mainMenu = new JButton("Return To Main Menu");
         mainMenu.addActionListener(new ActionListener() {
@@ -528,6 +528,14 @@ public class GUI extends JFrame implements Runnable {
 
         top.add(info);
         top.add(sortBy);
+        middle.add(new JLabel("<html> <br/> <br/> Seller Statistics <br/> <br/> </html>"));
+
+        String response = (String) communicateWithServer(String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "1"));
+        String format = "<html><body><pre>" + response + "</pre></body></html>";
+        middle.add(printStringStatistics(format));
+
+
+
         bottom.add(mainMenu);
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
@@ -621,6 +629,22 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
+
+
+        top.add(userChangeType);
+
+        middle.add(currentLabel);
+        middle.add(currentCredential);
+        middle.add(newLabel);
+        middle.add(newCredential);
+        middle.add(info);
+
+        bottom.add(change);
+
+        add(top, BorderLayout.NORTH);
+        add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
+    }
 
     public void deleteAccount() {
         setup("Delete Account", 300, 350);
@@ -1045,6 +1069,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
+
     public void modifyProduct(String product) {
         setup("Modify Product", 400, 600);
 
@@ -1128,6 +1153,7 @@ public class GUI extends JFrame implements Runnable {
 
     }
 
+
     // TODO: fix formatting
     public void viewShoppingCart() {
         setup("View Customers Shopping Cart", 400, 400);
@@ -1161,6 +1187,7 @@ public class GUI extends JFrame implements Runnable {
         add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
     }
+
 
     public void viewSales() {
         setup("View Sales By Store", 800, 700);
@@ -1196,6 +1223,7 @@ public class GUI extends JFrame implements Runnable {
         add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
     }
+
 
     public JPanel customerProducts(String messageToServer) {
         ArrayList<String> products;
@@ -1243,6 +1271,7 @@ public class GUI extends JFrame implements Runnable {
         view.add(scrollPane);
         return view;
     }
+
 
     public JPanel sellerProducts() {
         String messageToServer = "VIEW SELLER PRODUCTS," + getEmail();
@@ -1572,7 +1601,7 @@ public class GUI extends JFrame implements Runnable {
         return view;
     }
 
-public JPanel printShoppingCarts(ArrayList<String> statistics) {
+    public JPanel printShoppingCarts(ArrayList<String> statistics) {
         JPanel panel = new JPanel(new GridLayout(statistics.size(), 1, 4, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.setPreferredSize(new Dimension(600, 800));
