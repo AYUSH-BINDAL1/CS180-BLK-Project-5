@@ -19,8 +19,12 @@ public class CustomerShopping {
 
     //Given a product in the form of the formatted String EXACTLY as it is in the Product.txt file adds if it is a
     // valid quantity
-    public static String addToCartServer(String email, String chosenProduct, Object SHOPPINGCARTLOCK,
+    public static String addToCartServer(String email, String productName,  String productDescription,
+                                         String storeName, String sellerEmail, String price, String quantitiy,
+                                         Object SHOPPINGCARTLOCK,
                                          Object PRODUCTLOCK) {
+        String chosenProduct =
+                productName + "," + productDescription + "," + storeName + "," + sellerEmail +"," +price+ "," +quantitiy;
         String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
         int purchaseQuantity = Integer.parseInt(chosenProductSplit[5]); //Gets the quantity of the user's product
         String result = "";
@@ -147,9 +151,12 @@ public class CustomerShopping {
 
 
     //Method that buys product directly from page and returns whether it succeeded or not.
-    public static String buyProductServer(String customerEmail, String chosenProduct, Object PURCHASEHISTORYLOCK,
+    public static String buyProductServer(String customerEmail, String productName,  String productDescription,
+                                          String storeName, String sellerEmail, String price, String quantitiy,
+                                          Object PURCHASEHISTORYLOCK,
                                           Object PRODUCTLOCK) {
-
+        String chosenProduct =
+                productName + "," + productDescription + "," + storeName + "," + sellerEmail +"," +price+ "," +quantitiy;
         String[] chosenProductSplit = chosenProduct.split(","); //Splits the product the user chose
         int purchaseAmount = Integer.parseInt(chosenProductSplit[5]); //Gets the quantity of the user's product
         ArrayList<String> productLines; //ArrayList of lines from Product.txt
@@ -224,8 +231,11 @@ public class CustomerShopping {
                         "," + shoppingCartSplit[5];
                 if (shoppingCartSplit[6].equals(email)) { //If the customer email matches it removes it from
                     // the shoppingCart ArrayList and adds it to the toAdd ArrayList to be added
-                    buyProductServer(shoppingCartSplit[6], currentProduct
-                            ,PURCHASEHISTORYLOCK, PRODUCTLOCK);
+                    buyProductServer(shoppingCartSplit[6],
+                            shoppingCartSplit[0],shoppingCartSplit[1],shoppingCartSplit[2],shoppingCartSplit[3],
+                            shoppingCartSplit[4],shoppingCartSplit[5],
+                            PURCHASEHISTORYLOCK,
+                            PRODUCTLOCK);
                     toAdd.add(shoppingCartLines.get(i));
                     shoppingCartLines.remove(i);
                     i--; //Accounts for removal
