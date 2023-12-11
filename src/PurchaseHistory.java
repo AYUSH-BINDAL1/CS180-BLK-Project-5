@@ -62,7 +62,7 @@ public class PurchaseHistory {
                     i--; //Accounts for removal of line
                 }
             }
-            purchaseHistoryLines.add(0,"Product Name,Product Description,Store Name,Seller Email," +
+            purchaseHistoryLines.add(0, "Product Name,Product Description,Store Name,Seller Email," +
                     "Price,Amount,Customer Email");
 
             synchronized (PURCHASEHISTORYLOCK) {

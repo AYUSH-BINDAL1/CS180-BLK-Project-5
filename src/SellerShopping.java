@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class SellerShopping {
 
 
-
     //Gets all products from ShoppingCart.txt and returns all products that belong to the seller
     public static ArrayList<String> getSellerShoppingCartServer(String sellerEmail, Object SHOPPINGCARTLOCK) {
         ArrayList<String> allProducts;
@@ -39,8 +38,7 @@ public class SellerShopping {
         return sellerShoppingCart; //returns
     }
 
-
-    //TODO: Create modifyProductClient method
+    //Given the new product info and old product updates the information accordingly
     public static String modifyProductServer(String productName, String productDescription, String storeName,
                                              double price, int quantity, String oldProductName,
                                              String oldProductDescription,
@@ -48,11 +46,11 @@ public class SellerShopping {
                                              String oldProductSellerEmail,
                                              String oldProductPrice,
                                              String oldProductQuantity,
-                                           Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
+                                             Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         ArrayList<String> allShoppingCart;
         ArrayList<String> allProducts;
         String oldProduct =
-                oldProductName + "," + oldProductDescription + "," + oldProductStore + "," +oldProductSellerEmail +
+                oldProductName + "," + oldProductDescription + "," + oldProductStore + "," + oldProductSellerEmail +
                         "," + oldProductPrice + "," + oldProductQuantity; //creates old product
         String[] oldProductSplit = oldProduct.split(","); //splits old product by comma
         try {
@@ -94,8 +92,7 @@ public class SellerShopping {
         return "SUCCESS";
     }
 
-
-    //TODO: Create deleteProductClient method
+    //Given the old product info removes the product from ShoppingCart.txt and Product.txt
     public static String deleteProductServer(String productName, String productDescription, String productStore,
                                              String productSeller,
                                              String productPrice,
@@ -197,7 +194,6 @@ public class SellerShopping {
         }
         return productLines;
     }
-
 
 
 }

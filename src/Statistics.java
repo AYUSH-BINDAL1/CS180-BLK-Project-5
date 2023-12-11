@@ -26,7 +26,8 @@ public class Statistics {
         ArrayList<String> purchaseHistory;
         try {
             synchronized (PRODUCTLOCK) {
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt")); //reads the all
+                //products file and put products in arraylist
             }
             for (int currentLine = 0; currentLine < allProducts.size(); currentLine++) {
                 String[] words = allProducts.get(currentLine).split(",");
@@ -51,7 +52,8 @@ public class Statistics {
                         break;
                     }
                 }
-                if (location != -1) {
+                if (location != -1) { //if the store has been seen before, increment the quantitiy bought by the
+                    // purchase history line
                     String[] arrayWords = sortedBought.get(location).split(",");
                     try {
                         int addQuantity = Integer.parseInt(words[5]);
@@ -62,6 +64,7 @@ public class Statistics {
                         System.out.println("PurchaseHistoryFile.txt Error!");
                     }
                 } else {
+                    //if the store has not been seen before, add it to the arraylist with 0 quantity bought
                     sortedBought.add(words[3] + "," + words[2] + "," + words[0] + "," + words[5]);
                 }
             }
@@ -78,14 +81,14 @@ public class Statistics {
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
         // CustomerUsername, productName, quantity, price, sellerUsername, store
-        if(sort.equals("HIGH TO LOW")) {
+        if (sort.equals("HIGH TO LOW")) {
             return sortCustomerHightoLowServer(sortedBought);
         } else {
             return sortCustomerLowtoHighServer(sortedBought);
         }
     }
 
-
+    //Creates a customer dashboard, returns arraylist of stores listed by products sold specific to the customer
     public static ArrayList<String> customerDashboardSpecificServer(String customerEmail,
                                                                     String sort, Object PURCHASEHISTORYLOCK) {
         // Seller store product quantity
@@ -95,14 +98,19 @@ public class Statistics {
             synchronized (PURCHASEHISTORYLOCK) {
                 totalPurchaseHistory = (ArrayList<String>) Files.readAllLines(
                         Paths.get("PurchaseHistory.txt"));
+                //reads the purchase history lines and puts it in to an arraylist
             }
             for (int currentLine = 0; currentLine < totalPurchaseHistory.size(); currentLine++) {
+                //this loops through the purchase history lines
                 String[] words = totalPurchaseHistory.get(currentLine).split(",");
-                if (words[6].equalsIgnoreCase(customerEmail)) {
-                    if (!sortedBought.contains(words[3] + "," + words[2] + "," + words[0])) {
+                if (words[6].equalsIgnoreCase(customerEmail)) { //if the customer email matches
+                    if (!sortedBought.contains(words[3] + "," + words[2] + "," + words[0])) { //if it has been seen
+                        // before then it should increment the quantity buy how much it has been bought
                         sortedBought.add(words[3] + "," + words[2] + "," + words[0] + "," + words[5]);
                     } else {
                         int location = -1;
+                        //if the location has not been seen before then we create a new one and make the quantity
+                        // purchased equal to quantity purchased in the purchaseHistoryLine
                         for (int i = 0; i < sortedBought.size(); i++) {
                             if (sortedBought.get(i).contains(words[3] + "," + words[2] + "," + words[0])) {
                                 location = i;
@@ -133,7 +141,7 @@ public class Statistics {
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
         // CustomerUsername, productName, quantity, price, sellerUsername, store
-        if(sort.equals("HIGH TO LOW")) {
+        if (sort.equals("HIGH TO LOW")) {
             return sortCustomerHightoLowServer(sortedBought);
         } else {
             return sortCustomerLowtoHighServer(sortedBought);
@@ -141,7 +149,7 @@ public class Statistics {
     }
 
 
-    //sort from low to high
+    //sort customer statistics from low to high
     public static ArrayList<String> sortCustomerLowtoHighServer(ArrayList<String> toSort) {
         // selection sort
         for (int i = 0; i < toSort.size() - 1; i++) {
@@ -167,7 +175,7 @@ public class Statistics {
     }
 
 
-    //sort from high to low
+    //sort customer statistics from high to low
     public static ArrayList<String> sortCustomerHightoLowServer(ArrayList<String> toSort) {
         // selection sort
         for (int i = 0; i < toSort.size() - 1; i++) {
@@ -243,7 +251,7 @@ public class Statistics {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(newString.isEmpty()) {
+        if (newString.isEmpty()) {
             return "NO SALES";
         } else {
             return newString.toString(); //Returns formatted String of the stores sales

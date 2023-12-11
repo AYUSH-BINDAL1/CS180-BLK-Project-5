@@ -59,22 +59,17 @@ public class ServerHandler implements Runnable {
                     command = commandSplit[0];
                     switch (command.toUpperCase()) {
                         case "GET ALL PRODUCTS" -> resultList = ServerHandler.getAllProducts();
-                        case "REGISTER" ->
-                                result = AccountManager.registerServer(commandSplit[1], commandSplit[2],
-                                        commandSplit[3], USERINFOLOCK);
-                        case "LOGIN" ->
-                                result = AccountManager.loginServer(commandSplit[1], commandSplit[2],
-                                        commandSplit[3], USERINFOLOCK);
-                        case "EDIT USERNAME" ->
-                                result = AccountManager.updateEmailFiles(commandSplit[1],
-                                        commandSplit[2], USERINFOLOCK, SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK,
-                                        PRODUCTLOCK);
-                        case "EDIT PASSWORD" ->
-                                result = AccountManager.updatePasswordFiles(commandSplit[1],
-                                        commandSplit[2], commandSplit[3], USERINFOLOCK);
-                        case "DELETE ACCOUNT" ->
-                                result = AccountManager.deleteAccount(commandSplit[1], commandSplit[2],
-                                        USERINFOLOCK, SHOPPINGCARTLOCK, PRODUCTLOCK);
+                        case "REGISTER" -> result = AccountManager.registerServer(commandSplit[1], commandSplit[2],
+                                commandSplit[3], USERINFOLOCK);
+                        case "LOGIN" -> result = AccountManager.loginServer(commandSplit[1], commandSplit[2],
+                                commandSplit[3], USERINFOLOCK);
+                        case "EDIT USERNAME" -> result = AccountManager.updateEmailFiles(commandSplit[1],
+                                commandSplit[2], USERINFOLOCK, SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK,
+                                PRODUCTLOCK);
+                        case "EDIT PASSWORD" -> result = AccountManager.updatePasswordFiles(commandSplit[1],
+                                commandSplit[2], commandSplit[3], USERINFOLOCK);
+                        case "DELETE ACCOUNT" -> result = AccountManager.deleteAccount(commandSplit[1], commandSplit[2],
+                                USERINFOLOCK, SHOPPINGCARTLOCK, PRODUCTLOCK);
                         case "BUY PRODUCT" -> result = CustomerShopping.buyProductServer(commandSplit[1],
                                 commandSplit[2], commandSplit[3],
                                 commandSplit[4], commandSplit[5], commandSplit[6],
@@ -90,12 +85,10 @@ public class ServerHandler implements Runnable {
                                         commandSplit[2], commandSplit[3],
                                         commandSplit[4], commandSplit[5], commandSplit[6],
                                         commandSplit[7], SHOPPINGCARTLOCK);
-                        case "SEARCH BY NAME" ->
-                                resultList =
-                                        ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
-                        case "SEARCH BY STORE" ->
-                                resultList =
-                                        ProductSearch.searchByStoreServer(commandSplit[1], PRODUCTLOCK);
+                        case "SEARCH BY NAME" -> resultList =
+                                ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
+                        case "SEARCH BY STORE" -> resultList =
+                                ProductSearch.searchByStoreServer(commandSplit[1], PRODUCTLOCK);
                         case "SEARCH BY DESCRIPTION" ->
                                 resultList = ProductSearch.searchByDescriptionServer(commandSplit[1],
                                         PRODUCTLOCK);
@@ -107,52 +100,45 @@ public class ServerHandler implements Runnable {
                                 resultList = ProductSort.sortByIncreasingQuantityServer(PRODUCTLOCK);
                         case "SORT DECREASING QUANTITY" ->
                                 resultList = ProductSort.sortByDecreasingQuantityServer(PRODUCTLOCK);
-                        case "VIEW PURCHASE HISTORY" ->
-                                resultList = PurchaseHistory.viewCustomerPurchaseHistoryServer(
-                                        commandSplit[1], PURCHASEHISTORYLOCK);
-                        case "EXPORT PURCHASE HISTORY" ->
-                                result = PurchaseHistory.exportCustomerPurchaseHistoryServer(
-                                        commandSplit[1], commandSplit[2], PURCHASEHISTORYLOCK);
-                        case "VIEW CUSTOMER STATISTICS" ->
-                                resultList = Statistics.customerDashboardServer(
-                                        commandSplit[1], PURCHASEHISTORYLOCK, PRODUCTLOCK);
-                        case "VIEW CUSTOMER STATISTICS SORT" ->
-                                resultList = Statistics.customerDashboardSpecificServer(
-                                        commandSplit[1], commandSplit[2], PURCHASEHISTORYLOCK);
+                        case "VIEW PURCHASE HISTORY" -> resultList = PurchaseHistory.viewCustomerPurchaseHistoryServer(
+                                commandSplit[1], PURCHASEHISTORYLOCK);
+                        case "EXPORT PURCHASE HISTORY" -> result = PurchaseHistory.exportCustomerPurchaseHistoryServer(
+                                commandSplit[1], commandSplit[2], PURCHASEHISTORYLOCK);
+                        case "VIEW CUSTOMER STATISTICS" -> resultList = Statistics.customerDashboardServer(
+                                commandSplit[1], PURCHASEHISTORYLOCK, PRODUCTLOCK);
+                        case "VIEW CUSTOMER STATISTICS SORT" -> resultList = Statistics.customerDashboardSpecificServer(
+                                commandSplit[1], commandSplit[2], PURCHASEHISTORYLOCK);
                         case "VIEW SELLER PRODUCTS" ->
                                 resultList = SellerShopping.viewSellerProducts(commandSplit[1], PRODUCTLOCK);
                         case "MODIFY PRODUCT" -> result =
                                 SellerShopping.modifyProductServer(commandSplit[1],
-                                commandSplit[2], commandSplit[3],
-                                Double.parseDouble(commandSplit[4]),
-                                Integer.parseInt(commandSplit[5]),
-                                commandSplit[6],
-                                commandSplit[7],
-                                commandSplit[8]
-                                , commandSplit[9],
-                                commandSplit[10],
-                                commandSplit[11], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                                        commandSplit[2], commandSplit[3],
+                                        Double.parseDouble(commandSplit[4]),
+                                        Integer.parseInt(commandSplit[5]),
+                                        commandSplit[6],
+                                        commandSplit[7],
+                                        commandSplit[8]
+                                        , commandSplit[9],
+                                        commandSplit[10],
+                                        commandSplit[11], SHOPPINGCARTLOCK, PRODUCTLOCK);
                         case "DELETE PRODUCT" -> result =
                                 SellerShopping.deleteProductServer(commandSplit[1],
-                                commandSplit[2],
+                                        commandSplit[2],
                                         commandSplit[3],
                                         commandSplit[4],
                                         commandSplit[5],
                                         commandSplit[6],
-                                SHOPPINGCARTLOCK, PRODUCTLOCK);
-                        case "CREATE NEW PRODUCT" ->
-                                result = SellerShopping.createNewProductServer(commandSplit[1],
-                                        commandSplit[2], commandSplit[3],
-                                        commandSplit[4], Double.parseDouble(commandSplit[5]),
-                                        Integer.parseInt(commandSplit[6]), PRODUCTLOCK);
-                        case "VIEW SALES BY STORE" ->
-                                result = Statistics.viewSalesByStoreServer(commandSplit[1],
-                                        PURCHASEHISTORYLOCK);
+                                        SHOPPINGCARTLOCK, PRODUCTLOCK);
+                        case "CREATE NEW PRODUCT" -> result = SellerShopping.createNewProductServer(commandSplit[1],
+                                commandSplit[2], commandSplit[3],
+                                commandSplit[4], Double.parseDouble(commandSplit[5]),
+                                Integer.parseInt(commandSplit[6]), PRODUCTLOCK);
+                        case "VIEW SALES BY STORE" -> result = Statistics.viewSalesByStoreServer(commandSplit[1],
+                                PURCHASEHISTORYLOCK);
                         case "IMPORT SELLER CSV" ->
                                 result = CSVHandler.importSellerCSVServer(commandSplit[1], PRODUCTLOCK);
-                        case "EXPORT SELLER CSV" ->
-                                result = CSVHandler.exportSellerCSVServer(commandSplit[1],
-                                        commandSplit[2], PRODUCTLOCK);
+                        case "EXPORT SELLER CSV" -> result = CSVHandler.exportSellerCSVServer(commandSplit[1],
+                                commandSplit[2], PRODUCTLOCK);
                         case "VIEW SELLER STATISTICS" ->
                                 result = Statistics.generateSellerDashboardServer(commandSplit[1],
                                         Integer.parseInt(commandSplit[2]), PURCHASEHISTORYLOCK);
