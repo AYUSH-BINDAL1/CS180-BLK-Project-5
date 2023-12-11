@@ -26,7 +26,7 @@ public class Statistics {
         ArrayList<String> purchaseHistory;
         try {
             synchronized (PRODUCTLOCK) {
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             for (int currentLine = 0; currentLine < allProducts.size(); currentLine++) {
                 String[] words = allProducts.get(currentLine).split(",");
@@ -72,13 +72,13 @@ public class Statistics {
         if (sortedBought.isEmpty()) {
             System.out.println("No Products in File/File could not be read!");
             // This is dependent on case from the productHistory file
-            return null;
+            return new ArrayList<String>();
         }
 
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
         // CustomerUsername, productName, quantity, price, sellerUsername, store
-        if(sort == "HIGH TO LOW") {
+        if(sort.equals("HIGH TO LOW")) {
             return sortCustomerHightoLowServer(sortedBought);
         } else {
             return sortCustomerLowtoHighServer(sortedBought);
@@ -132,7 +132,7 @@ public class Statistics {
         Collections.sort(sortedBought);
         // Returns arraylist of strings from purchase history in the format of
         // CustomerUsername, productName, quantity, price, sellerUsername, store
-        if(sort == "HIGH TO LOW") {
+        if(sort.equals("HIGH TO LOW")) {
             return sortCustomerHightoLowServer(sortedBought);
         } else {
             return sortCustomerLowtoHighServer(sortedBought);
@@ -231,7 +231,7 @@ public class Statistics {
 
                         //Adds the revenue from the sale and customer information to the StringBuilder
                         newString.append("    Product: ").append(currentPurchaseSplit[0]).append("\n");
-                        newString.append("        Customer Information: ").append(currentPurchaseSplit[6]).append("\n");
+                        newString.append("        Customer Info: ").append(currentPurchaseSplit[6]).append("\n");
                         newString.append("        Revenue: ").append(revenueFromSale).append("\n");
 
                     }
@@ -298,7 +298,7 @@ public class Statistics {
 
 
                     // List of customers with the number of items they have purchased
-                    sellerDashboard.append("\nCustomers:\n");
+                    sellerDashboard.append("\nCustomer Purchase Count:\n");
                     if (customerPurchaseCount.isEmpty()) {
                         sellerDashboard.append("    No data! No current products sold for this store!");
                     }
@@ -307,7 +307,7 @@ public class Statistics {
                     }
 
                     // List of products with the number of sales
-                    sellerDashboard.append("Products:\n");
+                    sellerDashboard.append("Product Sales Count:\n");
                     if (productSalesCount.isEmpty()) {
                         sellerDashboard.append("    No data! No current products sold for this store!");
                     }
@@ -351,9 +351,9 @@ public class Statistics {
         Comparator<String> comparator;
         comparator = Comparator.comparingInt(s -> Integer.parseInt(s.split(": ")[1]));
 
-        if (rank == 1) {
+        if (rank == 1) { //Sort from high to low if rank is 1
             Collections.sort(list, comparator.reversed());
-        } else {
+        } else { //Sorts from low to high if rank is 2
             Collections.sort(list, comparator);
         }
     }

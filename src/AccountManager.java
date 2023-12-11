@@ -73,6 +73,7 @@ public class AccountManager {
             if (newEmailIndexCheck != -1) { //If newEmail is already taken
                 return "EMAIL ALREADY TAKEN";
             }
+
             if(!validateEmail(newEmail)) { //If the newEmail is invalid
                 return "INVALID EMAIL FORMAT";
             }

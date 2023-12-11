@@ -24,7 +24,7 @@ public class ProductSearch {
         try {
             synchronized (PRODUCTLOCK) {
                 //Put files from product.txt into an arraylist, all products
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             for (int i = 0; i < allProducts.size(); i++) { //runs through all products
                 String[] currentProduct = allProducts.get(i).split(","); //splits current product by comma
@@ -48,7 +48,7 @@ public class ProductSearch {
         try {
             synchronized (PRODUCTLOCK) {
                 //Put files from product.txt into the arraylist
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             for (int i = 0; i < allProducts.size(); i++) { //runs through all products
                 String[] currentProduct = allProducts.get(i).split(","); //splits current product by comma
@@ -72,7 +72,7 @@ public class ProductSearch {
         try {
             synchronized (PRODUCTLOCK) {
                 //Put files from product.txt into the arraylist
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             for (int i = 0; i < allProducts.size(); i++) {
                 String[] currentProduct = allProducts.get(i).split(","); //splits current products by comma
