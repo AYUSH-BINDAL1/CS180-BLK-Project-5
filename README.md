@@ -27,7 +27,7 @@ After that simply follow the prompts!
 
 ## Submissions on BrightSpace and Vocareum
 ____ Submitted Vocareum Workspace\
-____ Submitted Report on Brightspace\
+Benjamin Wu Submitted Report on Brightspace\
 ____ Submitted Presentation on Brightspace
 
 ## SRC Files
