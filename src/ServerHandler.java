@@ -90,9 +90,13 @@ public class ServerHandler implements Runnable {
                         case "VIEW CUSTOMER STATISTICS" -> resultList = Statistics.customerDashboardServer(commandSplit[1], PURCHASEHISTORYLOCK, PRODUCTLOCK);
                         case "VIEW CUSTOMER STATISTICS SORT" -> resultList = Statistics.customerDashboardSpecificServer(commandSplit[1], commandSplit[2], PURCHASEHISTORYLOCK);
                         case "VIEW SELLER PRODUCTS" -> resultList = SellerShopping.viewSellerProducts(commandSplit[1], PRODUCTLOCK);
-                        case "MODIFY PRODUCT" -> result = SellerShopping.modifyProductServer(commandSplit[1], commandSplit[2], commandSplit[3], commandSplit[4],
-                                Double.parseDouble(commandSplit[5]), Integer.parseInt(commandSplit[6]), commandSplit[7], SHOPPINGCARTLOCK, PRODUCTLOCK);
-                        case "DELETE PRODUCT" -> result = SellerShopping.deleteProductServer(commandSplit[1], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                        case "MODIFY PRODUCT" -> result = SellerShopping.modifyProductServer(commandSplit[1],
+                                commandSplit[2], commandSplit[3], Double.parseDouble(commandSplit[4]),
+                                Integer.parseInt(commandSplit[5]), commandSplit[6], commandSplit[7], commandSplit[8]
+                                , commandSplit[9], commandSplit[10], commandSplit[11], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                        case "DELETE PRODUCT" -> result = SellerShopping.deleteProductServer(commandSplit[1],
+                                commandSplit[2],commandSplit[3],commandSplit[4],commandSplit[5],commandSplit[6],
+                                SHOPPINGCARTLOCK, PRODUCTLOCK);
                         case "CREATE NEW PRODUCT" -> result = SellerShopping.createNewProductServer(commandSplit[1], commandSplit[2], commandSplit[3],
                                 commandSplit[4], Double.parseDouble(commandSplit[5]), Integer.parseInt(commandSplit[6]), PRODUCTLOCK);
                         case "VIEW SALES BY STORE" -> result = Statistics.viewSalesByStoreServer(commandSplit[1], PURCHASEHISTORYLOCK);
@@ -101,7 +105,6 @@ public class ServerHandler implements Runnable {
                         case "VIEW SELLER STATISTICS" -> result = Statistics.generateSellerDashboardServer(commandSplit[1], Integer.parseInt(commandSplit[2]), PURCHASEHISTORYLOCK);
                         case "VIEW SELLER SHOPPING CART" -> resultList = SellerShopping.getSellerShoppingCartServer(commandSplit[1], PRODUCTLOCK);
                         case "GET CUSTOMER CART" -> resultList = CustomerShopping.getCustomerShoppingCartServer(commandSplit[1], SHOPPINGCARTLOCK);
-
                         case "EXIT PROGRAM" -> exitProgram();
                         default -> {
                             System.out.println("ERROR, client message");
