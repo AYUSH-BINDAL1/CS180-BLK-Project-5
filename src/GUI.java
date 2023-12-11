@@ -766,7 +766,7 @@ public class GUI extends JFrame implements Runnable {
         }
 
         middle.add(new JLabel("<html> <br/>  Product  |  Description  |  Store Name  | Seller |  Price | Quantity | Customer <br/> </html>"));
-        middle.add(printStatistics(purchaseHistory, 400, 400));
+        middle.add(printStatistics(purchaseHistory, 400, purchaseHistory.size()* 50));
 
         add(middle, BorderLayout.CENTER);
     }
@@ -1572,7 +1572,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JPanel panel = new JPanel(new GridLayout(statistics.size(), 1, 4, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(width, height));
+        panel.setPreferredSize(new Dimension(width + 100, statistics.size() * 50));
         for (String statistic : statistics) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
             JTextArea line = new JTextArea(statistic);
@@ -1583,7 +1583,7 @@ public class GUI extends JFrame implements Runnable {
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(width + 100, height + 100));
+        scrollPane.setPreferredSize(new Dimension(width + 100, statistics.size() * 50));
         JPanel view = new JPanel();
         view.add(scrollPane);
         return view;
