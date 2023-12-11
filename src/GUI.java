@@ -237,18 +237,13 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedItem = (String) sortBy.getSelectedItem();
-                String messageToServer ;
-                switch(selectedItem) {
-                    case "Sort By Increasing Price" ->
-                        messageToServer = "SORT INCREASING PRICE";
-                    case "Sort By Decreasing Price" ->
-                        messageToServer = "SORT DECREASING PRICE";
-                    case "Sort By Increasing Quantity" ->
-                        messageToServer = "SORT INCREASING QUANTITY";
-                    case "Sort By Decreasing Quantity" ->
-                        messageToServer = "SORT DECREASING QUANTITY";
-                    default ->
-                        messageToServer = "";
+                String messageToServer;
+                switch (selectedItem) {
+                    case "Sort By Increasing Price" -> messageToServer = "SORT INCREASING PRICE";
+                    case "Sort By Decreasing Price" -> messageToServer = "SORT DECREASING PRICE";
+                    case "Sort By Increasing Quantity" -> messageToServer = "SORT INCREASING QUANTITY";
+                    case "Sort By Decreasing Quantity" -> messageToServer = "SORT DECREASING QUANTITY";
+                    default -> messageToServer = "";
                 }
 
                 if (messageToServer.isEmpty()) {
@@ -432,7 +427,7 @@ public class GUI extends JFrame implements Runnable {
 
         JComboBox<String> sortBy = new JComboBox<>(new String[]{"View General Statistics High To Low",
                 "View General Statistics Low To High", "Sort By High", "Sort By Low",
-                });
+        });
         sortBy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -440,13 +435,12 @@ public class GUI extends JFrame implements Runnable {
                 String messageToServer;
                 switch (sort) {
                     case "Sort By High" ->
-                        messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",HIGH TO LOW";
+                            messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",HIGH TO LOW";
                     case "Sort By Low" ->
-                        messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",LOW TO HIGH";
+                            messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",LOW TO HIGH";
                     case "View General Statistics Low To High" ->
-                        messageToServer = "VIEW CUSTOMER STATISTICS,LOW TO HIGH";
-                    default ->
-                        messageToServer = "VIEW CUSTOMER STATISTICS,HIGH TO LOW";
+                            messageToServer = "VIEW CUSTOMER STATISTICS,LOW TO HIGH";
+                    default -> messageToServer = "VIEW CUSTOMER STATISTICS,HIGH TO LOW";
                 }
                 ArrayList<String> statistics;
                 try {
@@ -458,7 +452,7 @@ public class GUI extends JFrame implements Runnable {
                     return;
                 }
 
-                JPanel stats = new  JPanel(new FlowLayout(FlowLayout.CENTER));
+                JPanel stats = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 if (statistics.isEmpty()) {
                     stats = error("no Statistics");
                 } else {
@@ -466,14 +460,13 @@ public class GUI extends JFrame implements Runnable {
                 }
 
                 middle.removeAll();
-                middle.add(new JLabel("<html> <br/> Store  |   Product   |" +
+                middle.add(new JLabel("<html> <br/> Seller |  Store  |   Product   |" +
                         "   Price <br/> </html>"));
                 middle.add(stats);
                 middle.revalidate();
                 middle.repaint();
             }
         });
-
 
 
         top.add(sortBy);
@@ -483,7 +476,7 @@ public class GUI extends JFrame implements Runnable {
         middle.add(new JLabel("<html> <br/> Store  |   Product   |" +
                 "   Price <br/> </html>"));
 
-        middle.add(printStatistics((ArrayList<String>)communicateWithServer("VIEW CUSTOMER STATISTICS," + getEmail()), 200, 300));
+        middle.add(printStatistics((ArrayList<String>) communicateWithServer("VIEW CUSTOMER STATISTICS," + getEmail()), 200, 300));
 
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
@@ -510,8 +503,7 @@ public class GUI extends JFrame implements Runnable {
                             formattedString = String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "1");
                     case "Sort Low To High" ->
                             formattedString = String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "2");
-                    default ->
-                            formattedString = "";
+                    default -> formattedString = "";
                 }
                 String response = (String) communicateWithServer(formattedString);
                 String formattedResponse = "<html><body><pre>" + response + "</pre></body></html>";
@@ -521,6 +513,7 @@ public class GUI extends JFrame implements Runnable {
                 middle.repaint(); // Repaint to ensure changes are visible
             }
         });
+
 
         JButton mainMenu = new JButton("Return To Main Menu");
         mainMenu.addActionListener(new ActionListener() {
@@ -532,6 +525,14 @@ public class GUI extends JFrame implements Runnable {
 
         top.add(info);
         top.add(sortBy);
+        middle.add(new JLabel("<html> <br/> <br/> Seller Statistics <br/> <br/> </html>"));
+
+        String response = (String) communicateWithServer(String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "1"));
+        String format = "<html><body><pre>" + response + "</pre></body></html>";
+        middle.add(printStringStatistics(format));
+
+
+
         bottom.add(mainMenu);
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
@@ -637,7 +638,7 @@ public class GUI extends JFrame implements Runnable {
         setup("Delete Account", 300, 350);
 
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new GridLayout(1, 2, 5, 5));
 
         JLabel usernameLabel = new JLabel("Enter username:");
         JLabel passwordLabel = new JLabel("Enter password:");
@@ -758,7 +759,7 @@ public class GUI extends JFrame implements Runnable {
         add(top, BorderLayout.NORTH);
         add(bottom, BorderLayout.SOUTH);
 
-        ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(String.format("VIEW PURCHASE HISTORY,%s", "aa"));
+        ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(String.format("VIEW PURCHASE HISTORY,%s", getEmail()));
         if (purchaseHistory.isEmpty()) {
             add(error("No Products"), BorderLayout.SOUTH);
             return;
@@ -808,28 +809,28 @@ public class GUI extends JFrame implements Runnable {
                 }
                 for (int i = 0; i < result.size(); i++) {
                     String[] currentProductSplit = result.get(i).split(","); //spot 0 = product name 1 = result
-                    if (currentProductSplit[1].equals("NOT ENOUGH QUANTITY") ||  currentProductSplit[1].equals(
-                            "PRODUCT NOT FOUND")){
+                    if (currentProductSplit[1].equals("NOT ENOUGH QUANTITY") || currentProductSplit[1].equals(
+                            "PRODUCT NOT FOUND")) {
                         JOptionPane.showMessageDialog(null, "Product \"" + currentProductSplit[0]
-                                + "\" does not have enough quantity.\nPlease put the item into your cart again with " +
+                                        + "\" does not have enough quantity.\nPlease put the item into your cart again with " +
                                         "an avaiable quantity",
                                 "Cart Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-                    JOptionPane.showMessageDialog(null, "Your cart has been empytied!" +
-                                    "\nAvaiable Items have been purchased.",
-                            "Cart purchased", JOptionPane.INFORMATION_MESSAGE);
-                    returnHome();
+                JOptionPane.showMessageDialog(null, "Your cart has been empytied!" +
+                                "\nAvaiable Items have been purchased.",
+                        "Cart purchased", JOptionPane.INFORMATION_MESSAGE);
+                returnHome();
 
-                }
+            }
 
         });
 
 
         top.add(exit);
         top.add(returnToMain);
-        middle.add(buyAllButton);
-        bottom.add(viewCustomerShoppingCart());
+        middle.add(viewCustomerShoppingCart());
+        bottom.add(buyAllButton);
 
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
@@ -1197,14 +1198,14 @@ public class GUI extends JFrame implements Runnable {
         });
 
         top.add(info);
-        JTextArea display = new JTextArea ( 16, 58 );
-        display.setText ( response );
-        display.setEditable ( false ); // set textArea non-editable
-        JScrollPane scroll = new JScrollPane ( display );
-        scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+        JTextArea display = new JTextArea(16, 58);
+        display.setText(response);
+        display.setEditable(false); // set textArea non-editable
+        JScrollPane scroll = new JScrollPane(display);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         //Add Textarea in to middle panel
-        middle.add (scroll);
+        middle.add(scroll);
 
         bottom.add(backButton);
         add(top, BorderLayout.NORTH);
@@ -1227,7 +1228,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JPanel panel = new JPanel(new GridLayout(products.size(), 1, 4, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, 800));
+        panel.setPreferredSize(new Dimension(600, products.size()));
         for (String product : products) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
             String[] productInfo = product.split(",");
@@ -1254,7 +1255,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, 500));
+        scrollPane.setPreferredSize(new Dimension(600, products.size() * 100));
         JPanel view = new JPanel();
         view.add(scrollPane);
         return view;
@@ -1276,7 +1277,7 @@ public class GUI extends JFrame implements Runnable {
 
         JPanel panel = new JPanel(new GridLayout(products.size(), 1, 4, 4));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, 800));
+        panel.setPreferredSize(new Dimension(600, products.size() * 50));
         for (String product : products) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
             String[] productInfo = product.split(",");
@@ -1320,7 +1321,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, 500));
+        scrollPane.setPreferredSize(new Dimension(600, products.size() * 50));
         JPanel view = new JPanel();
         view.add(scrollPane);
         return view;
@@ -1419,10 +1420,6 @@ public class GUI extends JFrame implements Runnable {
         }
 
 
-
-
-
-
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setPreferredSize(new Dimension(600, 500));
@@ -1472,7 +1469,7 @@ public class GUI extends JFrame implements Runnable {
                 int quantity = 0;
                 try {
                     quantity = Integer.parseInt(cartQuantity.getText());
-                } catch (NumberFormatException numFormat){
+                } catch (NumberFormatException numFormat) {
                     JOptionPane.showMessageDialog(null, "Please enter a valid number",
                             "Invalid Format", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -1508,13 +1505,13 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int quantity = 0;
-                    try {
-                        quantity = Integer.parseInt(buyQuantity.getText());
-                    } catch (NumberFormatException numFormat){
-                        JOptionPane.showMessageDialog(null, "Please enter a valid number",
-                                "Invalid Format", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
+                try {
+                    quantity = Integer.parseInt(buyQuantity.getText());
+                } catch (NumberFormatException numFormat) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid number",
+                            "Invalid Format", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 String[] productInfoSplit = product.split(",");
                 productInfoSplit[5] = String.valueOf(quantity);
                 String productWithQuantitiy = String.join(",", productInfoSplit);
@@ -1567,7 +1564,7 @@ public class GUI extends JFrame implements Runnable {
 
 
     public JPanel printStatistics(ArrayList<String> statistics, int width, int height) {
-        if(statistics == null) {
+        if (statistics == null) {
             return error("No Statistics");
         }
         if (statistics.isEmpty()) {
@@ -1579,6 +1576,7 @@ public class GUI extends JFrame implements Runnable {
         for (String statistic : statistics) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
             JTextArea line = new JTextArea(statistic);
+            line.setEditable(false);
             component.add(line);
             panel.add(component);
         }
