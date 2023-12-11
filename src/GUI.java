@@ -758,7 +758,7 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public void customerShoppingCart() {
-        setup("Customer Shopping Cart", 800, 800);
+        setup("Customer Shopping Cart", 800, 400);
 
         JPanel top = new JPanel(new GridLayout(2, 2, 6, 6));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -877,8 +877,6 @@ public class GUI extends JFrame implements Runnable {
                     System.out.println(product);
                 }
                 middle.removeAll();
-                JPanel productsPanel;
-                productsPanel = printStatistics(products, 500, 600);
                 middle.add(new JLabel("<html> <br/> Name | Store  | Price <br/>  </html>"));
                 middle.add(searchProductPanel(products));
 
@@ -977,6 +975,7 @@ public class GUI extends JFrame implements Runnable {
     }
 
 
+    // fix formating
     public void csv() {
         setup("CSV", 400, 400);
 
@@ -1130,8 +1129,9 @@ public class GUI extends JFrame implements Runnable {
 
     }
 
+    // TODO: fix formatting
     public void viewShoppingCart() {
-        setup("View Customers Shopping Cart", 800, 800);
+        setup("View Customers Shopping Cart", 500, 500);
 
         JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -1158,7 +1158,7 @@ public class GUI extends JFrame implements Runnable {
         if (shoppingCart.isEmpty()) {
             middle.add(new JLabel("Your shopping cart is empty"));
         } else {
-            middle.add(printStatistics(shoppingCart, 300, 300));
+            middle.add(printStatistics(shoppingCart, 300, shoppingCart.size() * 100));
         }
 
         add(middle, BorderLayout.CENTER);
@@ -1166,7 +1166,7 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public void viewSales() {
-        setup("View Sales By Store", 400, 400);
+        setup("View Sales By Store", 800, 700);
         JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -1183,7 +1183,6 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-        // TODO: add functionality to print sales, check if this works
         top.add(info);
         JTextArea display = new JTextArea ( 16, 58 );
         display.setText ( response );
@@ -1333,7 +1332,7 @@ public class GUI extends JFrame implements Runnable {
 
         JPanel panel = new JPanel(new GridLayout(cart.size(), 1, 4, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, 800));
+        panel.setPreferredSize(new Dimension(600, cart.size() * 100));
 
         for (String cartItem : cart) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -1367,7 +1366,7 @@ public class GUI extends JFrame implements Runnable {
 
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, 500));
+        scrollPane.setPreferredSize(new Dimension(600, cart.size() * 100));
 
         JPanel view = new JPanel();
         view.add(scrollPane);
@@ -1441,10 +1440,10 @@ public class GUI extends JFrame implements Runnable {
 
         JLabel productInfo = new JLabel("<html> <br/> Product: " + productWords[0] +
                 "<br/> <br/> Product Description: " + productWords[1] +
-                "<br/> <br/> Product Seller: " + productWords[5] +
+                "<br/> <br/> Product Seller: " + productWords[3] +
                 "<br/> <br/> Product Store: " + productWords[2] +
-                "<br/> <br/> Product Price: " + productWords[3] +
-                "<br/> <br/> Product Quantity: " + productWords[4]
+                "<br/> <br/> Product Price: " + productWords[4] +
+                "<br/> <br/> Product Quantity: " + productWords[5]
                 + "<br/> <br/> </html>");
 
 
@@ -1457,7 +1456,6 @@ public class GUI extends JFrame implements Runnable {
         addToCart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: add functionality to add to cart and return to home page
                 int quantity = 0;
                 try {
                     quantity = Integer.parseInt(cartQuantity.getText());
@@ -1497,7 +1495,6 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int quantity = 0;
-                //TODO: add funcitonality to buy
                     try {
                         quantity = Integer.parseInt(buyQuantity.getText());
                     } catch (NumberFormatException numFormat){
@@ -1574,7 +1571,8 @@ public class GUI extends JFrame implements Runnable {
         }
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, 500));
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(width + 100, height + 100));
         JPanel view = new JPanel();
         view.add(scrollPane);
         return view;

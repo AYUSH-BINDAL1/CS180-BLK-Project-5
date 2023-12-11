@@ -101,6 +101,7 @@ public class ServerHandler implements Runnable {
                         case "VIEW SELLER STATISTICS" -> result = Statistics.generateSellerDashboardServer(commandSplit[1], Integer.parseInt(commandSplit[2]), PURCHASEHISTORYLOCK);
                         case "VIEW SELLER SHOPPING CART" -> resultList = SellerShopping.getSellerShoppingCartServer(commandSplit[1], PRODUCTLOCK);
                         case "GET CUSTOMER CART" -> resultList = CustomerShopping.getCustomerShoppingCartServer(commandSplit[1], SHOPPINGCARTLOCK);
+
                         case "EXIT PROGRAM" -> exitProgram();
                         default -> {
                             System.out.println("ERROR, client message");
