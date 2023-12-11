@@ -426,7 +426,7 @@ public class GUI extends JFrame implements Runnable {
         mainMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CustomerPage();
+                returnHome();
             }
         });
 
@@ -438,17 +438,17 @@ public class GUI extends JFrame implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 String sort = (String) sortBy.getSelectedItem();
                 String messageToServer;
-                switch (sort) {
-                    case "Sort By High" ->
+                switch (sort.toUpperCase()) {
+                    case "SORT BY HIGH" ->
                         messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",HIGH TO LOW";
-                    case "Sort By Low" ->
+                    case "SORT BY LOW" ->
                         messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",LOW TO HIGH";
-                    case "View General Statistics Low To High" ->
+                    case "VIEW GENERAL STATISTICS LOW TO HIGH" ->
                         messageToServer = "VIEW CUSTOMER STATISTICS,LOW TO HIGH";
                     default ->
                         messageToServer = "VIEW CUSTOMER STATISTICS,HIGH TO LOW";
                 }
-                ArrayList<String> statistics;
+                ArrayList<String> statistics = new ArrayList<>();
                 try {
                     statistics = (ArrayList) communicateWithServer(messageToServer);
                 } catch (Exception ex) {
@@ -457,8 +457,9 @@ public class GUI extends JFrame implements Runnable {
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                System.out.println(statistics);
 
-                JPanel stats = new  JPanel(new FlowLayout(FlowLayout.CENTER));
+                JPanel stats = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 if (statistics.isEmpty()) {
                     stats = error("no Statistics");
                 } else {

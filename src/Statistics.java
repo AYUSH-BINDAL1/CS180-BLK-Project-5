@@ -72,7 +72,7 @@ public class Statistics {
         if (sortedBought.isEmpty()) {
             System.out.println("No Products in File/File could not be read!");
             // This is dependent on case from the productHistory file
-            return null;
+            return new ArrayList<String>();
         }
 
         Collections.sort(sortedBought);
