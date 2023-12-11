@@ -42,6 +42,16 @@ public class CSVHandler {
                     if (productLines.contains(csvLine)) { //Skips line if product is already found in Product.txt
                         continue;
                     }
+                    try {
+                        Double.parseDouble(sellerCSVLine[4]); //Checks if price is valid;
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                    try {
+                        Integer.parseInt(sellerCSVLine[5]); //Checks if quantity is valid;
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
                     productLines.add(csvLine); //Appends the csvLine if it is valid
                 }
                 synchronized (PRODUCTLOCK) {

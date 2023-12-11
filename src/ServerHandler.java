@@ -69,11 +69,15 @@ public class ServerHandler implements Runnable {
                                 commandSplit[2],commandSplit[3],commandSplit[4],commandSplit[5],commandSplit[6],
                                 commandSplit[7],
                                 PURCHASEHISTORYLOCK, PRODUCTLOCK);
-                        case "CHECKOUT CART" -> result = CustomerShopping.checkoutCartServer(commandSplit[1], SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK, PRODUCTLOCK);
+                        case "CHECKOUT CART" -> resultList = CustomerShopping.checkoutCartServer(commandSplit[1],
+                                SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK, PRODUCTLOCK);
                         case "ADD PRODUCT TO CART" -> result = CustomerShopping.addToCartServer(commandSplit[1],
                                 commandSplit[2],commandSplit[3],commandSplit[4],commandSplit[5],commandSplit[6],
                                 commandSplit[7],SHOPPINGCARTLOCK, PRODUCTLOCK);
-                        case "REMOVE PRODUCT FROM CART" -> result = CustomerShopping.removeProductServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK, PRODUCTLOCK);
+                        case "REMOVE PRODUCT FROM CART" -> result =
+                                CustomerShopping.removeProductServer(commandSplit[1], commandSplit[2],
+                                        commandSplit[3], commandSplit[4], commandSplit[5], commandSplit[6],
+                                        commandSplit[7], SHOPPINGCARTLOCK);
                         case "SEARCH BY NAME" -> resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
                         case "SEARCH BY STORE" -> resultList = ProductSearch.searchByStoreServer(commandSplit[1], PRODUCTLOCK);
                         case "SEARCH BY DESCRIPTION" -> resultList = ProductSearch.searchByDescriptionServer(commandSplit[1], PRODUCTLOCK);

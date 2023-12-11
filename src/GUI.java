@@ -255,7 +255,6 @@ public class GUI extends JFrame implements Runnable {
                     messageToServer = "GET PRODUCTS";
                 }
                 middle.removeAll();
-
                 middle.add(new JLabel("<html> <br/> Product  |   Store   |   Price  |  View Product <br/> </html>"));
                 middle.add(customerProducts(messageToServer));
                 middle.revalidate();
@@ -757,7 +756,7 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public void customerShoppingCart() {
-        setup("Customer Shopping Cart", 400, 400);
+        setup("Customer Shopping Cart", 800, 800);
 
         JPanel top = new JPanel(new GridLayout(2, 2, 6, 6));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -784,17 +783,31 @@ public class GUI extends JFrame implements Runnable {
         buyAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                boolean success = false;
                 String messageToServer = String.format("CHECKOUT CART,%s", getEmail());
-                String result = (String) communicateWithServer(messageToServer);
-                if (result.equals("SUCCESS")) {
-                    JOptionPane.showMessageDialog(null, "Purchase successful",
-                            "Purchase Success", JOptionPane.INFORMATION_MESSAGE);
-                    returnHome();
-                } else if (result.equals("EMPTY CART")) {
+                ArrayList<String> result = (ArrayList<String>) communicateWithServer(messageToServer);
+                if (result.size() == 0) {
                     JOptionPane.showMessageDialog(null, "Cart is empty",
                             "Empty Cart", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            }
+                for (int i = 0; i < result.size(); i++) {
+                    String[] currentProductSplit = result.get(i).split(","); //spot 0 = product name 1 = result
+                    if (currentProductSplit[1].equals("NOT ENOUGH QUANTITY") ||  currentProductSplit[1].equals(
+                            "PRODUCT NOT FOUND")){
+                        JOptionPane.showMessageDialog(null, "Product \"" + currentProductSplit[0]
+                                + "\" does not have enough quantity.\nPlease put the item into your cart again with " +
+                                        "an avaiable quantity",
+                                "Cart Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                    JOptionPane.showMessageDialog(null, "Your cart has been empytied!" +
+                                    "\nAvaiable Items have been purchased.",
+                            "Cart purchased", JOptionPane.INFORMATION_MESSAGE);
+                    returnHome();
+
+                }
+
         });
 
 
@@ -864,8 +877,7 @@ public class GUI extends JFrame implements Runnable {
                 middle.removeAll();
                 JPanel productsPanel;
                 productsPanel = printStatistics(products, 500, 600);
-                middle.add(new JLabel("<html> <br/> Name  |  Description |  Store  " +
-                        "|  Seller  |  Price  |  Quantity  <br/>  </html>"));
+                middle.add(new JLabel("<html> <br/> Name | Store  | Price <br/>  </html>"));
                 middle.add(searchProductPanel(products));
 
                 middle.revalidate();
@@ -970,7 +982,13 @@ public class GUI extends JFrame implements Runnable {
         JPanel bottom = new JPanel(new GridLayout(1, 2, 6, 6));
 
         JComboBox<String> csvType = new JComboBox<>(new String[]{"Import", "Export"});
-        JLabel csvText = new JLabel("<html> <br/> <br/> Please enter the file you want to import or export <br/> <br/> </html>");
+        JLabel csvText = new JLabel("<html> <br/> <br/> Please enter the file you want" +
+                " to import or export <br/> <br/> </html>");
+        JLabel csvformat = new JLabel("<html> <br/> <br/> Imported Filed should have the format: Product Name," +
+                "Product Description,Store Name,Seller Email,Price,Quantity <br/> " +
+                "<br/> </html>");
+
+
         JTextField fileName = new JTextField(15);
 
         JButton backButton = new JButton("Back to Main Menu");
@@ -997,7 +1015,8 @@ public class GUI extends JFrame implements Runnable {
                     messageToServer = String.format("IMPORT SELLER CSV,%s", fileNameInput);
                     result = (String) communicateWithServer(messageToServer);
                     if (result.equals("SUCCESS")) {
-                        JOptionPane.showMessageDialog(null, "Your file has been imported", "Export CSV" +
+                        JOptionPane.showMessageDialog(null, "Your file has been imported. \n Incorrectly Formatted " +
+                                "linea have been omitted", "Export CSV" +
                                 "Success", JOptionPane.INFORMATION_MESSAGE);
                         returnHome();
                     } else if (result.equals("PATH DOES NOT EXIST")) {
@@ -1020,6 +1039,7 @@ public class GUI extends JFrame implements Runnable {
 
         middle.add(csvType);
         middle.add(csvText);
+        middle.add(csvformat);
         middle.add(fileName);
 
         bottom.add(backButton);
@@ -1109,7 +1129,7 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public void viewShoppingCart() {
-        setup("View Customers Shopping Cart", 400, 400);
+        setup("View Customers Shopping Cart", 800, 800);
 
         JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -1293,10 +1313,13 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public JPanel viewCustomerShoppingCart() {
-        String messageToServer = "GET CUSTOMER SHOPPING CART," + getEmail(); // Assuming getEmail() retrieves the customer's email
+        String messageToServer = "GET CUSTOMER CART," + getEmail(); // Assuming getEmail() retrieves the customer's email
         ArrayList<String> cart;
         try {
             cart = (ArrayList<String>) communicateWithServer(messageToServer);
+            for (int i = 0; i < cart.size(); i++) {
+                System.out.println(cart.get(i));
+            }
         } catch (Exception e) {
             System.out.println("GET SHOPPING CART, arraylistError");
             return error("ERROR, SERVER ERROR retrieving shopping cart");
@@ -1326,7 +1349,7 @@ public class GUI extends JFrame implements Runnable {
             removeFromCartButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String messageToServer = String.format("REMOVE PRODUCT FROM CART,%s,%s", getEmail(), cartItemInfo[0]);
+                    String messageToServer = String.format("REMOVE PRODUCT FROM CART,%s", cartItem);
                     String result = (String) communicateWithServer(messageToServer);
                     if (result.equals("SUCCESS")) {
                         JOptionPane.showMessageDialog(null, "Product Removed: " + cartItemInfo[0],
@@ -1361,18 +1384,30 @@ public class GUI extends JFrame implements Runnable {
 
         for (String product : products) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
+            String[] productInfo = product.split(",");
             JButton viewProduct = new JButton("View Product");
+            try {
+                component.add(new JLabel("   " + productInfo[0] + "   "));
+                component.add(new JLabel("   " + productInfo[2] + "   "));
+                component.add(new JLabel("   " + productInfo[4] + "   "));
+            } catch (Exception e) {
+                System.out.println("index out of bound exception");
+                return error("ERROR, SERVER ERROR sending products");
+            }
             viewProduct.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     viewProduct(product);
                 }
             });
-            component.add(new JLabel(product));
             component.add(viewProduct);
             panel.add(component);
         }
+
+
+
+
+
 
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -1385,6 +1420,7 @@ public class GUI extends JFrame implements Runnable {
 
 
     public void viewProduct(String product) {
+        boolean validFormat = false;
         String[] productWords;
         try {
             productWords = product.split(",");
@@ -1396,7 +1432,7 @@ public class GUI extends JFrame implements Runnable {
             return;
         }
 
-        setup("View Product", 400, 500);
+        setup("View Product", 800, 800);
         JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel middle = new JPanel(new GridLayout(1, 2, 5, 5));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -1420,7 +1456,30 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add functionality to add to cart and return to home page
-                String messageToServer = String.format("ADD PRODUCT TO CART,%s,%s", getEmail(), productWords[0]);
+                int quantity = 0;
+                try {
+                    quantity = Integer.parseInt(cartQuantity.getText());
+                } catch (NumberFormatException numFormat){
+                    JOptionPane.showMessageDialog(null, "Please enter a valid number",
+                            "Invalid Format", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String[] productInfoSplit = product.split(",");
+                productInfoSplit[5] = String.valueOf(quantity);
+                String productWithQuantitiy = String.join(",", productInfoSplit);
+
+                String messageToServer = String.format("ADD PRODUCT TO CART,%s,%s", getEmail(), productWithQuantitiy);
+                String result = (String) communicateWithServer(messageToServer);
+                if (result.equals("ADDED TO CART")) {
+                    JOptionPane.showMessageDialog(null, "Added to cart",
+                            "Shoppingcart", JOptionPane.INFORMATION_MESSAGE);
+
+                } else if (result.equals("NOT ENOUGH QUANTITY") || result.equals("INVALID PRODUCT")) {
+                    JOptionPane.showMessageDialog(null, "Not Enough Quantitiy",
+                            "Shoppingcart", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                returnHome();
             }
         });
         cart.add(addToCartLabel);
@@ -1429,13 +1488,37 @@ public class GUI extends JFrame implements Runnable {
 
 
         JPanel buy = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JLabel buyLabel = new JLabel("Buy: ");
+        JLabel buyLabel = new JLabel("Buy:             ");
         JTextField buyQuantity = new JTextField(15);
         JButton buyButton = new JButton("Buy");
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int quantity = 0;
                 //TODO: add funcitonality to buy
+                    try {
+                        quantity = Integer.parseInt(buyQuantity.getText());
+                    } catch (NumberFormatException numFormat){
+                        JOptionPane.showMessageDialog(null, "Please enter a valid number",
+                                "Invalid Format", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                String[] productInfoSplit = product.split(",");
+                productInfoSplit[5] = String.valueOf(quantity);
+                String productWithQuantitiy = String.join(",", productInfoSplit);
+
+                String messageToServer = String.format("BUY PRODUCT,%s,%s", getEmail(), productWithQuantitiy);
+                String result = (String) communicateWithServer(messageToServer);
+                if (result.equals("SUCCESS")) {
+                    JOptionPane.showMessageDialog(null, "Successful purchase",
+                            "Product Purchase", JOptionPane.INFORMATION_MESSAGE);
+
+                } else if (result.equals("NOT ENOUGH QUANTITY") || result.equals("PRODUCT NOT FOUND")) {
+                    JOptionPane.showMessageDialog(null, "Not Enough Quantitiy",
+                            "Product Purchase", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                returnHome();
             }
         });
 
