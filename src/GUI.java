@@ -21,13 +21,14 @@ import java.util.Objects;
  */
 
 public class GUI extends JFrame implements Runnable {
-    private Socket socket;
-    private String email;
-    private String password;
-    private String userType;
-    private ObjectInputStream reader;
-    private BufferedWriter writer;
+    private Socket socket; //Socket the user connects to
+    private String email; //User's email
+    private String password; //User's password
+    private String userType; //User's type either a Seller or Customer
+    private ObjectInputStream reader; //Reader that reads from the Server over the Socket
+    private BufferedWriter writer; //Writer that writes to the Server over the Socket
 
+    //Getters and setters for all fields
     public String getEmail() {
         return email;
     }
@@ -569,6 +570,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
+    //Create editAccount GUI
     public void editAccount() {
         setup("Edit Account", 450, 450);
 
@@ -676,6 +678,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
+    //Create Delete Account GUI
     public void deleteAccount() {
         setup("Delete Account", 300, 350);
 
@@ -745,6 +748,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
+    //Create View Purchase History GUI for Customer
     public void viewPurchaseHistory() {
         setup("View Purchase History", 600, 650);
 
@@ -819,6 +823,7 @@ public class GUI extends JFrame implements Runnable {
         add(middle, BorderLayout.CENTER);
     }
 
+    //Display's the customer's shopping cart
     public void customerShoppingCart() {
         setup("Customer Shopping Cart", 800, 400);
 
@@ -887,6 +892,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
+    //Search By GUI for Customer
     public void searchBy() {
         setup("Search by - Products", 450, 450);
 
@@ -963,6 +969,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
+    //Add Product GUI
     public void addProduct() {
         setup("Create Product", 350, 400);
 
@@ -1040,7 +1047,7 @@ public class GUI extends JFrame implements Runnable {
     }
 
 
-    // fix formating
+    //Import and Export CSV GUI
     public void csv() {
         setup("CSV", 400, 400);
 
@@ -1114,7 +1121,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
-
+    //Modify Product GUI for Seller
     public void modifyProduct(String product) {
         setup("Modify Product", 400, 600);
 
@@ -1232,7 +1239,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
-
+    //View Sales By Store GUI
     public void viewSales() {
         setup("View Sales By Store", 800, 700);
         JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -1268,7 +1275,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
-
+    //Returns A JPanel of all the customer's product
     public JPanel customerProducts(String messageToServer) {
         ArrayList<String> products;
         try {
@@ -1316,7 +1323,7 @@ public class GUI extends JFrame implements Runnable {
         return view;
     }
 
-
+    //Gets Seller Product as a JPanel
     public JPanel sellerProducts() {
         String messageToServer = "VIEW SELLER PRODUCTS," + getEmail();
         ArrayList<String> products;
@@ -1384,6 +1391,7 @@ public class GUI extends JFrame implements Runnable {
         return view;
     }
 
+    //Gets a JPanel of the Customer's Shopping Cart
     public JPanel viewCustomerShoppingCart() {
         String messageToServer = "GET CUSTOMER CART," + getEmail(); // Assuming getEmail()
         // retrieves the customer's email
@@ -1446,6 +1454,7 @@ public class GUI extends JFrame implements Runnable {
         return view;
     }
 
+    //Returns A JPanel of the searchProduct
     public JPanel searchProductPanel(ArrayList<String> products) {
         if (products.isEmpty()) {
             return error("No Products");
@@ -1488,7 +1497,7 @@ public class GUI extends JFrame implements Runnable {
         return view;
     }
 
-
+    //Displays all the products
     public void viewProduct(String product) {
         boolean validFormat = false;
         String[] productWords;
@@ -1621,7 +1630,7 @@ public class GUI extends JFrame implements Runnable {
         return error;
     }
 
-
+    //Returns JPanel of the Statistics for Statistics
     public JPanel printStatistics(ArrayList<String> statistics, int width, int height) {
         if (statistics == null) {
             return error("No Statistics");
@@ -1647,7 +1656,7 @@ public class GUI extends JFrame implements Runnable {
         view.add(scrollPane);
         return view;
     }
-
+    //Returns JPanel of Seller's Shopping Carts
     public JPanel printShoppingCarts(ArrayList<String> statistics) {
         JPanel panel = new JPanel(new GridLayout(statistics.size(), 1, 4, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -1684,7 +1693,7 @@ public class GUI extends JFrame implements Runnable {
         return view;
     }
 
-
+    //Given a String of info prints it out to the panel
     public JPanel printStringStatistics(String info) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -1700,7 +1709,7 @@ public class GUI extends JFrame implements Runnable {
         return view;
     }
 
-
+    //Sets up the panel and Jframe
     public void setup(String description, int width, int height) {
         getContentPane().removeAll();
         revalidate();
@@ -1712,7 +1721,7 @@ public class GUI extends JFrame implements Runnable {
         setLocationRelativeTo(null);
     }
 
-
+    //Based on the User Type returns to the correct menu.
     public void returnHome() {
         if (userType.equals("CUSTOMER")) {
             CustomerPage();

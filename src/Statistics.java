@@ -10,7 +10,7 @@ import java.util.Comparator;
  * <p>
  * Handles all information regarding statistics feature for both customer and seller.
  *
- * @author Ayush Bindal & Lionel Loo Lab #L08
+ * @author Ayush Bindal & Lionel Loo, Lab #L08
  * @version 12/11/2023
  * <p>
  */
@@ -18,6 +18,7 @@ import java.util.Comparator;
 public class Statistics {
 
 
+    //Creates a customer dashboard, returns arraylist of stores listed by products sold in general
     public static ArrayList<String> customerDashboardServer(String sort, Object PURCHASEHISTORYLOCK,
                                                             Object PRODUCTLOCK) {
         //seller store product quantity
@@ -201,6 +202,7 @@ public class Statistics {
     }
 
 
+    //Given the seller's email constructs a formatted String of the sales for each store
     public static String viewSalesByStoreServer(String sellerEmail, Object PURCHASEHISTORYLOCK) {
         ArrayList<String> purchaseHistoryLines; //ArrayList of purchaseHistory from PurchaseHistory.txt
         ArrayList<String> stores = new ArrayList<String>(); //ArrayList of Strings contain stores
@@ -258,7 +260,7 @@ public class Statistics {
         }
     }
 
-
+    //Given the seller's email and rank creates a formatted String containing their dashboard
     public static String generateSellerDashboardServer(String sellerEmail, int rank,
                                                        Object PURCHASEHISTORYLOCK) {
 

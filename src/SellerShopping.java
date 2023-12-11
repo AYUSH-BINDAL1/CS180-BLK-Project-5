@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * <p>
  * Handles all methods pertaining to the seller shopping cart information
  *
- * @author Ayush Bindal, Lionel Loo & Benjamin Wu Lab #L08
+ * @author Ayush Bindal, Lionel Loo, and Benjamin Wu, Lab #L08
  * @version 12/11/2023
  * <p>
  */
@@ -145,6 +145,8 @@ public class SellerShopping {
     }
 
 
+    //Given product information such as productName, productDescription, storeName etc... adds it to Product.txt if
+    // the product doesn't already exist
     public static String createNewProductServer(String productName, String productDescription, String storeName,
                                                 String sellerEmail, double price, int quantity,
                                                 Object PRODUCTLOCK) {
@@ -174,7 +176,7 @@ public class SellerShopping {
         return "PRODUCT CREATED";
     }
 
-
+    //Returns ArrayList of all products the seller owns
     public static ArrayList<String> viewSellerProducts(String email, Object PRODUCTLOCK) {
         ArrayList<String> productLines = new ArrayList<>(); //ArrayList of lines from Product.txt
         try {

@@ -30,10 +30,12 @@ public class MarketPlaceServer {
         Socket clientSocket; //Creates clientSocket
         ServerHandler serverHandler; //Creates ServerHandler
 
+        //Create new files if they don't exist already
         File usernameFile = new File("Username.txt");
         File shoppingCartFile = new File("ShoppingCart.txt");
         File purchaseHistoryFile = new File("PurchaseHistory.txt");
         File productFile = new File("Product.txt");
+
         try {
             if (!usernameFile.exists()) {
                 usernameFile.createNewFile();

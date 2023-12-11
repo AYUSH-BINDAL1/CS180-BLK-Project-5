@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * <p>
  * Sorts the products based on price or quantity for the customer.
  *
- * @author Lionel Loo & Benjamin Wu Lab #L08
+ * @author Lionel Loo & Benjamin Wu, Lab #L08
  * @version 12/11/2023
  * <p>
  */

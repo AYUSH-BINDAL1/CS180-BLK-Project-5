@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * <p>
  * This class handles all the methods for the customer shopping cart and buying.
  *
- * @author Ayush Bindal & Lionel Loo Lab #L08
+ * @author Ayush Bindal & Lionel Loo, Lab #L08
  * @version 12/11/2023
  * <p>
  */
@@ -91,7 +91,6 @@ public class CustomerShopping {
 
 
     //Given a product from a customer's shopping cart attempts to remove it and add it back to Product.txt
-    //FIXME: Probably need to check if the chosenProduct is in the shopping cart first
     public static String removeProductServer(String productName, String productDesciption,
                                              String storename, String sellerEmail, String price, String quantity,
                                              String email, Object SHOPPINGCARTLOCK) {
@@ -122,6 +121,7 @@ public class CustomerShopping {
     }
 
 
+    //Return's ArrayList of strings of a customer's shopping cart
     public static ArrayList<String> getCustomerShoppingCartServer(String email, Object SHOPPINGCARTLOCK) {
         ArrayList<String> shoppingCartLines; //ArrayList of lines from ShoppingCart.txt
         ArrayList<String> returnList = new ArrayList<String>(); //Result to return to run method

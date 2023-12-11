@@ -7,7 +7,7 @@ import java.net.Socket;
  * <p>
  * Java class that starts a new client and starts a thread for that client. Starts GUI also.
  *
- * @author Ayush Bindal, Benjamin Wu, and Lionel Loo Lab #L08
+ * @author Ayush Bindal, Benjamin Wu, and Lionel Loo, Lab #L08
  * @version 12/11/2023
  * <p>
  */

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * <p>
  * Java class that handles all CSV handling including export and import
  *
- * @author Ayush Bindal & Lionel Loo Lab #L08
+ * @author Ayush Bindal & Lionel Loo, Lab #L08
  * @version 12/11/2023
  * <p>
  */
@@ -20,7 +20,7 @@ public class CSVHandler {
     //Given a path to a seller's CSV file, import the seller's products into the Product.txt file.
     public static String importSellerCSVServer(String path, Object PRODUCTLOCK) {
         Path pathCheck = Paths.get(path);
-        if (Files.exists(pathCheck)) {
+        if (Files.exists(pathCheck)) { //Checks if path exsists
             try {
                 Object CSVLOCK = new Object();
                 ArrayList<String> sellerCSVLines; // List of seller CSV lines (lines containing seller information)
@@ -70,7 +70,7 @@ public class CSVHandler {
     //Given the sellerEmail and path writes Products the seller owns to a new CSV file
     public static String exportSellerCSVServer(String path, String sellerEmail, Object PRODUCTLOCK) {
         Path pathCheck = Paths.get(path);
-        if (!Files.exists(pathCheck)) {
+        if (!Files.exists(pathCheck)) { //Checks if path is already taken
             try {
                 ArrayList<String> productLines; // List of product lines (lines containing product information)
                 synchronized (PRODUCTLOCK) {

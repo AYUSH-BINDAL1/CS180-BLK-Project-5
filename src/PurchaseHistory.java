@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * <p>
  * Handles all purchase history information for the users
  *
- * @author Ayush Bindal & Lionel Loo Lab #L08
+ * @author Ayush Bindal & Lionel Loo, Lab #L08
  * @version 12/11/2023
  * <p>
  */

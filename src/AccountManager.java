@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * <p>
  * Java class that handles all information regarding the user (Usernames, Password, etc...)
  *
- * @author Ayush Bindal & Lionel Loo Lab #L08
+ * @author Ayush Bindal & Lionel Loo,Lab #L08
  * @version 12/11/2023
  * <p>
  */
@@ -146,6 +146,7 @@ public class AccountManager {
     }
 
 
+    //Given the email and password deletes the account if the password is right
     public static String deleteAccount(String email, String password, Object USERINFOLOCK,
                                        Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         String result = ""; //Result to send back to run

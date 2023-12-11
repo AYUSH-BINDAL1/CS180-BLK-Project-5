@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * <p>
  * Java class that implements Runnable used to create new Threads for new connections to the Server
  *
- * @author Ayush Bindal, Benjamin Wu, Lionel Loo Lab #L08
+ * @author Ayush Bindal, Benjamin Wu, and Lionel Loo, Lab #L08
  * @version 12/11/2023
  * <p>
  */
@@ -56,7 +56,7 @@ public class ServerHandler implements Runnable {
                 if (reader.ready()) { // Check if data is available to read
                     clientMessage = reader.readLine();
                     commandSplit = clientMessage.split(",");
-                    command = commandSplit[0];
+                    command = commandSplit[0]; //Command from Client
                     switch (command.toUpperCase()) {
                         case "GET ALL PRODUCTS" -> resultList = ServerHandler.getAllProducts();
                         case "REGISTER" -> result = AccountManager.registerServer(commandSplit[1], commandSplit[2],
