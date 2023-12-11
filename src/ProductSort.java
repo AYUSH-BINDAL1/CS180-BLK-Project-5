@@ -22,7 +22,7 @@ public class ProductSort {
         try {
             synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             // sorts all products by min to max with selection sort
             for (int i = 0; i < allProducts.size() - 1; i++) {
@@ -58,7 +58,7 @@ public class ProductSort {
         try {
             synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             //sorts all products by max to min price by selection sort
             for (int i = 0; i < allProducts.size() - 1; i++) {
@@ -93,7 +93,7 @@ public class ProductSort {
         try {
             synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             //sorts all products by min to max quantity by selection sort
             for (int i = 0; i < allProducts.size() - 1; i++) {
@@ -128,7 +128,7 @@ public class ProductSort {
         try {
             synchronized (PRODUCTLOCK) {
                 //creates arraylist of all products
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             //sorts all products by max to min quantity by selection sort
             for (int i = 0; i < allProducts.size() - 1; i++) {

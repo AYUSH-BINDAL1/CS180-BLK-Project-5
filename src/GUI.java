@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GUI extends JFrame implements Runnable {
     private Socket socket;
@@ -193,7 +194,7 @@ public class GUI extends JFrame implements Runnable {
     // Customer Page
     public void CustomerPage() {
         // Remove content from the previous pane
-        setup("Customer Page", 800, 500);
+        setup("Customer Page", 800, 700);
 
         JPanel top = new JPanel(new GridLayout(4, 2, 5, 5));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -229,7 +230,38 @@ public class GUI extends JFrame implements Runnable {
                 deleteAccount();
             }
         });
-        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By Store", "Sort By Seller"});
+        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By Increasing Price", "Sort By Decreasing Price",
+                "Sort By Increasing Quantity", "Sort By Decreasing Quantity"});
+        sortBy.setVisible(true);
+        sortBy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedItem = (String) sortBy.getSelectedItem();
+                String messageToServer ;
+                switch(selectedItem) {
+                    case "Sort By Increasing Price" ->
+                        messageToServer = "SORT INCREASING PRICE";
+                    case "Sort By Decreasing Price" ->
+                        messageToServer = "SORT DECREASING PRICE";
+                    case "Sort By Increasing Quantity" ->
+                        messageToServer = "SORT INCREASING QUANTITY";
+                    case "Sort By Decreasing Quantity" ->
+                        messageToServer = "SORT DECREASING QUANTITY";
+                    default ->
+                        messageToServer = "";
+                }
+
+                if (messageToServer.isEmpty()) {
+                    messageToServer = "GET PRODUCTS";
+                }
+                middle.removeAll();
+
+                middle.add(new JLabel("<html> <br/> Product  |   Store   |   Price  |  View Product <br/> </html>"));
+                middle.add(customerProducts(messageToServer));
+                middle.revalidate();
+                middle.repaint();
+            }
+        });
         JButton searchBy = new JButton("Search By");
         searchBy.addActionListener(new ActionListener() {
             @Override
@@ -248,17 +280,20 @@ public class GUI extends JFrame implements Runnable {
         viewStatistics.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                viewStatistics();
+                viewCustomerStatistics();
             }
         });
 
-        // TODO: implement method to print the products in Marketplace with a view more button that corresponds to each product
 
         JButton refresh = new JButton("Refresh");
         refresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CustomerPage();
+                middle.removeAll();
+                middle.add(new JLabel("<html> <br/> Product  |   Store   |   Price  |  View Product <br/> </html>"));
+                middle.add(customerProducts("GET ALL PRODUCTS"));
+                middle.revalidate();
+                middle.repaint();
             }
         });
 
@@ -272,7 +307,7 @@ public class GUI extends JFrame implements Runnable {
         top.add(viewStatistics);
 
         middle.add(new JLabel("<html> <br/> Product  |   Store   |   Price  |  View Product <br/> </html>"));
-        middle.add(customerProducts());
+        middle.add(customerProducts("GET ALL PRODUCTS"));
 
         bottom.add(refresh);
 
@@ -282,7 +317,7 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public void SellerPage() {
-        setup("Seller MarketPlace", 800, 500);
+        setup("Seller MarketPlace", 800, 700);
 
         JPanel top = new JPanel(new GridLayout(4, 2, 5, 5));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -337,7 +372,7 @@ public class GUI extends JFrame implements Runnable {
         viewStatistics.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                viewStatistics();
+                viewSellerStatistics();
             }
         });
         JButton csv = new JButton("Export/Import CSV");
@@ -349,14 +384,17 @@ public class GUI extends JFrame implements Runnable {
         });
 
 
-        // TODO: implement method to print the the seller's products
-
         JButton refresh = new JButton("Refresh");
         refresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: implement refresh button does this work?
-                SellerPage();
+                middle.removeAll();
+                middle.add(new JLabel("<html> <br/> Store  |   Product   |   Price  |  Modify Product  " +
+                        "|  Delete Product <br/> </html>"));
+                middle.add(sellerProducts());
+                middle.repaint();
+                middle.revalidate();
+                middle.repaint();
             }
         });
 
@@ -379,18 +417,95 @@ public class GUI extends JFrame implements Runnable {
         add(middle, BorderLayout.CENTER);
     }
 
-    public void viewStatistics() {
+    public void viewCustomerStatistics() {
         setup("View Statistics", 450, 450);
 
         JPanel top = new JPanel(new GridLayout(1, 2, 7, 7));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By Store Descending ", "Sort By Store Ascending"
-                , "Sort by Seller Descending", "Sort by Seller Ascending"});
+        JButton mainMenu = new JButton("Main Menu");
+        mainMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CustomerPage();
+            }
+        });
+
+        JComboBox<String> sortBy = new JComboBox<>(new String[]{"View General Statistics High To Low",
+                "View General Statistics Low To High", "Sort By High", "Sort By Low",
+                });
         sortBy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: add functionality to sort
+                String sort = (String) sortBy.getSelectedItem();
+                String messageToServer;
+                switch (sort) {
+                    case "Sort By High" ->
+                        messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",HIGH TO LOW";
+                    case "Sort By Low" ->
+                        messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",LOW TO HIGH";
+                    case "View General Statistics Low To High" ->
+                        messageToServer = "VIEW CUSTOMER STATISTICS,LOW TO HIGH";
+                    default ->
+                        messageToServer = "VIEW CUSTOMER STATISTICS,HIGH TO LOW";
+                }
+                ArrayList<String> statistics;
+                try {
+                    statistics = (ArrayList) communicateWithServer(messageToServer);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "SERVER ERROR", "Error reading file",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                JPanel stats = new  JPanel(new FlowLayout(FlowLayout.CENTER));
+                if (statistics.isEmpty()) {
+                    stats = error("no Statistics");
+                } else {
+                    stats = printStatistics(statistics, 200, 300);
+                }
+
+                middle.removeAll();
+                middle.add(new JLabel("<html> <br/> Store  |   Product   |" +
+                        "   Price <br/> </html>"));
+                middle.add(stats);
+                middle.revalidate();
+                middle.repaint();
+            }
+        });
+
+
+
+        top.add(sortBy);
+        top.add(mainMenu);
+
+
+        middle.add(new JLabel("<html> <br/> Store  |   Product   |" +
+                "   Price <br/> </html>"));
+
+        middle.add(printStatistics((ArrayList<String>)communicateWithServer("VIEW CUSTOMER STATISTICS," + getEmail()), 200, 300));
+
+        add(top, BorderLayout.NORTH);
+        add(middle, BorderLayout.CENTER);
+    }
+
+    // TODO: finish this method
+    public void viewSellerStatistics() {
+        setup("View Statistics", 450, 450);
+
+        JPanel top = new JPanel(new GridLayout(1, 2, 7, 7));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By High", "Sort By low"});
+        sortBy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String sort = (String) sortBy.getSelectedItem();
+                String messageToServer;
+                switch (sort) {
+                    // TODO: PRINT SELLER STATS
+                }
             }
         });
 
@@ -405,8 +520,6 @@ public class GUI extends JFrame implements Runnable {
         top.add(sortBy);
         top.add(mainMenu);
 
-        // TODO: implement method to print the statistics *note*
-        //  statistics is general and used by both seller and customer
 
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
@@ -575,7 +688,7 @@ public class GUI extends JFrame implements Runnable {
     }
 
     public void viewPurchaseHistory() {
-        setup("View Purchase History", 400, 450);
+        setup("View Purchase History", 600, 650);
 
 
         JPanel top = new JPanel(new GridLayout(2, 2, 6, 6));
@@ -632,14 +745,13 @@ public class GUI extends JFrame implements Runnable {
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
 
-        //TODO: implement functionality to import customer purchase history and
         ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(String.format("VIEW PURCHASE HISTORY,%s", "aa"));
         if (purchaseHistory.isEmpty()) {
             add(error("No Products"), BorderLayout.SOUTH);
             return;
         }
 
-        bottom.add(printStatistics(purchaseHistory));
+        bottom.add(printStatistics(purchaseHistory, 400, 400));
 
         add(bottom, BorderLayout.SOUTH);
     }
@@ -684,39 +796,95 @@ public class GUI extends JFrame implements Runnable {
                 }
             }
         });
-        JTextField removedItem = new JTextField(15);
-        JButton removeItemButton = new JButton("Remove item");
-        removeItemButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO: implement functionality to remove an item in shopping cart
-                //question how do we get the item ??
-            }
-        });
 
-        // TODO: implement functionality to print the shopping cart to the screen
 
         top.add(exit);
         top.add(returnToMain);
         middle.add(buyAllButton);
-        middle.add(removedItem);
-        middle.add(removeItemButton);
+        bottom.add(viewCustomerShoppingCart());
 
+        add(top, BorderLayout.NORTH);
+        add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
     }
 
     public void searchBy() {
-        setup("Search by - Products", 350, 400);
+        setup("Search by - Products", 450, 450);
 
-        JPanel top = new JPanel(new GridLayout(2, 1, 6, 6));
+        JPanel top = new JPanel(new GridLayout(2, 2, 6, 6));
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         JTextField search = new JTextField(15);
         JButton searchButton = new JButton("Search");
 
+        JButton back = new JButton("Back");
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CustomerPage();
+            }
+        });
+
+        JLabel searchByLabel = new JLabel("Search by: ");
+        JComboBox<String> searchBy = new JComboBox<>(new String[]{"Name",
+                "Description", "Store"});
+
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchInput = search.getText();
+                if (searchInput.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter a search term",
+                            "No Search Term", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String searchWith = ((String) Objects.requireNonNull(searchBy.getSelectedItem())).toUpperCase();
+                ArrayList<String> products;
+                String messageToServer = String.format("SEARCH BY %s,%s", searchWith, searchInput);
+                try {
+                    products = (ArrayList<String>) communicateWithServer(messageToServer);
+                } catch (Exception exception) {
+                    System.out.println("Server Error");
+                    JOptionPane.showMessageDialog(null, "Server Error",
+                            "Server Error", JOptionPane.ERROR_MESSAGE);
+                    System.out.println("Server Error");
+                    return;
+                }
+
+                if (products.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "No products found",
+                            "No Products Found", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
+                for (String product : products) {
+                    System.out.println(product);
+                }
+                middle.removeAll();
+                JPanel productsPanel;
+                productsPanel = printStatistics(products, 500, 600);
+                middle.add(new JLabel("<html> <br/> Name  |  Description |  Store  " +
+                        "|  Seller  |  Price  |  Quantity  <br/>  </html>"));
+                middle.add(searchProductPanel(products));
+
+                middle.revalidate();
+                middle.repaint();
+            }
+        });
+
+        top.add(searchByLabel);
+        top.add(searchBy);
         top.add(search);
         top.add(searchButton);
 
+        bottom.add(back);
+
+        middle.add(new JTextArea("PLEASE SEARCH TO VIEW PRODUCTS"));
+
         add(top, BorderLayout.NORTH);
+        add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
     }
 
     public void addProduct() {
@@ -885,7 +1053,6 @@ public class GUI extends JFrame implements Runnable {
         modifyProduct.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: add functionality to modify product and return to home page
                 try {
                     double price = Double.parseDouble(productPrice.getText());
                 } catch (Exception exception) {
@@ -969,7 +1136,7 @@ public class GUI extends JFrame implements Runnable {
         if (shoppingCart.isEmpty()) {
             middle.add(new JLabel("Your shopping cart is empty"));
         } else {
-            middle.add(printStatistics(shoppingCart));
+            middle.add(printStatistics(shoppingCart, 300, 300));
         }
 
         add(middle, BorderLayout.CENTER);
@@ -994,9 +1161,17 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
-        // TODO: add functionality to print sales
+        // TODO: add functionality to print sales, check if this works
         top.add(info);
-        middle.add(new JLabel("<html> <br/> <br/>" + response + "<br/> <br/> </html>"));
+        JTextArea display = new JTextArea ( 16, 58 );
+        display.setText ( response );
+        display.setEditable ( false ); // set textArea non-editable
+        JScrollPane scroll = new JScrollPane ( display );
+        scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+
+        //Add Textarea in to middle panel
+        middle.add (scroll);
+
         bottom.add(backButton);
         add(top, BorderLayout.NORTH);
 
@@ -1004,8 +1179,7 @@ public class GUI extends JFrame implements Runnable {
         add(bottom, BorderLayout.SOUTH);
     }
 
-    public JPanel customerProducts() {
-        String messageToServer = "GET ALL PRODUCTS";
+    public JPanel customerProducts(String messageToServer) {
         ArrayList<String> products;
         try {
             products = (ArrayList<String>) communicateWithServer(messageToServer);
@@ -1118,8 +1292,98 @@ public class GUI extends JFrame implements Runnable {
         return view;
     }
 
+    public JPanel viewCustomerShoppingCart() {
+        String messageToServer = "GET CUSTOMER SHOPPING CART," + getEmail(); // Assuming getEmail() retrieves the customer's email
+        ArrayList<String> cart;
+        try {
+            cart = (ArrayList<String>) communicateWithServer(messageToServer);
+        } catch (Exception e) {
+            System.out.println("GET SHOPPING CART, arraylistError");
+            return error("ERROR, SERVER ERROR retrieving shopping cart");
+        }
 
-    // TODO: finish this
+        if (cart.isEmpty()) {
+            return error("Shopping Cart is Empty");
+        }
+
+        JPanel panel = new JPanel(new GridLayout(cart.size(), 1, 4, 5));
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.setPreferredSize(new Dimension(600, 800));
+
+        for (String cartItem : cart) {
+            JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            String[] cartItemInfo = cartItem.split(",");
+            try {
+                component.add(new JLabel("   " + cartItemInfo[0] + "   "));
+                component.add(new JLabel("   " + cartItemInfo[2] + "   "));
+                component.add(new JLabel("   " + cartItemInfo[4] + "   "));
+            } catch (Exception e) {
+                System.out.println("index out of bound exception");
+                return error("ERROR, SERVER ERROR sending shopping cart");
+            }
+
+            JButton removeFromCartButton = new JButton("Remove from Cart");
+            removeFromCartButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String messageToServer = String.format("REMOVE PRODUCT FROM CART,%s,%s", getEmail(), cartItemInfo[0]);
+                    String result = (String) communicateWithServer(messageToServer);
+                    if (result.equals("SUCCESS")) {
+                        JOptionPane.showMessageDialog(null, "Product Removed: " + cartItemInfo[0],
+                                "Product Removed", JOptionPane.INFORMATION_MESSAGE);
+                        CustomerPage();
+                    }
+                }
+            });
+
+            component.add(removeFromCartButton);
+            panel.add(component);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(600, 500));
+
+        JPanel view = new JPanel();
+        view.add(scrollPane);
+        return view;
+    }
+
+    public JPanel searchProductPanel(ArrayList<String> products) {
+        if (products.isEmpty()) {
+            return error("No Products");
+        }
+
+        JPanel panel = new JPanel(new GridLayout(products.size(), 1, 4, 5));
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.setPreferredSize(new Dimension(600, 800));
+
+
+        for (String product : products) {
+            JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+            JButton viewProduct = new JButton("View Product");
+            viewProduct.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    viewProduct(product);
+                }
+            });
+            component.add(new JLabel(product));
+            component.add(viewProduct);
+            panel.add(component);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(600, 500));
+
+        JPanel view = new JPanel();
+        view.add(scrollPane);
+        return view;
+    }
+
+
     public void viewProduct(String product) {
         String[] productWords;
         try {
@@ -1137,7 +1401,7 @@ public class GUI extends JFrame implements Runnable {
         JPanel middle = new JPanel(new GridLayout(1, 2, 5, 5));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel productInfo = new JLabel("<html> <br/> Product:" + productWords[0] +
+        JLabel productInfo = new JLabel("<html> <br/> Product: " + productWords[0] +
                 "<br/> <br/> Product Description: " + productWords[1] +
                 "<br/> <br/> Product Seller: " + productWords[5] +
                 "<br/> <br/> Product Store: " + productWords[2] +
@@ -1156,6 +1420,7 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: add functionality to add to cart and return to home page
+                String messageToServer = String.format("ADD PRODUCT TO CART,%s,%s", getEmail(), productWords[0]);
             }
         });
         cart.add(addToCartLabel);
@@ -1206,12 +1471,20 @@ public class GUI extends JFrame implements Runnable {
     }
 
 
-    public JPanel printStatistics(ArrayList<String> statistics) {
+    public JPanel printStatistics(ArrayList<String> statistics, int width, int height) {
+        if(statistics == null) {
+            return error("No Statistics");
+        }
+        if (statistics.isEmpty()) {
+            return error("No Statistics");
+        }
         JPanel panel = new JPanel(new GridLayout(statistics.size(), 1, 4, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, 800));
+        panel.setPreferredSize(new Dimension(width, height));
         for (String statistic : statistics) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JTextArea line = new JTextArea(statistic);
+            component.add(line);
             panel.add(component);
         }
         JScrollPane scrollPane = new JScrollPane(panel);
@@ -1239,6 +1512,8 @@ public class GUI extends JFrame implements Runnable {
             CustomerPage();
         } else if (userType.equals("SELLER")) {
             SellerPage();
+        } else {
+            loginPage();
         }
     }
 

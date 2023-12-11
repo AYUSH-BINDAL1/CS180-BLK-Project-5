@@ -69,7 +69,9 @@ public class ServerHandler implements Runnable {
                         case "CHECKOUT CART" -> result = CustomerShopping.checkoutCartServer(commandSplit[1], SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK, PRODUCTLOCK);
                         case "ADD PRODUCT TO CART" -> result = CustomerShopping.addToCartServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK, PRODUCTLOCK);
                         case "REMOVE PRODUCT FROM CART" -> result = CustomerShopping.removeProductServer(commandSplit[1], commandSplit[2], SHOPPINGCARTLOCK, PRODUCTLOCK);
-                        case "SEARCH BY NAME", "SEARCH BY STORE", "SEARCH BY DESCRIPTION" -> resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
+                        case "SEARCH BY NAME" -> resultList = ProductSearch.searchByNameServer(commandSplit[1], PRODUCTLOCK);
+                        case "SEARCH BY STORE" -> resultList = ProductSearch.searchByStoreServer(commandSplit[1], PRODUCTLOCK);
+                        case "SEARCH BY DESCRIPTION" -> resultList = ProductSearch.searchByDescriptionServer(commandSplit[1], PRODUCTLOCK);
                         case "SORT INCREASING PRICE" -> resultList = ProductSort.sortByIncreasingPriceServer(PRODUCTLOCK);
                         case "SORT DECREASING PRICE" -> resultList = ProductSort.sortByDecreasingPriceServer(PRODUCTLOCK);
                         case "SORT INCREASING QUANTITY" -> resultList = ProductSort.sortByIncreasingQuantityServer(PRODUCTLOCK);
@@ -89,6 +91,7 @@ public class ServerHandler implements Runnable {
                         case "EXPORT SELLER CSV" -> result = CSVHandler.exportSellerCSVServer(commandSplit[1], commandSplit[2], PRODUCTLOCK);
                         case "VIEW SELLER STATISTICS" -> result = Statistics.generateSellerDashboardServer(commandSplit[1], Integer.parseInt(commandSplit[2]), PURCHASEHISTORYLOCK);
                         case "VIEW SELLER SHOPPING CART" -> resultList = SellerShopping.getSellerShoppingCartServer(commandSplit[1], PRODUCTLOCK);
+                        case "GET CUSTOMER CART" -> resultList = CustomerShopping.getCustomerShoppingCartServer(commandSplit[1], SHOPPINGCARTLOCK);
                         case "EXIT PROGRAM" -> exitProgram();
                         default -> {
                             System.out.println("ERROR, client message");

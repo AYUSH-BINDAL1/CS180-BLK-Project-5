@@ -26,7 +26,7 @@ public class Statistics {
         ArrayList<String> purchaseHistory;
         try {
             synchronized (PRODUCTLOCK) {
-                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Products.txt"));
+                allProducts = (ArrayList<String>) Files.readAllLines(Paths.get("Product.txt"));
             }
             for (int currentLine = 0; currentLine < allProducts.size(); currentLine++) {
                 String[] words = allProducts.get(currentLine).split(",");
