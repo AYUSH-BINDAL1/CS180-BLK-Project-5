@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.Socket;
 import java.io.*;
+import java.net.SocketException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -81,9 +82,13 @@ public class GUI extends JFrame implements Runnable {
             writer.newLine();
             writer.flush();
             serverResponse = reader.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (SocketException f) {
+            JOptionPane.showMessageDialog(null, "Server Has Shut Down!"
+                    , "Server Shut Down", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println(serverResponse);
