@@ -751,12 +751,12 @@ public class GUI extends JFrame implements Runnable {
         top.add(exit);
         top.add(returnToMain);
 
-        middle.add(info);
-        middle.add(fileName);
-        middle.add(exportButton);
+        bottom.add(info);
+        bottom.add(fileName);
+        bottom.add(exportButton);
 
         add(top, BorderLayout.NORTH);
-        add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
 
         ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(String.format("VIEW PURCHASE HISTORY,%s", "aa"));
         if (purchaseHistory.isEmpty()) {
@@ -764,9 +764,10 @@ public class GUI extends JFrame implements Runnable {
             return;
         }
 
-        bottom.add(printStatistics(purchaseHistory, 400, 400));
+        middle.add(new JLabel("<html> <br/>  Product  |  Description  |  Store Name  | Seller |  Price | Quantity | Customer <br/> </html>"));
+        middle.add(printStatistics(purchaseHistory, 400, 400));
 
-        add(bottom, BorderLayout.SOUTH);
+        add(middle, BorderLayout.CENTER);
     }
 
     public void customerShoppingCart() {
