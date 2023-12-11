@@ -426,7 +426,7 @@ public class GUI extends JFrame implements Runnable {
         });
 
         JComboBox<String> sortBy = new JComboBox<>(new String[]{"View General Statistics High To Low",
-                "View General Statistics Low To High", "Sort By High", "Sort By Low",
+                "View General Statistics Low To High", "Sort By High (Products Purchased By You)", "Sort By Low (Products Purchased By You)",
         });
         sortBy.addActionListener(new ActionListener() {
             @Override
@@ -434,9 +434,9 @@ public class GUI extends JFrame implements Runnable {
                 String sort = (String) sortBy.getSelectedItem();
                 String messageToServer;
                 switch (sort) {
-                    case "Sort By High" ->
+                    case "Sort By High (Products Purchased By You)" ->
                             messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",HIGH TO LOW";
-                    case "Sort By Low" ->
+                    case "Sort By Low (Products Purchased By You)" ->
                             messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",LOW TO HIGH";
                     case "View General Statistics Low To High" ->
                             messageToServer = "VIEW CUSTOMER STATISTICS,LOW TO HIGH";
@@ -461,7 +461,7 @@ public class GUI extends JFrame implements Runnable {
 
                 middle.removeAll();
                 middle.add(new JLabel("<html> <br/> Seller |  Store  |   Product   |" +
-                        "   Price <br/> </html>"));
+                        "   Quantity Sold <br/> </html>"));
                 middle.add(stats);
                 middle.revalidate();
                 middle.repaint();
@@ -473,8 +473,8 @@ public class GUI extends JFrame implements Runnable {
         top.add(mainMenu);
 
 
-        middle.add(new JLabel("<html> <br/> Store  |   Product   |" +
-                "   Price <br/> </html>"));
+        middle.add(new JLabel("<html> <br/> Seller  |  Store  |   Product   |" +
+                "   Quantity Sold <br/> </html>"));
 
         middle.add(printStatistics((ArrayList<String>) communicateWithServer("VIEW CUSTOMER STATISTICS," + getEmail()), 200, 300));
 
