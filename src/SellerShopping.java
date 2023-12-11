@@ -42,10 +42,18 @@ public class SellerShopping {
 
     //TODO: Create modifyProductClient method
     public static String modifyProductServer(String productName, String productDescription, String storeName,
-                                           String sellerEmail, double price, int quantity, String oldProduct,
+                                             double price, int quantity, String oldProductName,
+                                             String oldProductDescription,
+                                             String oldProductStore,
+                                             String oldProductSellerEmail,
+                                             String oldProductPrice,
+                                             String oldProductQuantity,
                                            Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
         ArrayList<String> allShoppingCart;
         ArrayList<String> allProducts;
+        String oldProduct =
+                oldProductName + "," + oldProductDescription + "," + oldProductStore + "," +oldProductSellerEmail +
+                        "," + oldProductPrice + "," + oldProductQuantity; //creates old product
         String[] oldProductSplit = oldProduct.split(","); //splits old product by comma
         try {
             synchronized (SHOPPINGCARTLOCK) {
@@ -61,7 +69,7 @@ public class SellerShopping {
                 if (productSplit[0].equals(oldProductSplit[0]) && productSplit[2].equals(oldProductSplit[2])
                         && productSplit[3].equals(oldProductSplit[3])) {
                     allProducts.set(i,
-                            productName + "," + productDescription + "," + storeName + "," + sellerEmail + ","
+                            productName + "," + productDescription + "," + storeName + "," + oldProductSellerEmail + ","
                                     + price + "," + quantity);
                 }
             }
@@ -70,7 +78,7 @@ public class SellerShopping {
                 if (shoppingCartSplit[0].equals(oldProductSplit[0]) && shoppingCartSplit[2].equals(oldProductSplit[2])
                         && shoppingCartSplit[3].equals(oldProductSplit[3])) {
                     allShoppingCart.set(i,
-                            productName + "," + productDescription + "," + storeName + "," + sellerEmail + ","
+                            productName + "," + productDescription + "," + storeName + "," + oldProductSellerEmail + ","
                                     + price + "," + quantity + "," + shoppingCartSplit[6]);
                 }
             }
@@ -88,9 +96,16 @@ public class SellerShopping {
 
 
     //TODO: Create deleteProductClient method
-    public static String deleteProductServer(String oldProduct, Object SHOPPINGCARTLOCK, Object PRODUCTLOCK) {
+    public static String deleteProductServer(String productName, String productDescription, String productStore,
+                                             String productSeller,
+                                             String productPrice,
+                                             String productQuantity,
+                                             Object SHOPPINGCARTLOCK,
+                                             Object PRODUCTLOCK) {
         ArrayList<String> allShoppingCart;
         ArrayList<String> allProducts;
+        String oldProduct =
+                productName + "," + productDescription + "," + productStore + "," + productSeller + "," + productPrice + "," + productQuantity;
         String[] oldProductSplit = oldProduct.split(","); //splits old product by comma
         try {
             synchronized (SHOPPINGCARTLOCK) {
