@@ -216,7 +216,7 @@ Test Status: Passed
 
 ### Test 15: Add to Shopping Cart
 Steps:
-1. User goes through Customer Login
+1. User goes through Customer Login `customer@gmail.com` : `123`
 2. User selects the `View Product` button next to "iPhone 15"
 3. User selects the Add to Cart textbox
 4. User types "10" via the keyboard
@@ -228,7 +228,7 @@ Test Status: Passed
 
 ### Test 16: Add to Shopping Cart
 Steps:
-1. User goes through Customer Login
+1. User goes through Customer Login `customer@gmail.com` : `123`
 2. User selects the `View Product` button next to "iPhone 15"
 3. User selects the Add to Cart textbox
 4. User types "10" via the keyboard
@@ -240,7 +240,7 @@ Test Status: Passed
 
 ### Test 17: Buy Product
 Steps:
-1. User goes through Customer Login
+1. User goes through Customer Login `customer@gmail.com` : `123`
 2. User selects the `Shopping Cart` button
 3. User selects the `Buy All` button
 
@@ -260,7 +260,7 @@ Test Status: Passed
 
 ### Test 19: Export Purchase History
 Steps:
-1. User goes through Customer Login
+1. User goes through Customer Login `customer@gmail.com` : `123`
 2. User selects the `View/Export Purchase History` button
 3. User selects the textbox
 4. User types "History.txt" via the keyboard
@@ -272,7 +272,7 @@ Test Status: Passed
 
 ### Test 20: Customer Statistics
 Steps:
-1. User goes through Customer Login
+1. User goes through Customer Login `customer@gmail.com` : `123`
 2. User selects the `View Store/Customer Statistics` button
 
 Expected Result: Displays the seller@gmail.com and iPhone purchased
@@ -281,7 +281,7 @@ Test Status: Passed
 
 ### Test 21: Search Product
 Steps:
-1. User goes through Customer Login
+1. User goes through Customer Login `customer@gmail.com` : `123`
 2. User selects the `Search` button
 3. User selects Name
 4. User selects the textbox
@@ -289,5 +289,19 @@ Steps:
 6. User selects search
 
 Expected Result: Displays the iPhone product
+
+Test Status: Passed
+
+### Test 22: Delete Account
+Steps:
+1. User goes through Customer Create Account `customer1@gmail.com` : `123`
+2. User selects the `Delete Account` button
+3. User selects the username textbox
+4. User types "customer@gmail.com"
+5. User selects the password textbox
+6. User types "123"
+7. User selects `Delete Account` button
+
+Expected Result: Popup display shows account is deleted and shuts down GUI
 
 Test Status: Passed
