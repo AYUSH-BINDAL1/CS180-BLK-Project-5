@@ -170,3 +170,46 @@ Steps:
 Expected Result: Popup confirms that prodcut is added and returns to the Seller MarketPlace. Also displays the product on the page
 
 Test Status: Passed
+
+    Link Tests 12 to 14 to properly test concurrency
+
+### Test 12: Concurrency
+Steps:
+1. User runs MarketPlaceServer
+2. User runs MarketPlaceClient
+3. User goes through Seller login `seller@gmail.com` : `1234`
+4. User runs MarketPlaceClient
+5. User goes through Customer Login `customer@gmail.com` : `123` 
+
+Expected Result: There should be two GUI interfaces, one of Seller MarketPlace and one of Customer MarketPlace
+
+Test Status: Passed
+
+### Test 13: Modify Product
+Steps:
+1. Continue from Test 12. User goes to Seller MarketPlace
+2. User presses the `Modify Products` button next to iPhone
+3. User selects Enter Product Name textbox
+4. User enters "iPhone 15" via the keyboard
+5. User selects Enter Product Price textbox
+6. User enters "800" via the keyboard
+7. User selects Enter Product Quantity textbox
+8. User enters "500" via the keyboard
+9. User selects Product Store textbox
+10. User enters "Apple" via the keyboard
+11. User selects Enter Product Description textbox
+12. User enters "New SmartPhone" via the keyboard
+13. User selects the `Modify Product` button: `123`
+
+Expected Result: Popup confirms that product is modified and returns to the Seller MarketPlace. Also displays the product on the page with all the new information
+
+Test Status: Passed
+
+### Test 14: Refresh
+Steps:
+1. Continue from Test 13. User goes to Customer MarketPlace
+2. User selects the `Refresh` button
+
+Expected Result: Product "iPhone" and stats should update to "iPhone 15" and the new stats
+
+Test Status: Passed
