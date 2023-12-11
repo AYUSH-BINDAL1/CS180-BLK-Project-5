@@ -388,7 +388,7 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 middle.removeAll();
-                middle.add(new JLabel("<html> <br/> Store  |   Product   |   Price  |  Modify Product  " +
+                middle.add(new JLabel("<html> <br/> Product  |   Store   |   Price  |  Modify Product  " +
                         "|  Delete Product <br/> </html>"));
                 middle.add(sellerProducts());
                 middle.repaint();
@@ -745,13 +745,14 @@ public class GUI extends JFrame implements Runnable {
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
 
-        ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(String.format("VIEW PURCHASE HISTORY,%s", "aa"));
+        ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(String.format("VIEW PURCHASE HISTORY,%s", getEmail()));
+        System.out.println(purchaseHistory);
         if (purchaseHistory.isEmpty()) {
             add(error("No Products"), BorderLayout.SOUTH);
             return;
         }
 
-        bottom.add(printStatistics(purchaseHistory, 400, 400));
+        bottom.add(printStatistics(purchaseHistory, 200, 200));
 
         add(bottom, BorderLayout.SOUTH);
     }
@@ -1214,7 +1215,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JPanel panel = new JPanel(new GridLayout(products.size(), 1, 4, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, 800));
+        panel.setPreferredSize(new Dimension(600, products.size() * 100));
         for (String product : products) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
             String[] productInfo = product.split(",");
@@ -1241,7 +1242,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, 500));
+        scrollPane.setPreferredSize(new Dimension(600, products.size() * 100));
         JPanel view = new JPanel();
         view.add(scrollPane);
         return view;
@@ -1263,7 +1264,7 @@ public class GUI extends JFrame implements Runnable {
 
         JPanel panel = new JPanel(new GridLayout(products.size(), 1, 4, 4));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, 800));
+        panel.setPreferredSize(new Dimension(600, products.size() * 100));
         for (String product : products) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
             String[] productInfo = product.split(",");
@@ -1307,7 +1308,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, 500));
+        scrollPane.setPreferredSize(new Dimension(600, products.size() * 100));
         JPanel view = new JPanel();
         view.add(scrollPane);
         return view;
@@ -1433,7 +1434,7 @@ public class GUI extends JFrame implements Runnable {
             return;
         }
 
-        setup("View Product", 800, 800);
+        setup("View Product", 500, 500);
         JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel middle = new JPanel(new GridLayout(1, 2, 5, 5));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
