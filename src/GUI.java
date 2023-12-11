@@ -388,7 +388,7 @@ public class GUI extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 middle.removeAll();
-                middle.add(new JLabel("<html> <br/> Product  |   Store   |   Price  |  Modify Product  " +
+                middle.add(new JLabel("<html> <br/> Store  |   Product   |   Price  |  Modify Product  " +
                         "|  Delete Product <br/> </html>"));
                 middle.add(sellerProducts());
                 middle.repaint();
@@ -426,7 +426,7 @@ public class GUI extends JFrame implements Runnable {
         mainMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                returnHome();
+                CustomerPage();
             }
         });
 
@@ -438,17 +438,17 @@ public class GUI extends JFrame implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 String sort = (String) sortBy.getSelectedItem();
                 String messageToServer;
-                switch (sort.toUpperCase()) {
-                    case "SORT BY HIGH" ->
+                switch (sort) {
+                    case "Sort By High" ->
                         messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",HIGH TO LOW";
-                    case "SORT BY LOW" ->
+                    case "Sort By Low" ->
                         messageToServer = "VIEW CUSTOMER STATISTICS SORT," + getEmail() + ",LOW TO HIGH";
-                    case "VIEW GENERAL STATISTICS LOW TO HIGH" ->
+                    case "View General Statistics Low To High" ->
                         messageToServer = "VIEW CUSTOMER STATISTICS,LOW TO HIGH";
                     default ->
                         messageToServer = "VIEW CUSTOMER STATISTICS,HIGH TO LOW";
                 }
-                ArrayList<String> statistics = new ArrayList<>();
+                ArrayList<String> statistics;
                 try {
                     statistics = (ArrayList) communicateWithServer(messageToServer);
                 } catch (Exception ex) {
@@ -457,9 +457,8 @@ public class GUI extends JFrame implements Runnable {
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                System.out.println(statistics);
 
-                JPanel stats = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                JPanel stats = new  JPanel(new FlowLayout(FlowLayout.CENTER));
                 if (statistics.isEmpty()) {
                     stats = error("no Statistics");
                 } else {
@@ -492,24 +491,38 @@ public class GUI extends JFrame implements Runnable {
 
     // TODO: finish this method
     public void viewSellerStatistics() {
-        setup("View Statistics", 450, 450);
+        setup("View Seller Statistics", 450, 450);
 
         JPanel top = new JPanel(new GridLayout(1, 2, 7, 7));
         JPanel middle = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort By High", "Sort By low"});
+        JLabel info = new JLabel("<html> <br/> <br/> Seller Statistics <br/> <br/> </html>");
+        JComboBox<String> sortBy = new JComboBox<>(new String[]{"Sort High To Low", "Sort Low To High"});
+        String formattedResponse = "";
         sortBy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String sort = (String) sortBy.getSelectedItem();
-                String messageToServer;
-                switch (sort) {
-                    // TODO: PRINT SELLER STATS
+                String sortBySelected = (String) sortBy.getSelectedItem();
+                String formattedString = "";
+                switch (sortBySelected) {
+                    case "Sort High To Low" ->
+                            formattedString = String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "1");
+                    case "Sort Low To High" ->
+                            formattedString = String.format("VIEW SELLER STATISTICS,%s,%s", getEmail(), "2");
+                    default ->
+                            formattedString = "";
                 }
+                String response = (String) communicateWithServer(formattedString);
+                String formattedResponse = "<html><body><pre>" + response + "</pre></body></html>";
+                middle.removeAll(); // Clear previous components
+                middle.add(printStringStatistics(formattedResponse)); // Add updated component
+                middle.revalidate(); // Revalidate to update the panel
+                middle.repaint(); // Repaint to ensure changes are visible
             }
         });
 
-        JButton mainMenu = new JButton("Main Menu");
+        JButton mainMenu = new JButton("Return To Main Menu");
         mainMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -517,12 +530,12 @@ public class GUI extends JFrame implements Runnable {
             }
         });
 
+        top.add(info);
         top.add(sortBy);
-        top.add(mainMenu);
-
-
+        bottom.add(mainMenu);
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
     }
 
     public void editAccount() {
@@ -745,14 +758,13 @@ public class GUI extends JFrame implements Runnable {
         add(top, BorderLayout.NORTH);
         add(middle, BorderLayout.CENTER);
 
-        ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(String.format("VIEW PURCHASE HISTORY,%s", getEmail()));
-        System.out.println(purchaseHistory);
+        ArrayList<String> purchaseHistory = (ArrayList<String>) communicateWithServer(String.format("VIEW PURCHASE HISTORY,%s", "aa"));
         if (purchaseHistory.isEmpty()) {
             add(error("No Products"), BorderLayout.SOUTH);
             return;
         }
 
-        bottom.add(printStatistics(purchaseHistory, 200, 200));
+        bottom.add(printStatistics(purchaseHistory, 400, 400));
 
         add(bottom, BorderLayout.SOUTH);
     }
@@ -1215,7 +1227,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JPanel panel = new JPanel(new GridLayout(products.size(), 1, 4, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, products.size() * 100));
+        panel.setPreferredSize(new Dimension(600, 800));
         for (String product : products) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
             String[] productInfo = product.split(",");
@@ -1242,7 +1254,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, products.size() * 100));
+        scrollPane.setPreferredSize(new Dimension(600, 500));
         JPanel view = new JPanel();
         view.add(scrollPane);
         return view;
@@ -1264,7 +1276,7 @@ public class GUI extends JFrame implements Runnable {
 
         JPanel panel = new JPanel(new GridLayout(products.size(), 1, 4, 4));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setPreferredSize(new Dimension(600, products.size() * 100));
+        panel.setPreferredSize(new Dimension(600, 800));
         for (String product : products) {
             JPanel component = new JPanel(new FlowLayout(FlowLayout.CENTER));
             String[] productInfo = product.split(",");
@@ -1308,7 +1320,7 @@ public class GUI extends JFrame implements Runnable {
         }
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(600, products.size() * 100));
+        scrollPane.setPreferredSize(new Dimension(600, 500));
         JPanel view = new JPanel();
         view.add(scrollPane);
         return view;
@@ -1434,7 +1446,7 @@ public class GUI extends JFrame implements Runnable {
             return;
         }
 
-        setup("View Product", 500, 500);
+        setup("View Product", 800, 800);
         JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel middle = new JPanel(new GridLayout(1, 2, 5, 5));
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -1516,7 +1528,7 @@ public class GUI extends JFrame implements Runnable {
                             "Product Purchase", JOptionPane.INFORMATION_MESSAGE);
 
                 } else if (result.equals("NOT ENOUGH QUANTITY") || result.equals("PRODUCT NOT FOUND")) {
-                    JOptionPane.showMessageDialog(null, "Not Enough Quantitiy",
+                    JOptionPane.showMessageDialog(null, "Not Enough Quantity",
                             "Product Purchase", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -1574,6 +1586,21 @@ public class GUI extends JFrame implements Runnable {
         }
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(600, 500));
+        JPanel view = new JPanel();
+        view.add(scrollPane);
+        return view;
+    }
+
+    public JPanel printStringStatistics(String info) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.setPreferredSize(new Dimension(600, 800));
+        JLabel component = new JLabel(info);
+        panel.add(component);
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setPreferredSize(new Dimension(600, 500));
         JPanel view = new JPanel();
         view.add(scrollPane);
