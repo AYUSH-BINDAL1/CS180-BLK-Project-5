@@ -213,3 +213,81 @@ Steps:
 Expected Result: Product "iPhone" and stats should update to "iPhone 15" and the new stats
 
 Test Status: Passed
+
+### Test 15: Add to Shopping Cart
+Steps:
+1. User goes through Customer Login
+2. User selects the `View Product` button next to "iPhone 15"
+3. User selects the Add to Cart textbox
+4. User types "10" via the keyboard
+5. User selects the `Add to Cart` button
+
+Expected Result: Popup confirms that the products were added to Shopping Cart and retuns to Customer MarketPlace
+
+Test Status: Passed
+
+### Test 16: Add to Shopping Cart
+Steps:
+1. User goes through Customer Login
+2. User selects the `View Product` button next to "iPhone 15"
+3. User selects the Add to Cart textbox
+4. User types "10" via the keyboard
+5. User selects the `Add to Cart` button
+
+Expected Result: Popup confirms that the products were added to Shopping Cart and retuns to Customer MarketPlace
+
+Test Status: Passed
+
+### Test 17: Buy Product
+Steps:
+1. User goes through Customer Login
+2. User selects the `Shopping Cart` button
+3. User selects the `Buy All` button
+
+Expected Result: Popup confirms that the cart is empty and products are bought then returns to Customer MarketPlace
+
+Test Status: Passed
+
+### Test 18: Remove Product
+Steps:
+1. User goes through Test 16 again
+2. User selects the `Shopping Cart` button
+3. User selects the `Remove Product` button
+
+Expected Result: Popup confirms that the product is removed then returns to Customer MarketPlace
+
+Test Status: Passed
+
+### Test 19: Export Purchase History
+Steps:
+1. User goes through Customer Login
+2. User selects the `View/Export Purchase History` button
+3. User selects the textbox
+4. User types "History.txt" via the keyboard
+5. User selects the `Export` button
+
+Expected Result: Popup confirms that the txt file is created
+
+Test Status: Passed
+
+### Test 20: Customer Statistics
+Steps:
+1. User goes through Customer Login
+2. User selects the `View Store/Customer Statistics` button
+
+Expected Result: Displays the seller@gmail.com and iPhone purchased
+
+Test Status: Passed
+
+### Test 21: Search Product
+Steps:
+1. User goes through Customer Login
+2. User selects the `Search` button
+3. User selects Name
+4. User selects the textbox
+5. User types "iPhone" via the keyboard
+6. User selects search
+
+Expected Result: Displays the iPhone product
+
+Test Status: Passed
