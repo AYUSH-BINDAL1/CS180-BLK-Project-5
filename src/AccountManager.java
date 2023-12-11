@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
  * <p>
  * Java class that handles all information regarding the user (Usernames, Password, etc...)
  *
- * @author Ayush Bindal, Lab #L08
- * @version 12/2/2023
+ * @author Ayush Bindal & Lionel Loo Lab #L08
+ * @version 12/11/2023
  * <p>
  */
 
@@ -51,7 +51,7 @@ public class AccountManager {
     //Given a newEmail and email, updates Username.txt, Product.txt, ShoppingCart.txt and PurchaseHistory.txt
     // accordingly
     public static String updateEmailFiles(String oldEmail, String newEmail, Object USERINFOLOCK,
-                                        Object SHOPPINGCARTLOCK, Object PURCHASEHISTORYLOCK, Object PRODUCTLOCK) {
+                                          Object SHOPPINGCARTLOCK, Object PURCHASEHISTORYLOCK, Object PRODUCTLOCK) {
         try {
             ArrayList<String> userInformationList; //ArrayList of lines from Username.txt
             ArrayList<String> productList; //ArrayList of lines from Product.txt
@@ -74,7 +74,7 @@ public class AccountManager {
                 return "EMAIL ALREADY TAKEN";
             }
 
-            if(!validateEmail(newEmail)) { //If the newEmail is invalid
+            if (!validateEmail(newEmail)) { //If the newEmail is invalid
                 return "INVALID EMAIL FORMAT";
             }
             userInformationList.set(emailIndex, newEmail); //Sets newEmail at index emailIndex in Username.txt

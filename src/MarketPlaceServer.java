@@ -11,7 +11,7 @@ import java.net.SocketException;
  * Java class that starts the server and accepts connections from clients and starts individual threads for them.
  *
  * @author Ayush Bindal, Lab #L08
- * @version 12/2/2023
+ * @version 12/11/2023
  * <p>
  */
 
@@ -23,7 +23,6 @@ public class MarketPlaceServer {
     public static final Object SHOPPINGCARTLOCK = new Object();
     public static final Object PURCHASEHISTORYLOCK = new Object();
     public static final Object PRODUCTLOCK = new Object();
-
 
 
     public static void main(String[] args) {
@@ -59,7 +58,8 @@ public class MarketPlaceServer {
 
             while (true) {
                 clientSocket = serverSocket.accept(); //Continues to accept connections to the server
-                JOptionPane.showMessageDialog(null, "Successfully Connected. Welcome to the Marketplace.",
+                JOptionPane.showMessageDialog(null, "Successfully Connected. " +
+                                "Welcome to the Marketplace.",
                         "Connection Established", JOptionPane.INFORMATION_MESSAGE);
                 serverHandler = new ServerHandler(clientSocket, USERINFOLOCK, SHOPPINGCARTLOCK, PURCHASEHISTORYLOCK,
                         PRODUCTLOCK); //Creates new serverHandler with clientSocket; //Creates new serverHandler with

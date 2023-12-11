@@ -8,10 +8,10 @@ import java.util.Comparator;
 /**
  * Statistics
  * <p>
- * Handles all information regarding statistics feature for both customer and seller
+ * Handles all information regarding statistics feature for both customer and seller.
  *
- * @author Ayush Bindal, Lab #L08
- * @version 11/30/2023
+ * @author Ayush Bindal & Lionel Loo Lab #L08
+ * @version 12/11/2023
  * <p>
  */
 
@@ -93,7 +93,8 @@ public class Statistics {
         ArrayList<String> totalPurchaseHistory;
         try {
             synchronized (PURCHASEHISTORYLOCK) {
-                totalPurchaseHistory = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+                totalPurchaseHistory = (ArrayList<String>) Files.readAllLines(
+                        Paths.get("PurchaseHistory.txt"));
             }
             for (int currentLine = 0; currentLine < totalPurchaseHistory.size(); currentLine++) {
                 String[] words = totalPurchaseHistory.get(currentLine).split(",");
@@ -199,7 +200,8 @@ public class Statistics {
         try {
             synchronized (PURCHASEHISTORYLOCK) {
                 //Reads lines from PurchaseHistory
-                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(
+                        Paths.get("PurchaseHistory.txt"));
             }
 
             for (String purchase : purchaseHistoryLines) { //Reads through each line in purchaseHistory and if the
@@ -249,7 +251,8 @@ public class Statistics {
     }
 
 
-    public static String generateSellerDashboardServer(String sellerEmail, int rank, Object PURCHASEHISTORYLOCK) {
+    public static String generateSellerDashboardServer(String sellerEmail, int rank,
+                                                       Object PURCHASEHISTORYLOCK) {
 
         ArrayList<String> purchaseHistoryLines; //ArrayList of purchaseHistory from PurchaseHistory.txt
         ArrayList<String> stores = new ArrayList<String>(); //ArrayList of Strings contain stores
@@ -260,7 +263,8 @@ public class Statistics {
 
             synchronized (PURCHASEHISTORYLOCK) {
                 //Reads lines from PurchaseHistory
-                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(Paths.get("PurchaseHistory.txt"));
+                purchaseHistoryLines = (ArrayList<String>) Files.readAllLines(
+                        Paths.get("PurchaseHistory.txt"));
             }
 
             //Loops through each purchase in the purchaseHistory
@@ -270,15 +274,18 @@ public class Statistics {
                 // Check if the store related to the purchase is not already in the ArrayList and is associated
                 // with the seller
                 if (!stores.contains(purchaseSplit[2]) && purchaseSplit[3].equals(sellerEmail)) {
-                    ArrayList<String> customerPurchaseCount = new ArrayList<>(); //List to track customer purchase count for a store
-                    ArrayList<String> productSalesCount = new ArrayList<>(); //List to track product sales count for a store
+                    ArrayList<String> customerPurchaseCount = new ArrayList<>(); //List to track
+                    // customer purchase count for a store
+                    ArrayList<String> productSalesCount = new ArrayList<>(); //List to track
+                    // product sales count for a store
 
                     // Process purchase history for the specified store related to the seller
                     for (String currentPurchase : purchaseHistoryLines) {
                         String[] currentPurchaseSplit = currentPurchase.split(",");
 
                         // Check if the purchase is related to the specified seller and store
-                        if (currentPurchaseSplit[3].equals(sellerEmail) && currentPurchaseSplit[2].equals(purchaseSplit[2])) {
+                        if (currentPurchaseSplit[3].equals(sellerEmail) &&
+                                currentPurchaseSplit[2].equals(purchaseSplit[2])) {
                             // Update customer purchase count
                             updatePurchaseCount(customerPurchaseCount, currentPurchaseSplit[6],
                                     currentPurchaseSplit[5]);

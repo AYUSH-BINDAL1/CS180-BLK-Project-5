@@ -6,10 +6,10 @@ import java.util.ArrayList;
 /**
  * ProductSearch
  * <p>
- * Handles all searching for products for customers
+ * Handles all searching for products for customers.
  *
  * @author Lionel Loo, Lab #L08
- * @version 12/02/2023
+ * @version 12/11/2023
  * <p>
  */
 
@@ -65,7 +65,8 @@ public class ProductSearch {
 
 
     //Given searched product description, return ArrayList of products that contain that searched term
-    public static ArrayList<String> searchByDescriptionServer(String descriptionSearched, Object PRODUCTLOCK) {
+    public static ArrayList<String> searchByDescriptionServer
+    (String descriptionSearched, Object PRODUCTLOCK) {
         ArrayList<String> allProducts;
         ArrayList<String> searchedProducts = new ArrayList<>();
         descriptionSearched = descriptionSearched.toLowerCase(); //makes product name lowercase;

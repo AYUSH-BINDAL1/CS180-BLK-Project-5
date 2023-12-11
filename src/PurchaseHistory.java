@@ -8,8 +8,8 @@ import java.util.ArrayList;
  * <p>
  * Handles all purchase history information for the users
  *
- * @author Ayush Bindal, Lab #L08
- * @version 12/02/2023
+ * @author Ayush Bindal & Lionel Loo Lab #L08
+ * @version 12/11/2023
  * <p>
  */
 
@@ -17,7 +17,8 @@ public class PurchaseHistory {
 
 
     //Given a customer returns an ArrayList of Strings containing the customer's purchase history
-    public static ArrayList<String> viewCustomerPurchaseHistoryServer(String customerEmail, Object PURCHASEHISTORYLOCK) {
+    public static ArrayList<String> viewCustomerPurchaseHistoryServer(String customerEmail,
+                                                                      Object PURCHASEHISTORYLOCK) {
         ArrayList<String> returnList = new ArrayList<>();
         try {
             ArrayList<String> purchaseHistoryLines; // List of all purchase lines (lines containing product

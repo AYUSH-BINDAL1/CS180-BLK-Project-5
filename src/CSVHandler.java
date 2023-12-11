@@ -9,8 +9,8 @@ import java.util.ArrayList;
  * <p>
  * Java class that handles all CSV handling including export and import
  *
- * @author Ayush Bindal, Lab #L08
- * @version 12/2/2023
+ * @author Ayush Bindal & Lionel Loo Lab #L08
+ * @version 12/11/2023
  * <p>
  */
 
@@ -20,7 +20,7 @@ public class CSVHandler {
     //Given a path to a seller's CSV file, import the seller's products into the Product.txt file.
     public static String importSellerCSVServer(String path, Object PRODUCTLOCK) {
         Path pathCheck = Paths.get(path);
-        if(Files.exists(pathCheck)) {
+        if (Files.exists(pathCheck)) {
             try {
                 Object CSVLOCK = new Object();
                 ArrayList<String> sellerCSVLines; // List of seller CSV lines (lines containing seller information)
@@ -65,12 +65,12 @@ public class CSVHandler {
             return "PATH DOES NOT EXIST";
         }
     }
-    
+
 
     //Given the sellerEmail and path writes Products the seller owns to a new CSV file
     public static String exportSellerCSVServer(String path, String sellerEmail, Object PRODUCTLOCK) {
         Path pathCheck = Paths.get(path);
-        if(!Files.exists(pathCheck)) {
+        if (!Files.exists(pathCheck)) {
             try {
                 ArrayList<String> productLines; // List of product lines (lines containing product information)
                 synchronized (PRODUCTLOCK) {
@@ -79,7 +79,7 @@ public class CSVHandler {
                 }
                 for (int i = 0; i < productLines.size(); i++) {
                     String[] productLine = productLines.get(i).split(","); //Splits the individual lines
-                    if (!productLine[3].equals(sellerEmail)) { //If the seller doesn't own the product it removes the line
+                    if (!productLine[3].equals(sellerEmail)) { //If the seller doesn't own the product removes it
                         productLines.remove(i);
                         i--; //Accounts for removal of line
                     }

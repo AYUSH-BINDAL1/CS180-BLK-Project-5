@@ -6,10 +6,10 @@ import java.util.ArrayList;
 /**
  * ProductSort
  * <p>
- * Sorts the products based on price or quantity for the customer
+ * Sorts the products based on price or quantity for the customer.
  *
- * @author Lionel Loo, Benjamin Wu Lab #L08
- * @version 12/02/2023
+ * @author Lionel Loo & Benjamin Wu Lab #L08
+ * @version 12/11/2023
  * <p>
  */
 

@@ -8,8 +8,8 @@ import java.util.ArrayList;
  * <p>
  * Handles all methods pertaining to the seller shopping cart information
  *
- * @author Ayush Bindal, Lab #L08
- * @version 11/30/2023
+ * @author Ayush Bindal, Lionel Loo & Benjamin Wu Lab #L08
+ * @version 12/11/2023
  * <p>
  */
 
@@ -69,17 +69,17 @@ public class SellerShopping {
                 if (productSplit[0].equals(oldProductSplit[0]) && productSplit[2].equals(oldProductSplit[2])
                         && productSplit[3].equals(oldProductSplit[3])) {
                     allProducts.set(i,
-                            productName + "," + productDescription + "," + storeName + "," + oldProductSellerEmail + ","
-                                    + price + "," + quantity);
+                            productName + "," + productDescription + "," + storeName + "," + oldProductSellerEmail +
+                                    "," + price + "," + quantity);
                 }
             }
             for (int i = 0; i < allShoppingCart.size(); i++) {
-                String[] shoppingCartSplit = allShoppingCart.get(i).split(","); //splits current product by comma(",");
+                String[] shoppingCartSplit = allShoppingCart.get(i).split(","); //splits current product by ,
                 if (shoppingCartSplit[0].equals(oldProductSplit[0]) && shoppingCartSplit[2].equals(oldProductSplit[2])
                         && shoppingCartSplit[3].equals(oldProductSplit[3])) {
                     allShoppingCart.set(i,
-                            productName + "," + productDescription + "," + storeName + "," + oldProductSellerEmail + ","
-                                    + price + "," + quantity + "," + shoppingCartSplit[6]);
+                            productName + "," + productDescription + "," + storeName + "," + oldProductSellerEmail +
+                                    "," + price + "," + quantity + "," + shoppingCartSplit[6]);
                 }
             }
             synchronized (SHOPPINGCARTLOCK) {
@@ -105,7 +105,8 @@ public class SellerShopping {
         ArrayList<String> allShoppingCart;
         ArrayList<String> allProducts;
         String oldProduct =
-                productName + "," + productDescription + "," + productStore + "," + productSeller + "," + productPrice + "," + productQuantity;
+                productName + "," + productDescription + "," + productStore + "," + productSeller + "," + productPrice
+                        + "," + productQuantity;
         String[] oldProductSplit = oldProduct.split(","); //splits old product by comma
         try {
             synchronized (SHOPPINGCARTLOCK) {
@@ -148,7 +149,8 @@ public class SellerShopping {
 
 
     public static String createNewProductServer(String productName, String productDescription, String storeName,
-                                                String sellerEmail, double price, int quantity, Object PRODUCTLOCK) {
+                                                String sellerEmail, double price, int quantity,
+                                                Object PRODUCTLOCK) {
         ArrayList<String> productLines; //ArrayList of lines from Product.txt
         boolean productExists; //boolean to check if product already exists
         try {
