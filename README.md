@@ -26,9 +26,9 @@ After that simply follow the prompts!
 **NOTE: You may need to minimize any current windows to find the Marketplace.
 
 ## Submissions on BrightSpace and Vocareum
-____ Submitted Vocareum Workspace\
+Ayush Bindal Submitted Vocareum Workspace\
 Benjamin Wu Submitted Report on Brightspace\
-____ Submitted Presentation on Brightspace
+Lionel Loo Submitted Presentation on Brightspace
 
 ## SRC Files
 
